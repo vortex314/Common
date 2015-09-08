@@ -12,11 +12,14 @@
 
 #include "Erc.h"
 #include "Sys.h"
+// #include "Str.h"
 #include <assert.h>
 
 #define MAX_BUFFER_SIZE 512
 #define SOF  0x7E
 #define ESC  0x7D
+
+class Str;
 
 class Bytes {
 public:

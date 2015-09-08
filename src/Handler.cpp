@@ -31,12 +31,12 @@ Handler::Handler(const char* name)
 
 void Handler::timeout(uint32_t msec)
 {
-    _timeout = Sys::upTime() + msec;
+    _timeout = Sys::millis() + msec;
 }
 
 bool Handler::timeout()
 {
-    return _timeout < Sys::upTime();
+    return _timeout < Sys::millis();
 }
 
 uint64_t Handler::getTimeout()

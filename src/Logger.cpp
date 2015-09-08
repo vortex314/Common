@@ -11,8 +11,9 @@ Logger::Logger(int size) : _str(size)
     _logLevel=DEBUG;
     _level=INFO;
 }
-void Logger::setLevel(Level l){
-_logLevel=l;
+void Logger::setLevel(Level l)
+{
+    _logLevel=l;
 }
 Logger& Logger::level(int level)
 {
@@ -119,3 +120,30 @@ Logger& Logger::operator<<(Bytes& bytes)
     return *this;
 }
 
+Logger& Logger::debug()
+{
+    return level(DEBUG);
+};
+Logger& Logger::warn()
+{
+    return level(WARN);
+};
+Logger& Logger::info()
+{
+    return level(INFO);
+};
+Logger& Logger::error()
+{
+    return level(ERROR);
+};
+Logger& Logger::fatal()
+{
+    return level(FATAL);
+};
+Logger&  Logger::perror(const char* s)
+{
+    level(ERROR);
+    _str << s << " failed. errno = "<< errno << ":" << strerror(errno);
+    flush();
+    return *this;
+};

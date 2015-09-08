@@ -132,7 +132,7 @@ bool Str::equals(const char* s) {
 }
 #include <cstring>
 bool Str::find(const char* s) {
-	char* pch = strstr(c_str(), s);
+	const char* pch = strstr((const char*)c_str(), s);
 	if (pch) {
 		return  true;
 	}

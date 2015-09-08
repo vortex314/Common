@@ -1,49 +1,36 @@
-/*
- * Sys.h
- *
- *  Created on: 31-aug.-2013
- *      Author: lieven2
- */
+#ifndef SYS_H
+#define SYS_H
 
-#ifndef SYS_H_
-#define SYS_H_
 #include "stdint.h"
-#include "Erc.h"
 
-class Str;
-class Sys;
-class Logger;
+#define DEBUG(fmt,...) Sys::log(__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
+#define INFO(fmt,...)  Sys::log(__FILE__, __PRETTY_FUNCTION__ ,fmt,##__VA_ARGS__)
+#define WARN(fmt,...)  Sys::log(__FILE__, __PRETTY_FUNCTION__ ,fmt,##__VA_ARGS__)
+#define PERROR(erc)  Sys::log(__FILE__, __PRETTY_FUNCTION__ ,"errno : %",erc)
+// ---------------------- LINUX ------------------------------
+#ifdef __linux__
+#endif
+// ---------------------- ESP8266 ----------------------------
+#ifdef __ESP8266__
+#define IROM __attribute__((section(".irom0.text")))
+#define IRAM __attribute__((section(".text")))
+#define noinline __attribute__ ((noinline))
+#define attr_pure __attribute__ ((pure))
+#define attr_const __attribute__ ((const))
+#endif
 
-
-class Sys {
+class Sys
+{
     public:
-
         Sys();
-        static void init();
-
-        static void delay_ms(uint32_t msec);
-        static uint64_t _upTime;
-        static uint64_t upTime();
-        static uint64_t _bootTime;
-
-        static void * malloc(uint32_t size);
-        static void free(void *pv);
-
+        virtual ~Sys();
+        static uint64_t millis();
+        static void warn(int erc,const char* s);
         static void interruptEnable();
         static void interruptDisable();
+        static void log(const char* file, const char* function, const char * format, ...) ;
+    protected:
+    private:
+};
 
-        static Str&  log();
-        static void warn(int err,const char* s);
-        static Str&  lastLog();
-        static Str& logFlush();
-        static Str& getDeviceName();
-
-    private :
-        static Str _logLine;
-        static Str _lastLogLine;
-        static uint32_t _errorCount;
-
-    };
-
-
-#endif /* SYS_H_ */
+#endif // SYS_H

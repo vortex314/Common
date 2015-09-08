@@ -19,33 +19,12 @@ public :
     Logger& operator<<(Bytes& b);
     Logger& operator<<(Str& str);
     Logger& flush();
-    Logger& debug()
-    {
-        return level(DEBUG);
-    };
-    Logger& warn()
-    {
-        return level(WARN);
-    };
-    Logger& info()
-    {
-        return level(INFO);
-    };
-    Logger& error()
-    {
-        return level(ERROR);
-    };
-    Logger& fatal()
-    {
-        return level(FATAL);
-    };
-    Logger& perror(const char* s)
-    {
-        level(ERROR);
-        _str << s << " failed. errno = "<< errno << ":" << strerror(errno);
-        flush();
-        return *this;
-    };
+    Logger& debug();
+    Logger& warn();
+    Logger& info();
+    Logger& error();
+    Logger& fatal();
+    Logger& perror(const char* s);
     const char* logTime();
 
 private :

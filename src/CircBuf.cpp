@@ -6,6 +6,7 @@
  */
 //#include "base.h"
 #include "CircBuf.h"
+#include "Erc.h"
 #include "Sys.h"
 #include "Board.h"
 

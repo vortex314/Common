@@ -6,6 +6,8 @@
  */
 
 #include <BipBuffer.h>
+#include "errno.h"
+#include "platform.h"
 #include "Sys.h"
 
 
@@ -136,7 +138,7 @@ uint8_t* BipBuffer::Reserve(int size, int& reserved) {
 			freespace = size;
 
 		if (freespace == 0) {
-			Sys::warn(EOVERFLOW,"BIP");
+			PERROR(EOVERFLOW);
 			return NULL;
 		}
 

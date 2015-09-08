@@ -43,7 +43,7 @@ static int pow10[10] = { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000,
 bool Prop::hasToBePublished() {
 	if (_flags.mode == M_WRITE)
 		return false;
-	if (Sys::upTime() > (_lastPublished + pow10[_flags.interval]))
+	if (Sys::millis() > (_lastPublished + pow10[_flags.interval]))
 		return true;
 	return _flags.doPublish;
 }
@@ -54,7 +54,7 @@ void Prop::doPublish() {
 
 void Prop::isPublished() {
 	_flags.doPublish = false;
-	_lastPublished = Sys::upTime();
+	_lastPublished = Sys::millis();
 }
 
 void Prop::metaToBytes(Bytes& message) {
