@@ -55,35 +55,34 @@ bool testCbor()
     cborUInt64( 1000000000000 ,"0x1b000000e8d4a51000" );
     cborUInt64( 18446744073709551615ULL ,"0x1bffffffffffffffff"   );
 //    cborUInt64( 18446744073709551616ULL,"0xc249010000000000000000"  );
- //   cborInt64(-18446744073709551616LL,"0x3bffffffffffffffff" );
- //   cborInt64( -18446744073709551617LL,"0xc349010000000000000000"  );
+//   cborInt64(-18446744073709551616LL,"0x3bffffffffffffffff" );
+//   cborInt64( -18446744073709551617LL,"0xc349010000000000000000"  );
     cborInt64( -1 ,"0x20");
     cborInt64( -10 ,"0x29");
     cborInt64( -100,"0x3863");
     cborInt64( -1000 ,"0x3903e7");
     cborFloat(3.4028234663852886e+38,"0xfa7f7fffff");
-    cborFloat(1.1,"0xfb3ff199999999999a");
 
-/*
-   |                              |                                    |
-   |                           |                            |
-   |                              |                                    |
-   |                       |                            |
-   |                              |                                    |
-   | 100000.0                     | 0xfa47c35000                       |
-   |                              |                                    |
-   | 3.4028234663852886e+38       | 0xfa7f7fffff                       |
-   |                              |                                    |
-   | 1.0e+300                     | 0xfb7e37e43c8800759c               |
-   |                              |                                    |
-   | 5.960464477539063e-8         | 0xf90001                           |
-   |                              |                                    |
-   | 0.00006103515625             | 0xf90400                           |
-   |                              |                                    |
-   | -4.0                         | 0xf9c400                           |
-   |                              |                                    |
-   | -4.1                         | 0xfbc010666666666666
-*/
+    /*
+       |                              |                                    |
+       |                           |                            |
+       |                              |                                    |
+       |                       |                            |
+       |                              |                                    |
+       | 100000.0                     | 0xfa47c35000                       |
+       |                              |                                    |
+       | 3.4028234663852886e+38       | 0xfa7f7fffff                       |
+       |                              |                                    |
+       | 1.0e+300                     | 0xfb7e37e43c8800759c               |
+       |                              |                                    |
+       | 5.960464477539063e-8         | 0xf90001                           |
+       |                              |                                    |
+       | 0.00006103515625             | 0xf90400                           |
+       |                              |                                    |
+       | -4.0                         | 0xf9c400                           |
+       |                              |                                    |
+       | -4.1                         | 0xfbc010666666666666
+    */
     cbor.clear();
     cbor.add(true);
     cbor.add(1234);
@@ -137,10 +136,72 @@ bool testCbor()
     return true;
 }
 
+
+#include "Slip.h"
+bool testSlip()
+{
+    Slip bytes(100);
+
+    for (int i = 0; i < 254; i++)
+    {
+        bytes.clear();
+        bytes.write((uint8_t) i);
+        bytes.write((uint8_t) i + 1);
+        bytes.write((uint8_t) i + 2);
+        bytes.encode();
+        bytes.addCrc();
+        if (bytes.isGoodCrc())
+        {
+            bytes.removeCrc();
+            bytes.decode();
+            bytes.offset(0);
+            if (i != bytes.read())
+                return false;
+            if ((i + 1) != bytes.read())
+                return false;
+            if ((i + 2) != bytes.read())
+                return false;
+        }
+        else
+            return false;
+    }
+    return true;
+}
+
+#include "Slip.h"
+
+bool slipTest()
+{
+    Slip slip(512);
+    for(int i=0; i< 256; i++) slip.write(i);
+    slip.addCrc();
+    slip.encode();
+    slip.decode();
+    if ( slip.isGoodCrc() == false )
+    {
+        INFO(" Invalid CRC on buffer ");
+        return false;
+    }
+    for(int i=0; i< 256; i++)
+    {
+        uint8_t b = slip.read();
+        if ( b != i )
+        {
+            INFO(" Slip data changed ");
+            return false;
+        }
+    }
+    return true;
+}
+
+
 int main()
 {
-    printf("Testing Cbor...\n");
+    INFO("Testing Cbor...");
     if ( testCbor())    INFO("Test OK.");
+    else INFO("Test Failed !!.");
+    INFO("Testing Slip...");
+    if ( testSlip())    INFO("Test OK.");
     else INFO("Test Failed !!.");
     return 0;
 }

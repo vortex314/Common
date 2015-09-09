@@ -39,10 +39,14 @@ void Sys::log(const char* file, const char* function, const char * format, ...) 
 	va_start(args, format);
 	vsnprintf(buffer, 256, format, args);
 	va_end(args);
-	char dst[30];
+	char dst[50];
+	#ifdef __ESP8266__
 	dst[0]='\0';
 	strAlign(dst, 15, file, strlen(file));
 	strAlign(&dst[15], 15, function, strlen(function));
+	#else
+	sprintf(dst,"%20.20s - %15.15s",file,function);
+	#endif
 	printf("%06d.%03d | %s | %s\r\n", time / 1000, time % 1000, dst,
 			buffer);
 }
