@@ -1,27 +1,37 @@
 #ifndef CBOR_H
 #define CBOR_H
 #include "Bytes.h"
-#include "Packer.h"
+//#include "Packer.h"
 #include "Str.h"
 #include "errno.h"
 #include <cstdarg>
 #include "platform.h"
-/*
-typedef enum {
-	P_PINT = 0, P_NINT, P_BYTES, P_STRING, P_ARRAY, P_MAP, P_TAG, P_SPECIAL = 7, // major types
-	P_BOOL,
-	P_FLOAT,
-	P_DOUBLE,
-	P_BREAK,
-	P_NILL,
-	P_ERROR
-} // minor additional types
-CborType;
-*/
+
+
 
 class Cbor: public Bytes
 {
 public:
+    typedef union CborVariant
+    {
+        uint64_t _uint64;
+        int64_t _int64;
+        double _double;
+        float _float;
+        bool _bool;
+        int _length;
+    } CborVariant;
+    typedef enum
+    {
+        P_PINT = 0, P_NINT, P_BYTES, P_STRING, P_ARRAY, P_MAP, P_TAG, P_SPECIAL = 7, // major types
+        P_BOOL,
+        P_FLOAT,
+        P_DOUBLE,
+        P_BREAK,
+        P_NILL,
+        P_ERROR
+    } // minor additional types
+    PackType;
     Cbor();
     Cbor(uint32_t size);
     ~Cbor();
@@ -61,7 +71,7 @@ public:
     bool get(Str& str);
 
 
-    Erc readToken(PackType& type,Variant& variant);
+    Erc readToken(PackType& type,CborVariant& variant);
     Erc toString(Str& str);
     Bytes& bytes()
     {

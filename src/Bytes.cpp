@@ -74,13 +74,14 @@ Bytes::Bytes(Bytes& src) {
 	isMemoryOwner = true;
 }
 
-void Bytes::clone(Bytes& src) {
+Bytes& Bytes::clone(Bytes& src) {
 	myMemcpy(_start, src._start, _capacity);
 	_offset = 0;
 	_limit = (_capacity > src._limit) ? src._limit : _capacity;
+	return *this;
 }
 
-void Bytes::sub(Bytes* parent, uint32_t length) {
+Bytes& Bytes::sub(Bytes* parent, uint32_t length) {
 	_start = parent->_start + parent->_offset;
 	_offset = 0;
 	if (length <= (parent->_capacity - parent->_offset))
@@ -89,6 +90,7 @@ void Bytes::sub(Bytes* parent, uint32_t length) {
 		_limit = parent->_capacity - parent->_offset;
 	_capacity = _limit;
 	isMemoryOwner = false;
+	return *this;
 }
 
 Bytes& Bytes::append(Bytes& b) {
@@ -118,11 +120,12 @@ Bytes& Bytes::operator=(const char* s) {
 
 
 
-void Bytes::move(int32_t dist) {
+Bytes& Bytes::move(int32_t dist) {
 	if ((_offset + dist) > _limit)
 		_offset = _limit;
 	else
 		_offset += dist;
+		return *this;
 }
 
 /* ByteBuffer::ByteBuffer(ByteBuffer& in) {
@@ -223,9 +226,10 @@ uint8_t Bytes::read() {
 	return '-';
 }
 
-void Bytes::clear() {
+Bytes& Bytes::clear() {
 	_offset = 0;
 	_limit = 0;
+	return *this;
 }
 
 bool Bytes::equals(const uint8_t* pb,uint32_t length){

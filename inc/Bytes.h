@@ -29,10 +29,10 @@ public:
 	void map(uint8_t* start, uint32_t size);
 	Bytes(Bytes& in);
 	~Bytes();
-	void clone(Bytes& src);
+	Bytes& clone(Bytes& src);
 //    void map(uint8_t *start, uint32_t size);
-	void sub(Bytes* parent, uint32_t length);
-	void copy(Bytes* from);
+	Bytes& sub(Bytes* parent, uint32_t length);
+	Bytes& copy(Bytes* from);
 	Bytes& operator=(Bytes& src);
 	Bytes& operator=(const char* s);
 	Bytes& append(Bytes& src);
@@ -44,7 +44,7 @@ public:
 	int available();
 	int offset(int32_t offset);
 	int offset();
-	void move(int32_t distance);
+	Bytes& move(int32_t distance);
 	Erc insert(uint32_t offset, Bytes* data);
 	uint8_t *data() const;
 
@@ -64,7 +64,7 @@ public:
 	Erc write(uint8_t value);
 	Erc write(uint8_t* data, int offset, int length);
 	Erc write(Bytes* data);
-	void clear();
+	Bytes& clear();
 
 	void AddCrc();
 	void RemoveCrc();
