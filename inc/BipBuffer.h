@@ -26,21 +26,21 @@ private:
 public:
 	BipBuffer() ;
 	~BipBuffer() ;
-	bool AllocateBuffer(int buffersize);
-	void Clear() ;
-	void FreeBuffer() ;
-	uint8_t* Reserve(int size, int& reserved);
-	void Commit(int size);
-	uint8_t* GetContiguousBlock(uint32_t& size);
-	void DecommitBlock(int size);
-	int GetCommittedSize() const ;
-	int GetReservationSize() const;
-	int GetBufferSize() const;
-	bool IsInitialized() const;
+	bool allocateBuffer(int buffersize);
+	void clear() ;
+	void freeBuffer() ;
+	uint8_t* reserve(int size, int& reserved);
+	void commit(int size);
+	uint8_t* getContiguousBlock(uint32_t& size);
+	void decommitBlock(int size);
+	int getCommittedSize() const ;
+	int getReservationSize() const;
+	int getBufferSize() const;
+	bool isInitialized() const;
 private:
-	int GetSpaceAfterA() const ;
+	int getSpaceAfterA() const ;
 
-	int GetBFreeSpace() const ;
+	int getBFreeSpace() const ;
 };
 
 

@@ -105,7 +105,7 @@ bool testCbor()
     Str str2(100);
     Bytes bytes2(100);
     INFO("Reading from cbor.scanf ");
-    if ( cbor.scanf("isuSB",&i,s,&ui,&str2,&bytes2) ) INFO("scanf succeeded.");
+    if ( cbor.scanf("isuSB",&i,s,100,&ui,&str2,&bytes2) ) INFO("scanf succeeded.");
     else INFO("scanf failed.");
     INFO("%d %s %u %s ",i,s,ui,str2.c_str());
     str2.clear();
@@ -125,7 +125,7 @@ bool testCbor()
             break;
         };
         cbor.offset(0);
-        if ( cbor.scanf("isuSB",&i,s,&ui,&str2,&bytes2)==false)
+        if ( cbor.scanf("isuSB",&i,s,100,&ui,&str2,&bytes2)==false)
         {
             INFO("scanf fails");
             break;
@@ -194,9 +194,51 @@ bool slipTest()
     return true;
 }
 
+#include "Msg.h"
+
+bool testMsg()
+{
+    Msg::init();
+
+    Msg msg(0);
+    int max=1000000;
+    INFO(" testing Msg times : %d",max);
+    for(int i=0; i<max; i++)
+    {
+        msg.alloc(100).add(i).add("Hi").add(0xDEADBEEF);
+        msg.send();
+
+        msg.alloc(100) << i+1 << "Hi" << 0xDEADBEEF; // .add(i+1).add("Hi").add(0xDEADBEEF)
+        msg.send();
+
+        uint32_t j;
+        char str[10];
+
+        msg.receive().get(j);
+        if ( j != i) return false;
+        msg.get(str,10);
+        if ( strcmp("Hi",str)!=0) return false;
+        msg.get(j);
+        if ( j != 0xDEADBEEF) return false;
+        msg.free();
+
+        msg.receive().get(j);
+        if ( j != i+1) return false;
+        msg.get(str,10);
+        if ( strcmp("Hi",str)!=0) return false;
+        msg.get(j);
+        if ( j != 0xDEADBEEF) return false;
+        msg.free();
+    }
+    return true;
+}
+
 
 int main()
 {
+    INFO("Testing Msg...");
+    if ( testMsg())    INFO("Test OK.");
+    else INFO("Test Failed !!.");
     INFO("Testing Cbor...");
     if ( testCbor())    INFO("Test OK.");
     else INFO("Test Failed !!.");
@@ -205,3 +247,4 @@ int main()
     else INFO("Test Failed !!.");
     return 0;
 }
+

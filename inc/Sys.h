@@ -9,6 +9,8 @@
 #define PERROR(erc)  Sys::log(__FILE__, __PRETTY_FUNCTION__ ,"errno : %",erc)
 // ---------------------- LINUX ------------------------------
 #ifdef __linux__
+#define IRAM
+#define IROM
 #endif
 // ---------------------- ESP8266 ----------------------------
 #ifdef __ESP8266__

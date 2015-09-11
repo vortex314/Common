@@ -41,6 +41,8 @@ public:
         return add(i);
     }
     Cbor& add(int i);
+    Cbor& operator<<(int i);
+    Cbor& operator<<(const char *s);
     Cbor& add(uint32_t i);
     Cbor& add(float f);
     Cbor& add(double d);
@@ -66,7 +68,7 @@ public:
     bool get(float& f);
     bool get(double& d);
     bool get(int32_t& i);
-    bool get(char*s );
+    bool get(char*s,int length );
     bool get(Bytes& bytes);
     bool get(Str& str);
 

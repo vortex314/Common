@@ -11,17 +11,18 @@
 
 //#include "Event.h"
 
-typedef enum Signal {
-	SIG_INIT , SIG_IDLE , SIG_ERC ,
+typedef enum Signal
+{
+    SIG_INIT , SIG_IDLE , SIG_ERC ,
 //	SIG_TIMEOUT = 1 << 3,
-	SIG_TICK ,
-	SIG_CONNECTED ,
-	SIG_DISCONNECTED ,
-	SIG_RXD ,
-	SIG_TXD ,
-	SIG_START ,
-	SIG_STOP ,
-	SIG_DO
+    SIG_TICK ,
+    SIG_CONNECTED ,
+    SIG_DISCONNECTED ,
+    SIG_RXD ,
+    SIG_TXD ,
+    SIG_START ,
+    SIG_STOP ,
+    SIG_DO
 
 } Signal;
 
@@ -39,33 +40,29 @@ class Handler;
 #include "Bytes.h"
 #include "BipBuffer.h"
 
+#include "Cbor.h"
 
-
-class Msg {
+class Msg : public Cbor
+{
+    private :
+    static BipBuffer* _bb;
 public:
-	Handler* src;
-	Signal signal;
-	int param;
-	void* data;
-//	Msg();
-	bool is(Handler * src, int sigMask, int param, void* data);
-	bool is(Handler * src, int sigMask);
-	bool is(Handler * src, Signal signal);
-	Signal sig();
+    void* _src;
+    Signal _signal;
+    uint8_t* _start;
+    uint32_t _size; // includes 2 first bytes length
+    Msg(uint32_t size);
+    bool is(void * src, Signal signal);
+    bool is(void * src, Signal signal,int v1,int v2);
+    static bool init();
+    Msg& alloc(int size);
+    Msg& send();
+    Msg& receive();
+    Msg& free();
+    Signal sig();
+    void* src();
 };
 
-class MsgQueue {
-private:
-	static BipBuffer bb;
-public:
-
-public:
-	static void publish(Msg& msg);
-	static void publishFromIsr(Msg& msg);
-	static void publish(Handler* src, Signal signal);
-	static void publish(Handler* src, Signal signal, int param, void* data);
-	static bool get(Msg& msg);
-};
 #endif
 
 #endif /* SIG_H_ */

@@ -112,7 +112,7 @@ IROM bool Cbor::get(double& d)
     if (readToken(type, v) != E_OK)
         return false;
     if (type == P_SPECIAL && v._int64 == 27 )
-     {
+    {
         for (int i = 7; i >= 0; i--)
             b[i]= read();
         d = f;
@@ -153,7 +153,7 @@ IROM bool Cbor::get(Str& str)
     return false;
 }
 
-IROM bool Cbor::get(char* s )
+IROM bool Cbor::get(char* s ,int length)
 {
     CborVariant v;
     PackType type;
@@ -162,8 +162,11 @@ IROM bool Cbor::get(char* s )
     if (type == P_STRING)
     {
 //		map(data() + offset(), v._length);
-        for (int i = 0; i < v._length; i++)
-            *s++ = read(); // skip data
+        for (int i = 0; i < v._length ; i++)
+            if ( i < length )
+                *s++ = read();
+            else
+                read(); // skip data
         *s='\0';
         return true;
     }
@@ -485,6 +488,10 @@ IROM Erc Cbor::toString(Str& str)
 
  }*/
 
+ IROM Cbor& Cbor::operator<<(int i){
+     return add(i);
+ }
+
 IROM Cbor& Cbor::add(int32_t i)
 {
     if (i >= 0)
@@ -553,6 +560,10 @@ IROM Cbor& Cbor::add(const char* s)
     for (uint32_t i = 0; i < size; i++)
         write(*s++);
     return *this;
+}
+
+IROM Cbor& Cbor::operator<<(const char* s){
+return add(s);
 }
 
 IROM Cbor& Cbor::add(uint64_t i64)
@@ -758,7 +769,8 @@ IROM bool Cbor::scanf(const char *fmt, ...)
         else if (*fmt == 's')
         {
             char * s = va_arg(args, char*);
-            if ( get(s) == false ) return false;
+            int length = va_arg(args, int);
+            if ( get(s,length) == false ) return false;
         }
         else if (*fmt == 'b')
         {
