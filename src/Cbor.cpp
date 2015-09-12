@@ -572,6 +572,10 @@ IROM Cbor& Cbor::add(uint64_t i64)
     return *this;
 }
 
+IROM Cbor& Cbor::operator<<(uint64_t ull){
+return add(ull);
+}
+
 IROM Cbor& Cbor::add(int64_t i64)
 {
     if (i64 >= 0)

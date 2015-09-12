@@ -205,30 +205,39 @@ bool testMsg()
     INFO(" testing Msg times : %d",max);
     for(int i=0; i<max; i++)
     {
-        msg.alloc(100).add(i).add("Hi").add(0xDEADBEEF);
+        msg.create(&msg,SIG_RXD).add(i).add("Hi").add(0xDEADBEEF);
         msg.send();
 
-        msg.alloc(100) << i+1 << "Hi" << 0xDEADBEEF; // .add(i+1).add("Hi").add(0xDEADBEEF)
+        msg.create(&msg,SIG_TXD) << i+1 << "Hi" << 0xDEADBEEF; // .add(i+1).add("Hi").add(0xDEADBEEF)
         msg.send();
+
+        msg.create(&msg,SIG_RXD).add(i).add("Hi").add(0xDEADBEEF);
+        msg.send();
+
+        msg.create(&msg,SIG_TXD) << i+1 << "Hi" << 0xDEADBEEF; // .add(i+1).add("Hi").add(0xDEADBEEF)
+        msg.send();
+
+        msg.create(&msg,SIG_TXD).addf("isu",i, "Hi", 0xDEADBEEF); // .add(i+1).add("Hi").add(0xDEADBEEF)
+        msg.send();
+
+
+
+//       msg.alloc(&msg,SIG_CONNECTED).addf("isu",i,"Hi",0xDEADBEEF);
+//       msg.send();
 
         uint32_t j;
         char str[10];
 
-        msg.receive().get(j);
-        if ( j != i) return false;
-        msg.get(str,10);
-        if ( strcmp("Hi",str)!=0) return false;
-        msg.get(j);
-        if ( j != 0xDEADBEEF) return false;
-        msg.free();
-
-        msg.receive().get(j);
-        if ( j != i+1) return false;
-        msg.get(str,10);
-        if ( strcmp("Hi",str)!=0) return false;
-        msg.get(j);
-        if ( j != 0xDEADBEEF) return false;
-        msg.free();
+        while ( msg.receive())
+        {
+            msg.get(j);
+            if ( j != i &&  j != i+1  ) return false;
+            msg.get(str,10);
+            if ( strcmp("Hi",str)!=0) return false;
+            msg.get(j);
+            if ( j != 0xDEADBEEF) return false;
+            msg.free();
+        }
     }
     return true;
 }
@@ -247,4 +256,6 @@ int main()
     else INFO("Test Failed !!.");
     return 0;
 }
+
+
 

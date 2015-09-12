@@ -51,13 +51,17 @@ public:
     Signal _signal;
     uint8_t* _start;
     uint32_t _size; // includes 2 first bytes length
+    uint32_t _offset;
+
+
     Msg(uint32_t size);
     bool is(void * src, Signal signal);
     bool is(void * src, Signal signal,int v1,int v2);
     static bool init();
-    Msg& alloc(int size);
+    Msg& create(void * src, Signal signal);
+    Msg& rewind();
     Msg& send();
-    Msg& receive();
+    bool receive();
     Msg& free();
     Signal sig();
     void* src();

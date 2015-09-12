@@ -43,6 +43,7 @@ public:
     Cbor& add(int i);
     Cbor& operator<<(int i);
     Cbor& operator<<(const char *s);
+    Cbor& operator<<(uint64_t l);
     Cbor& add(uint32_t i);
     Cbor& add(float f);
     Cbor& add(double d);

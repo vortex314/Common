@@ -62,13 +62,15 @@ bool Msg::init()
     return false;
 }
 
-Msg& Msg::alloc(int size)
+Msg& Msg::create(void* src,Signal signal)
 {
-    _size=size+2;
+    _size=512+2;
     int reserved;
     if ( (_start =  _bb->reserve((int)_size,reserved)))
     {
-        map(_start+2,reserved);
+        map(_start+2,reserved-2);
+        add((uint64_t)src);
+        add(signal);
     }
     return *this;
 }
@@ -86,17 +88,25 @@ Msg& Msg::send()
 
 
 
-Msg& Msg::receive()
+bool Msg::receive()
 {
     _size=512;
     _start=_bb->getContiguousBlock(_size);
+    if ( _size == 0 ) return false;
     _size = *_start;     // Big endian write of 16 bit size
     _size <<=8;
     _size += *(_start+1);
  //   _start =_bb->getContiguousBlock(_size);
     map(_start+2,_size-2);
-    get(_src);
-    get(_signal);
+    get((uint64_t&)_src);
+    get((int&)_signal);
+    _offset = offset();
+    return true;
+}
+
+Msg& Msg::rewind()
+{
+    offset(_offset);
     return *this;
 }
 
