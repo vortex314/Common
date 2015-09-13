@@ -5,7 +5,7 @@
 #include "Str.h"
 #include "errno.h"
 #include <cstdarg>
-#include "platform.h"
+#include "Sys.h"
 
 
 
@@ -40,38 +40,38 @@ public:
     {
         return add(i);
     }
-    Cbor& add(int i);
-    Cbor& operator<<(int i);
-    Cbor& operator<<(const char *s);
-    Cbor& operator<<(uint64_t l);
-    Cbor& add(uint32_t i);
-    Cbor& add(float f);
-    Cbor& add(double d);
-    Cbor& add(Bytes& b);
-    Cbor& add(Str& str);
-    Cbor& add(const char* s);
-    Cbor& add(uint64_t i64);
-    Cbor& add(int64_t i64);
-    Cbor& add(bool b);
-    Cbor& addMap(int size);
-    Cbor& addArray(int size);
-    Cbor& addTag(int nr);
-    Cbor& addBreak();
-    Cbor& addNull();
+     Cbor& add(int i);
+     Cbor& operator<<(int i);
+     Cbor& operator<<(const char *s);
+     Cbor& operator<<(uint64_t l);
+     Cbor& add(uint32_t i);
+     Cbor& add(float f);
+     Cbor& add(double d);
+     Cbor& add(Bytes& b);
+     Cbor& add(Str& str);
+     Cbor& add(const char* s);
+     Cbor& add(uint64_t i64);
+     Cbor& add(int64_t i64);
+     Cbor& add(bool b);
+     Cbor& addMap(int size);
+     Cbor& addArray(int size);
+     Cbor& addTag(int nr);
+     Cbor& addBreak();
+     Cbor& addNull();
 
-    bool addf(const char *fmt,...);
-    bool scanf(const char* fmt,... );
-    void sprintf(Str& s);
+     bool addf(const char *fmt,...);
+     bool scanf(const char* fmt,... );
+     void sprintf(Str& s);
 
-    bool get(bool& bl);
-    bool get(uint32_t& i);
-    bool get(uint64_t& l);
-    bool get(float& f);
-    bool get(double& d);
-    bool get(int32_t& i);
-    bool get(char*s,int length );
-    bool get(Bytes& bytes);
-    bool get(Str& str);
+     bool get(bool& bl);
+     bool get(uint32_t& i);
+     bool get(uint64_t& l);
+     bool get(float& f);
+     bool get(double& d);
+     bool get(int32_t& i);
+     bool get(char*s,int length );
+     bool get(Bytes& bytes);
+     bool get(Str& str);
 
 
     Erc readToken(PackType& type,CborVariant& variant);
