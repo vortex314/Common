@@ -45,7 +45,10 @@ void Sys::log(const char* file, const char* function, const char * format, ...) 
 	strAlign(dst, 15, file, strlen(file));
 	strAlign(&dst[15], 15, function, strlen(function));
 	#else
-	sprintf(dst,"%20.20s - %15.15s",file,function);
+	const char *ps = strrchr(file,'/');
+	const char *pf=strchr(function,' ');
+//	pf  = strchr(pf,'(');
+	sprintf(dst,"%10.10s - %10.10s",ps+1,pf+1);
 	#endif
 	printf("%06d.%03d | %s | %s\r\n", time / 1000, time % 1000, dst,
 			buffer);

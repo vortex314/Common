@@ -30,6 +30,20 @@ bool Msg::is(void* src, Signal signal)
     return false;
 }
 
+bool Msg::is(void* src, Signal signal,int v)
+{
+    if (signal==0 || signal == _signal)
+    {
+        if (src == 0 || src == _src)
+        {
+            rewind();
+            int _v;
+            if ( get(_v) && _v == v ) return true;
+        }
+    }
+    return false;
+}
+
 Signal Msg::sig()
 {
     return _signal;
@@ -86,6 +100,19 @@ Msg& Msg::send()
     return *this;
 }
 
+void Msg::publish(void* src,Signal signal)
+{
+    Msg msg(0);
+    msg.create(src,signal).send();
+}
+
+void Msg::publish(void* src,Signal signal,int par)
+{
+    Msg msg(0);
+    msg.create(src,signal) << par;
+    msg.send();
+}
+
 
 
 bool Msg::receive()
@@ -96,7 +123,7 @@ bool Msg::receive()
     _size = *_start;     // Big endian write of 16 bit size
     _size <<=8;
     _size += *(_start+1);
- //   _start =_bb->getContiguousBlock(_size);
+//   _start =_bb->getContiguousBlock(_size);
     map(_start+2,_size-2);
     get((uint64_t&)_src);
     get((int&)_signal);
@@ -115,5 +142,7 @@ Msg& Msg::free()
     _bb->decommitBlock(_size);
     return *this;
 }
+
+
 
 

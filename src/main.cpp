@@ -199,11 +199,11 @@ bool slipTest()
 bool testMsg()
 {
     Msg::init();
-
+        uint32_t messageCount=0;
     Msg msg(0);
-    int max=1000000;
+    uint32_t max=200000;
     INFO(" testing Msg times : %d",max);
-    for(int i=0; i<max; i++)
+    for(uint32_t i=0; i<max; i++)
     {
         msg.create(&msg,SIG_RXD).add(i).add("Hi").add(0xDEADBEEF);
         msg.send();
@@ -228,8 +228,10 @@ bool testMsg()
         uint32_t j;
         char str[10];
 
+
         while ( msg.receive())
         {
+            messageCount++;
             msg.get(j);
             if ( j != i &&  j != i+1  ) return false;
             msg.get(str,10);
@@ -239,12 +241,25 @@ bool testMsg()
             msg.free();
         }
     }
+    INFO(" messages processed : %d ",messageCount);
     return true;
 }
 
+#include "CircBuf.h"
+
+bool testCircBuf(){
+    CircBuf cb(1000);
+    for(uint32_t i=0;i<256;i++) cb.write(i);
+    for(uint32_t i=0;i<256;i++) {
+        if ( cb.read() != i ) return false;
+    }
+    return true;
+}
 
 int main()
 {
+    INFO("Testing CircBuf...");
+    if ( testCircBuf())    INFO("Test OK.");
     INFO("Testing Msg...");
     if ( testMsg())    INFO("Test OK.");
     else INFO("Test Failed !!.");

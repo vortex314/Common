@@ -44,7 +44,7 @@ class Handler;
 
 class Msg : public Cbor
 {
-    private :
+private :
     static BipBuffer* _bb;
 public:
     void* _src;
@@ -56,9 +56,11 @@ public:
 
     Msg(uint32_t size);
     bool is(void * src, Signal signal);
-    bool is(void * src, Signal signal,int v1,int v2);
+    bool is(void * src, Signal signal,int v1);
     static bool init();
     Msg& create(void * src, Signal signal);
+    static void publish(void * src, Signal signal);
+    static void publish(void * src, Signal signal,int par);
     Msg& rewind();
     Msg& send();
     bool receive();
