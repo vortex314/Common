@@ -11,12 +11,12 @@
 #else
 //#include "new.h"
 #endif
-void myMemcpy(uint8_t *dst, uint8_t* src, int length) {
+IROM void myMemcpy(uint8_t *dst, uint8_t* src, int length) {
 	for (int i = 0; i < length; i++)
 		dst[i] = src[i];
 }
 
-Bytes::Bytes() {
+IROM Bytes::Bytes() {
 	_start = 0;
 	_offset = 0;
 	_limit = 0;
@@ -24,7 +24,7 @@ Bytes::Bytes() {
 	isMemoryOwner = false;
 }
 
-Bytes::Bytes(uint8_t *st, uint32_t length) {
+IROM Bytes::Bytes(uint8_t *st, uint32_t length) {
 	_start = st;
 	_offset = 0;
 	_limit = length;
@@ -32,7 +32,7 @@ Bytes::Bytes(uint8_t *st, uint32_t length) {
 	isMemoryOwner = false;
 }
 
-void Bytes::map(uint8_t* st, uint32_t length) {
+IROM void Bytes::map(uint8_t* st, uint32_t length) {
 	_start = st;
 	_offset = 0;
 	_limit = length;
@@ -48,7 +48,7 @@ void Bytes::map(uint8_t* st, uint32_t length) {
  isMemoryOwner = false;
  }*/
 
-Bytes::Bytes(uint32_t size) {
+IROM Bytes::Bytes(uint32_t size) {
 	_start = 0;
 	if (size > 0) {
 		_start = (uint8_t*)malloc(size); // (uint8_t*) Sys::malloc(size);
@@ -60,12 +60,12 @@ Bytes::Bytes(uint32_t size) {
 	isMemoryOwner = true;
 }
 
-Bytes::~Bytes() {
+IROM Bytes::~Bytes() {
 	if (isMemoryOwner)
 		if ( _start)
 		free( _start);
 }
-Bytes::Bytes(Bytes& src) {
+IROM Bytes::Bytes(Bytes& src) {
 	_start = (uint8_t*)malloc(src._capacity);
 	_offset = 0;
 	_limit = src._limit;
@@ -74,14 +74,14 @@ Bytes::Bytes(Bytes& src) {
 	isMemoryOwner = true;
 }
 
-Bytes& Bytes::clone(Bytes& src) {
+IROM Bytes& Bytes::clone(Bytes& src) {
 	myMemcpy(_start, src._start, _capacity);
 	_offset = 0;
 	_limit = (_capacity > src._limit) ? src._limit : _capacity;
 	return *this;
 }
 
-Bytes& Bytes::sub(Bytes* parent, uint32_t length) {
+IROM Bytes& Bytes::sub(Bytes* parent, uint32_t length) {
 	_start = parent->_start + parent->_offset;
 	_offset = 0;
 	if (length <= (parent->_capacity - parent->_offset))
@@ -93,14 +93,14 @@ Bytes& Bytes::sub(Bytes* parent, uint32_t length) {
 	return *this;
 }
 
-Bytes& Bytes::append(Bytes& b) {
+IROM Bytes& Bytes::append(Bytes& b) {
 	b.offset(0);
 	while (b.hasData())
 		write(b.read());
 	return *this;
 }
 
-Bytes& Bytes::append(const char s[]) {
+IROM Bytes& Bytes::append(const char s[]) {
 	while (*s != '\0') {
 		write((uint8_t) (*s));
 		s++;
@@ -108,7 +108,7 @@ Bytes& Bytes::append(const char s[]) {
 	return *this;
 }
 
-Bytes& Bytes::operator=(Bytes& s) {
+IROM Bytes& Bytes::operator=(Bytes& s) {
 	clear();
 	return append(s);
 }
@@ -120,7 +120,7 @@ Bytes& Bytes::operator=(const char* s) {
 
 
 
-Bytes& Bytes::move(int32_t dist) {
+IROM Bytes& Bytes::move(int32_t dist) {
 	if ((_offset + dist) > _limit)
 		_offset = _limit;
 	else
@@ -136,19 +136,19 @@ Bytes& Bytes::move(int32_t dist) {
  isMemoryOwner = false;
  }*/
 
-uint8_t* Bytes::data() const {
+IROM uint8_t* Bytes::data() const {
 	return _start;
 }
 
-int Bytes::capacity() {
+IROM int Bytes::capacity() {
 	return _capacity;
 }
 
-uint32_t Bytes::length() const {
+IROM uint32_t Bytes::length() const {
 	return _limit;
 }
 
-int Bytes::offset(int32_t pos) {
+IROM int Bytes::offset(int32_t pos) {
 	if (pos < 0)
 		_offset = _limit;
 	else if ((uint32_t) pos < _capacity)
@@ -156,7 +156,7 @@ int Bytes::offset(int32_t pos) {
 	return 0;
 }
 
-Erc Bytes::insert(uint32_t offset, Bytes* data) {
+IROM Erc Bytes::insert(uint32_t offset, Bytes* data) {
 	if (data->_limit + _limit > _capacity)
 		return E_LACK_RESOURCE;
 	if (offset > _limit)
@@ -172,24 +172,24 @@ Erc Bytes::insert(uint32_t offset, Bytes* data) {
 	return E_OK;
 }
 
-int Bytes::offset() {
+IROM int Bytes::offset() {
 	return _offset;
 }
 
-int Bytes::length(int l) {
+IROM int Bytes::length(int l) {
 	_offset = 0;
 	_limit = l;
 	return 0;
 }
 
-int Bytes::available() {
+IROM int Bytes::available() {
 	if (_offset < _limit)
 		return _limit - _offset;
 	else
 		return 0;
 }
 
-Erc Bytes::write(uint8_t value) {
+IROM Erc Bytes::write(uint8_t value) {
 	if (_offset < _capacity) {
 		_start[_offset++] = value;
 		_limit = _offset;
@@ -198,7 +198,7 @@ Erc Bytes::write(uint8_t value) {
 	return 0;
 }
 
-Erc Bytes::write(uint8_t* data, int offset, int length) {
+IROM Erc Bytes::write(uint8_t* data, int offset, int length) {
 	for (int i = 0; i < length; i++) {
 		int erc;
 		erc = write(data[offset + i]);
@@ -208,11 +208,11 @@ Erc Bytes::write(uint8_t* data, int offset, int length) {
 	return 0;
 }
 
-Erc Bytes::write(Bytes* data) {
+IROM Erc Bytes::write(Bytes* data) {
 	return write(data->_start, 0, data->_limit);
 }
 
-Erc Bytes::read(uint8_t* data) {
+IROM Erc Bytes::read(uint8_t* data) {
 	if (_offset < _limit)
 		*data = _start[_offset++];
 	else
@@ -220,19 +220,19 @@ Erc Bytes::read(uint8_t* data) {
 	return 0;
 }
 
-uint8_t Bytes::read() {
+IROM uint8_t Bytes::read() {
 	if (_offset < _limit)
 		return _start[_offset++];
 	return '-';
 }
 
-Bytes& Bytes::clear() {
+IROM Bytes& Bytes::clear() {
 	_offset = 0;
 	_limit = 0;
 	return *this;
 }
 
-bool Bytes::equals(const uint8_t* pb,uint32_t length){
+IROM bool Bytes::equals(const uint8_t* pb,uint32_t length){
 	if ( length != _limit ) return false;
 	for(uint32_t i=0;i<length;i++){
 		if ( _start[i] != pb[i]) return false;
@@ -241,31 +241,31 @@ bool Bytes::equals(const uint8_t* pb,uint32_t length){
 }
 
 
-int Bytes::poke(uint32_t idx, uint8_t b) {
+IROM int Bytes::poke(uint32_t idx, uint8_t b) {
 	if (idx > _limit)
 		return E_LACK_RESOURCE;
 	_start[idx] = b;
 	return 0;
 }
 
-int Bytes::peek() {
+IROM int Bytes::peek() {
 	return _start[_offset];
 }
 
-int Bytes::peek(int32_t offset) {
+IROM int Bytes::peek(int32_t offset) {
 	return _start[offset];
 }
 
-bool Bytes::hasData() {
+IROM bool Bytes::hasData() {
 	return _offset < _limit;
 }
 
-bool Bytes::hasSpace() {
+IROM bool Bytes::hasSpace() {
 	return _limit < _capacity;
 }
 const char *HEX = "0123456789ABCDEF";
 #include "Str.h"
-void Bytes::toString(Str& str) {
+IROM void Bytes::toString(Str& str) {
 	uint32_t i;
 	uint8_t b;
 	for (i = 0; i < _limit; i++) {

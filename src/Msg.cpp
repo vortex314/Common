@@ -12,7 +12,7 @@
 
 #define ENVELOPE_SIZE	sizeof(Msg)
 
-Msg::Msg(uint32_t size) : Cbor(size)
+IROM Msg::Msg(uint32_t size) : Cbor(size)
 {
     _signal = SIG_IDLE;
     _src=0;
@@ -44,7 +44,7 @@ bool Msg::is(void* src, Signal signal,int v)
     return false;
 }
 
-Signal Msg::sig()
+Signal Msg::signal()
 {
     return _signal;
 }
@@ -65,7 +65,7 @@ void* Msg::src()
 
 BipBuffer* Msg::_bb;
 
-bool Msg::init()
+IROM bool Msg::init()
 {
     if (!_bb)
     {
@@ -76,7 +76,7 @@ bool Msg::init()
     return false;
 }
 
-Msg& Msg::create(void* src,Signal signal)
+IROM Msg& Msg::create(void* src,Signal signal)
 {
     _size=512+2;
     int reserved;
@@ -89,7 +89,7 @@ Msg& Msg::create(void* src,Signal signal)
     return *this;
 }
 
-Msg& Msg::send()
+IROM Msg& Msg::send()
 {
     uint32_t size=length()+2;
 
@@ -100,13 +100,13 @@ Msg& Msg::send()
     return *this;
 }
 
-void Msg::publish(void* src,Signal signal)
+IROM void Msg::publish(void* src,Signal signal)
 {
     Msg msg(0);
     msg.create(src,signal).send();
 }
 
-void Msg::publish(void* src,Signal signal,int par)
+IROM void Msg::publish(void* src,Signal signal,int par)
 {
     Msg msg(0);
     msg.create(src,signal) << par;

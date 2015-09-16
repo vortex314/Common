@@ -148,7 +148,7 @@ PINGING:
             timeout(TIME_WAIT_REPLY);
             PT_YIELD_UNTIL(
                 (msg.is(&_link ,SIG_RXD,MQTT_MSG_PINGRESP) || timeout()));
-            if (msg.sig() == SIG_RXD)
+            if (msg.signal() == SIG_RXD)
                 goto PING_SLEEP;
         }
         goto DISCONNECTED;

@@ -31,7 +31,7 @@ void *memcpy(void *dest, const void *src, size_t n) {
 }
 */
 
-BipBuffer::BipBuffer() :
+IROM BipBuffer::BipBuffer() :
 		pBuffer(NULL), ixa(0), sza(0), ixb(0), szb(0), buflen(0), ixResrv(0), szResrv(
 				0) {
 }
@@ -54,7 +54,7 @@ BipBuffer::~BipBuffer() {
 // Returns:
 //   bool                        true if successful, false if buffer cannot be allocated
 
-bool BipBuffer::allocateBuffer(int buffersize = 4096) {
+IROM bool BipBuffer::allocateBuffer(int buffersize = 4096) {
 	/*    if (buffersize <= 0) return false;
 
 	 if (pBuffer != NULL) FreeBuffer();
@@ -87,7 +87,7 @@ bool BipBuffer::allocateBuffer(int buffersize = 4096) {
 /// allocations.
 ///
 
-void BipBuffer::clear() {
+IROM void BipBuffer::clear() {
 	ixa = sza = ixb = szb = ixResrv = szResrv = 0;
 }
 
@@ -101,7 +101,7 @@ void BipBuffer::clear() {
 // Returns:
 //   void
 
-void BipBuffer::freeBuffer() {
+IROM void BipBuffer::freeBuffer() {
 	if (pBuffer == NULL)
 		return;
 
@@ -129,7 +129,7 @@ void BipBuffer::freeBuffer() {
 //   Can return any value from 1 to size in reserved.
 //   Will return NULL if a previous reservation has not been committed.
 
-uint8_t* BipBuffer::reserve(int size, int& reserved) {
+IROM uint8_t* BipBuffer::reserve(int size, int& reserved) {
 	// We always allocate on B if B exists; this means we have two blocks and our buffer is filling.
 	if (szb) {
 		int freespace = getBFreeSpace();
@@ -189,7 +189,7 @@ uint8_t* BipBuffer::reserve(int size, int& reserved) {
 //   Committing a size of 0 will release the reservation.
 //
 
-void BipBuffer::commit(int size) {
+IROM void BipBuffer::commit(int size) {
 	if (size == 0) {
 		// decommit any reservation
 		szResrv = ixResrv = 0;
@@ -233,7 +233,7 @@ void BipBuffer::commit(int size) {
 // Returns:
 //   uint8_t*                    pointer to the first contiguous block, or NULL if empty.
 
-uint8_t* BipBuffer::getContiguousBlock(uint32_t& size) {
+IROM uint8_t* BipBuffer::getContiguousBlock(uint32_t& size) {
 	if (sza == 0) {
 		size = 0;
 		return NULL;
@@ -254,7 +254,7 @@ uint8_t* BipBuffer::getContiguousBlock(uint32_t& size) {
 // Returns:
 //   nothing
 
-void BipBuffer::decommitBlock(int size) {
+IROM void BipBuffer::decommitBlock(int size) {
 	if (size >= sza) {
 		ixa = ixb;
 		sza = szb;
@@ -276,7 +276,7 @@ void BipBuffer::decommitBlock(int size) {
 // Returns:
 //   int                    total amount of committed data in the buffer
 
-int BipBuffer::getCommittedSize() const {
+IROM int BipBuffer::getCommittedSize() const {
 	return sza + szb;
 }
 
@@ -293,7 +293,7 @@ int BipBuffer::getCommittedSize() const {
 // Notes:
 //   A return value of 0 indicates that no space has been reserved
 
-int BipBuffer::getReservationSize() const {
+IROM int BipBuffer::getReservationSize() const {
 	return szResrv;
 }
 
@@ -307,7 +307,7 @@ int BipBuffer::getReservationSize() const {
 // Returns:
 //   int                    total size of buffer
 
-int BipBuffer::getBufferSize() const {
+IROM int BipBuffer::getBufferSize() const {
 	return buflen;
 }
 
@@ -321,15 +321,15 @@ int BipBuffer::getBufferSize() const {
 // Returns:
 //   bool                    true if the buffer has been allocated
 
-bool BipBuffer::isInitialized() const {
+IROM bool BipBuffer::isInitialized() const {
 	return pBuffer != NULL;
 }
 
-int BipBuffer::getSpaceAfterA() const {
+IROM int BipBuffer::getSpaceAfterA() const {
 	return buflen - ixa - sza;
 }
 
-int BipBuffer::getBFreeSpace() const {
+IROM int BipBuffer::getBFreeSpace() const {
 	return ixa - ixb - szb;
 }
 

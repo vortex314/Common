@@ -4,7 +4,7 @@
 #include "stdint.h"
 
 #define DEBUG(fmt,...) Sys::log(__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
-#define INFO(fmt,...)  Sys::log(__FILE__, __PRETTY_FUNCTION__ ,fmt,##__VA_ARGS__)
+#define INFO(fmt,...)  Sys::log(__FILE__,__PRETTY_FUNCTION__ ,fmt,##__VA_ARGS__)
 #define WARN(fmt,...)  Sys::log(__FILE__, __PRETTY_FUNCTION__ ,fmt,##__VA_ARGS__)
 #define PERROR(erc)  Sys::log(__FILE__, __PRETTY_FUNCTION__ ,"errno : %",erc)
 // ---------------------- LINUX ------------------------------
@@ -15,6 +15,7 @@
 // ---------------------- ESP8266 ----------------------------
 #ifdef __ESP8266__
 #define IROM __attribute__((section(".irom0.text")))
+#define IROM1 __attribute__((section(".irom01.text")))
 #define IRAM __attribute__((section(".text")))
 #define noinline __attribute__ ((noinline))
 #define attr_pure __attribute__ ((pure))

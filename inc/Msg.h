@@ -65,7 +65,7 @@ public:
     Msg& send();
     bool receive();
     Msg& free();
-    Signal sig();
+    Signal signal();
     void* src();
 };
 

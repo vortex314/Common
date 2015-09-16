@@ -20,7 +20,7 @@
 #define CVTBUFSIZE 30
 // eflag : exponent flag
 #ifdef DOUBLE
-static char *cvt(double arg, int ndigits, int *decpt, int *sign, char *buf,
+IROM static char *cvt(double arg, int ndigits, int *decpt, int *sign, char *buf,
 		int eflag) {
 	int r2;
 	double fi, fj;
@@ -93,34 +93,34 @@ static char *cvt(double arg, int ndigits, int *decpt, int *sign, char *buf,
 }
 #endif
 
-Str::Str() :
+IROM Str::Str() :
 		Bytes(0) {
 }
 
-Str::Str(int size) :
+IROM Str::Str(int size) :
 		Bytes(size) {
 }
 
-Str::Str(uint8_t *pstart, int size) :
+IROM Str::Str(uint8_t *pstart, int size) :
 		Bytes(pstart, size) {
 }
 #include <string.h>
-Str::Str(const char* s) :
+IROM Str::Str(const char* s) :
 		Bytes((uint8_t*) s, strlen(s)) {
 }
 
-Str& Str::set(const char* const s) {
+IROM Str& Str::set(const char* const s) {
 	Bytes::clear();
 	append(s);
 	return *this;
 }
 
-Str& Str::clear() {
+IROM Str& Str::clear() {
 	Bytes::clear();
 	return *this;
 }
 
-bool Str::equals(const char* s) {
+IROM bool Str::equals(const char* s) {
 	uint32_t i;
 	uint32_t slen = strlen(s);
 	if (slen != length())
@@ -131,7 +131,7 @@ bool Str::equals(const char* s) {
 	return true;
 }
 #include <cstring>
-bool Str::find(const char* s) {
+IROM bool Str::find(const char* s) {
 	const char* pch = strstr((const char*)c_str(), s);
 	if (pch) {
 		return  true;
@@ -139,7 +139,7 @@ bool Str::find(const char* s) {
 	return false;
 }
 
-bool Str::endsWith(const char* s) {
+IROM bool Str::endsWith(const char* s) {
 	int sl = strlen(s);
 	int offset = length() - sl;
 	if (offset < 0)
@@ -151,7 +151,7 @@ bool Str::endsWith(const char* s) {
 	return true;
 }
 
-bool Str::startsWith(Str& s) {
+IROM bool Str::startsWith(Str& s) {
 	if (s.length() > length())
 		return false;
 	uint32_t i;
@@ -161,7 +161,7 @@ bool Str::startsWith(Str& s) {
 	return true;
 }
 
-bool Str::startsWith(const char* const s) {
+IROM bool Str::startsWith(const char* const s) {
 	Str ss(s);
 	return startsWith(ss);
 	/*   if ( s.length() > length()) return false;
@@ -171,39 +171,39 @@ bool Str::startsWith(const char* const s) {
 	 return true;*/
 }
 
-Str& Str::operator<<(char ch) {
+IROM Str& Str::operator<<(char ch) {
 	write(ch);
 	return *this;
 }
 
-Str& Str::operator<<(int i) {
+IROM Str& Str::operator<<(int i) {
 	append((int32_t) i);
 	return *this;
 }
 
-Str& Str::operator<<(Str& s) {
+IROM Str& Str::operator<<(Str& s) {
 	write(s._start, 0, s._limit);
 	return *this;
 }
 #ifdef DOUBLE
-Str& Str::operator<<(double d) {
+IROM Str& Str::operator<<(double d) {
 	append(d);
 	return *this;
 }
 
-Str& Str::operator<<(float d) {
+IROM Str& Str::operator<<(float d) {
 	append(d);
 	return *this;
 }
 #endif
 
-Str& Str::operator+(Str& s) {
+IROM Str& Str::operator+(Str& s) {
 	*this << s;
 	return *this;
 }
 #ifdef DOUBLE
 #include <cstdio>
-Str& Str::append(double d) {
+IROM Str& Str::append(double d) {
 	char buf[80];
 	int decpt;
 	int sign;
@@ -219,14 +219,14 @@ Str& Str::append(double d) {
 	return *this;
 }
 
-Str& Str::append(float f) {
+IROM Str& Str::append(float f) {
 	double d = f;
 	append(d);
 	return *this;
 }
 
 #endif
-Str& Str::operator=(Str& s) {
+IROM Str& Str::operator=(Str& s) {
 	clear();
 	s.offset(0);
 	while (s.hasData()) {
@@ -234,15 +234,15 @@ Str& Str::operator=(Str& s) {
 	};
 	return *this;
 }
-Str& Str::operator=(const char* s) {
+IROM Str& Str::operator=(const char* s) {
 	clear();
 	return append(s);
 }
-Str& Str::operator<<(const char *s) {
+IROM Str& Str::operator<<(const char *s) {
 	return append(s);
 }
 
-bool Str::operator==(Str& str) {
+IROM bool Str::operator==(Str& str) {
 	if (str.length() != length())
 		return false;
 	uint32_t i;
@@ -252,7 +252,7 @@ bool Str::operator==(Str& str) {
 	return true;
 }
 
-Str& Str::append(const char* s) {
+IROM Str& Str::append(const char* s) {
 	while (*s != '\0') {
 		write((uint8_t) (*s));
 		s++;
@@ -260,7 +260,7 @@ Str& Str::append(const char* s) {
 	return *this;
 }
 
-Str& Str::append(char s) {
+IROM Str& Str::append(char s) {
 	write((uint8_t) (s));
 	return *this;
 }
@@ -269,12 +269,12 @@ Str& Str::append(char s) {
 #define is_digit(c)	((unsigned)to_digit(c) <= 9)
 #define	to_char(n)	((n) + '0')
 
-bool ishex(uint8_t c) {
+IROM bool ishex(uint8_t c) {
 	return (c >= '0' || c <= '9') || (c >= 'A' || c <= 'F')
 			|| (c >= 'a' || c <= 'f');
 }
 
-Str& Str::append(uint64_t val) {
+IROM Str& Str::append(uint64_t val) {
 #define MAX_CHAR 22
 	char str[MAX_CHAR];
 	str[MAX_CHAR - 1] = '\0';
@@ -287,7 +287,7 @@ Str& Str::append(uint64_t val) {
 	return *this;
 }
 
-Str& Str::append(uint32_t val) {
+IROM Str& Str::append(uint32_t val) {
 #define MAX_CHAR_INT32 10
 	char str[MAX_CHAR_INT32];
 	str[MAX_CHAR_INT32 - 1] = '\0';
@@ -300,7 +300,7 @@ Str& Str::append(uint32_t val) {
 	return *this;
 }
 
-Str& Str::append(int32_t val) {
+IROM Str& Str::append(int32_t val) {
 	uint64_t v = val;
 	if (val < 0) {
 		write('-');
@@ -311,7 +311,7 @@ Str& Str::append(int32_t val) {
 	return *this;
 }
 
-Str& Str::append(bool b) {
+IROM Str& Str::append(bool b) {
 	if (b)
 		append("true");
 	else
@@ -321,17 +321,17 @@ Str& Str::append(bool b) {
 
 const char *hexChar = "0123456789ABCDEF";
 
-char nibbleToHex(uint8_t value) {
+IROM char nibbleToHex(uint8_t value) {
 	return hexChar[value & 0xF];
 }
 
-Str& Str::appendHex(uint8_t byt) {
+IROM Str& Str::appendHex(uint8_t byt) {
 	write(hexChar[byt >> 4]);
 	write(hexChar[byt & 0xF]);
 	return *this;
 }
 
-Str& Str::append(void* ptr) {
+IROM Str& Str::append(void* ptr) {
 	union {
 		void *ptr;
 		uint8_t b[sizeof(int)];
@@ -344,24 +344,24 @@ Str& Str::append(void* ptr) {
 	return *this;
 }
 
-Str& Str::substr(Str& mstr, uint32_t offset) {
+IROM Str& Str::substr(Str& mstr, uint32_t offset) {
 	mstr.offset(offset);
 	while (mstr.hasData())
 		write(mstr.read());
 	return *this;
 }
 
-const char* Str::c_str() {
+IROM const char* Str::c_str() {
 	if (_limit < _capacity)
 		*(_start + _limit) = '\0';
 	return (char*) _start;
 }
 
-bool isdigit(uint8_t v) {
+IROM bool isdigit(uint8_t v) {
 	return v >= '0' && v <= '9';
 }
 
-Erc Str::parse(uint64_t* pval) {
+IROM Erc Str::parse(uint64_t* pval) {
 	uint64_t val = 0;
 	while (hasData()) {
 		if (isdigit(peek())) {
@@ -374,14 +374,14 @@ Erc Str::parse(uint64_t* pval) {
 	return E_OK;
 }
 
-Erc Str::parse(uint32_t* pval) {
+IROM Erc Str::parse(uint32_t* pval) {
 	uint64_t val = 0;
 	parse(&val);
 	*pval = val;
 	return E_OK;
 }
 
-uint8_t hexToNibble(uint8_t ch) {
+IROM uint8_t hexToNibble(uint8_t ch) {
 	if (ch >= '0' || ch <= '9')
 		return ch - '0';
 	if (ch >= 'A' || ch <= 'F')
@@ -391,7 +391,7 @@ uint8_t hexToNibble(uint8_t ch) {
 	return 0;
 }
 
-Erc Str::parseHex(uint8_t *pb) {
+IROM Erc Str::parseHex(uint8_t *pb) {
 	uint8_t b = 0;
 	int i;
 	for (i = 0; i < 2; i++)
