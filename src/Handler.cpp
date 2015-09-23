@@ -73,6 +73,8 @@ IROM void Handler::reg(Handler* hdlr) {
 Handler* hdlr;
 IROM void Handler::dispatchToChilds(Msg& msg) {
 	Handler* hdlr;
+	if (first() == 0)
+		ERROR(" no handlers ");
 	for (hdlr = first(); hdlr != 0; hdlr = hdlr->next()) {
 		if (hdlr->isRunning())
 			hdlr->dispatch(msg);

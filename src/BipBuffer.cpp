@@ -138,7 +138,7 @@ IROM uint8_t* BipBuffer::reserve(int size, int& reserved) {
 			freespace = size;
 
 		if (freespace == 0) {
-			PERROR(EOVERFLOW);
+			ERROR("BipBuffer overflow %d:%d %d:%d ",ixa,sza,ixb,szb);
 			return NULL;
 		}
 

@@ -44,7 +44,7 @@ class Handler;
 
 class Msg : public Cbor
 {
-private :
+public :
     static BipBuffer* _bb;
 public:
     void* _src;

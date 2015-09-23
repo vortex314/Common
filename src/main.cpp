@@ -200,7 +200,7 @@ bool testMsg()
 {
     Msg::init();
         uint32_t messageCount=0;
-    Msg msg(0);
+    Msg msg(100);
     uint32_t max=200000;
     INFO(" testing Msg times : %d",max);
     for(uint32_t i=0; i<max; i++)

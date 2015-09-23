@@ -2,11 +2,25 @@
 #define SYS_H
 
 #include "stdint.h"
+#include "errno.h"
+ #include <string.h>
 
-#define DEBUG(fmt,...) Sys::log(__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
-#define INFO(fmt,...)  Sys::log(__FILE__,__PRETTY_FUNCTION__ ,fmt,##__VA_ARGS__)
-#define WARN(fmt,...)  Sys::log(__FILE__, __PRETTY_FUNCTION__ ,fmt,##__VA_ARGS__)
-#define PERROR(erc)  Sys::log(__FILE__, __PRETTY_FUNCTION__ ,"errno : %",erc)
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void SysLog(const char *type,const char* file, const char* function, const char * format, ...);
+
+#ifdef __cplusplus
+};
+#endif
+
+#define ERROR(fmt,...) SysLog("ERROR",__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
+#define DEBUG(fmt,...) SysLog("DEBUG",__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
+#define INFO(fmt,...)  SysLog("INFO ",__FILE__,__FUNCTION__ ,fmt,##__VA_ARGS__)
+#define WARN(fmt,...)  SysLog("WARN ",__FILE__, __PRETTY_FUNCTION__ ,fmt,##__VA_ARGS__)
+#define PERROR()  Sys::log("ERROR",__FILE__, __PRETTY_FUNCTION__ ,"line : %d - System failure : %d : %s ",__LINE__,errno,strerror(errno));
+#define SYSTEM_ERROR(erc) ERROR("errno : %d",erc)
 // ---------------------- LINUX ------------------------------
 #ifdef __linux__
 #define IRAM
@@ -22,6 +36,10 @@
 #define attr_const __attribute__ ((const))
 #endif
 
+
+
+
+#ifdef __cplusplus
 class Sys
 {
     public:
@@ -35,5 +53,6 @@ class Sys
     protected:
     private:
 };
+#endif
 
 #endif // SYS_H
