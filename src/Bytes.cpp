@@ -50,23 +50,25 @@ IROM void Bytes::map(uint8_t* st, uint32_t length) {
 
 IROM Bytes::Bytes(uint32_t size) {
 	_start = 0;
-	if (size > 0) {
-		_start = (uint8_t*)malloc(size); // (uint8_t*) Sys::malloc(size);
-		ASSERT(_start != 0);
-	}
 	_offset = 0;
 	_limit = 0;
-	_capacity = size;
+	if (size > 0) {
+		_start = (uint8_t*) malloc(size); // (uint8_t*) Sys::malloc(size);
+		ERROR("malloc failed");
+		_capacity = 0;
+	} else {
+		_capacity = size;
+	}
 	isMemoryOwner = true;
 }
 
 IROM Bytes::~Bytes() {
 	if (isMemoryOwner)
-		if ( _start)
-		free( _start);
+		if (_start)
+			free(_start);
 }
 IROM Bytes::Bytes(Bytes& src) {
-	_start = (uint8_t*)malloc(src._capacity);
+	_start = (uint8_t*) malloc(src._capacity);
 	_offset = 0;
 	_limit = src._limit;
 	_capacity = src._capacity;
@@ -118,14 +120,12 @@ Bytes& Bytes::operator=(const char* s) {
 	return append(s);
 }
 
-
-
 IROM Bytes& Bytes::move(int32_t dist) {
 	if ((_offset + dist) > _limit)
 		_offset = _limit;
 	else
 		_offset += dist;
-		return *this;
+	return *this;
 }
 
 /* ByteBuffer::ByteBuffer(ByteBuffer& in) {
@@ -232,14 +232,15 @@ IROM Bytes& Bytes::clear() {
 	return *this;
 }
 
-IROM bool Bytes::equals(const uint8_t* pb,uint32_t length){
-	if ( length != _limit ) return false;
-	for(uint32_t i=0;i<length;i++){
-		if ( _start[i] != pb[i]) return false;
+IROM bool Bytes::equals(const uint8_t* pb, uint32_t length) {
+	if (length != _limit)
+		return false;
+	for (uint32_t i = 0; i < length; i++) {
+		if (_start[i] != pb[i])
+			return false;
 	}
 	return true;
 }
-
 
 IROM int Bytes::poke(uint32_t idx, uint8_t b) {
 	if (idx > _limit)
@@ -275,5 +276,4 @@ IROM void Bytes::toString(Str& str) {
 		str.append(' ');
 	}
 }
-
 

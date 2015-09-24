@@ -68,8 +68,11 @@ IROM bool Msg::init() {
 
 IROM Msg& Msg::create(void* src, Signal signal) {
 	clear();
+	INFO("msg capacity : %d ",capacity());
 	add((PTR_CAST) src);
 	add(signal);
+	INFO("msg create %x : %d ",src,signal);
+	INFO("msg length : %d ",length());
 	return *this;
 }
 
@@ -78,30 +81,35 @@ IROM Msg& Msg::send() {
 	INFO(" send %d bytes ",_size);
 	int reserved;
 	_start = _bb->reserve((int) _size + 2, reserved);
-	if (reserved < (_size + 2))
+	if (reserved < (_size + 2)) {
 		WARN("Bipbuffer alloc fails");
+		return *this;
+	}
 	*_start = _size >> 8;
 	*(_start + 1) = _size & 0xFF;
 	memcpy(_start + 2, data(), _size);
 	_bb->commit(_size + 2);
+	clear();
 	return *this;
 }
 
-Msg msg(20);
+Msg __msg(20);
 
 IROM void Msg::publish(void* src, Signal signal) {
-	msg.create(src, signal).send();
+	INFO(" publish msg capacity %d bytes ",__msg.capacity());
+	__msg.create(src, signal).send();
 }
 
 IROM void Msg::publish(void* src, Signal signal, int par) {
-	msg.create(src, signal) << par;
-	msg.send();
+	__msg.create(src, signal) << par;
+	__msg.send();
 }
 
 bool Msg::receive() {
-	_size = capacity();
-	_start = _bb->getContiguousBlock(_size);
-	if (_size == 0) {
+	uint32_t length;
+	clear();
+	_start = _bb->getContiguousBlock(length);
+	if (length == 0) {
 //		WARN("No message ");
 		return false;
 	}
