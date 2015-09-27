@@ -8,7 +8,6 @@
 #ifndef BIPBUFFER_H_
 #define BIPBUFFER_H_
 #include <stdint.h>
-#include <malloc.h>
 #include <string.h>
 
 

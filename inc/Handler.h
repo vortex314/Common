@@ -15,7 +15,7 @@ class Handler: public ProtoThread {
 	static Handler* _firstChild;
 	Handler* _next;
 	uint64_t _timeout;
-	const char* _name;
+	const char*_name;
 public:
 	Handler();
 	Handler(const char* name);

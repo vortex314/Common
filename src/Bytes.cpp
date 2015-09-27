@@ -4,7 +4,7 @@
  *  Created on: 24-aug.-2012
  *      Author: lieven
  */
-#include <malloc.h>
+
 #include "Bytes.h"
 #ifdef __linux__
 #include <stdlib.h>
@@ -53,11 +53,12 @@ IROM Bytes::Bytes(uint32_t size) {
 	_offset = 0;
 	_limit = 0;
 	if (size > 0) {
+//		INFO("calling malloc : %d ",size);
 		_start = (uint8_t*) malloc(size); // (uint8_t*) Sys::malloc(size);
-		ERROR("malloc failed");
-		_capacity = 0;
-	} else {
+//		INFO("malloc result : %x",_start);
 		_capacity = size;
+	} else {
+		_capacity = 0;
 	}
 	isMemoryOwner = true;
 }

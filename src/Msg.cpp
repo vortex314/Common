@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <malloc.h>
 #include <string.h>
 
 #include "BipBuffer.h"
@@ -9,17 +8,22 @@
 // const Handler* os_spi1 =(Handler*)"SPI1";
 // const Handler* os_clock =(Handler*)"CLOCK";
 
+const char* strSignal[] = { "SIG_INIT", "SIG_IDLE", "SIG_ERC",
+		"SIG_TICK", "SIG_CONNECTED", "SIG_DISCONNECTED", "SIG_RXD", "SIG_TXD",
+		"SIG_START", "SIG_STOP", "SIG_DO" };
+
 #define ENVELOPE_SIZE	sizeof(Msg)
 
 IROM Msg::Msg(uint32_t size) :
 		Cbor(size) {
+	INFO(" Msg ctor : %d : %d ",size,_capacity);
 	_signal = SIG_IDLE;
 	_src = 0;
 }
 
 bool Msg::is(void* src, Signal signal) {
-	if (signal == 0 || signal == _signal) {
-		if (src == 0 || src == _src) {
+	if ((signal == 0) || (signal == _signal)) {
+		if ((src == 0) || (src == _src)) {
 			return true;
 		}
 	}
@@ -55,12 +59,17 @@ void* Msg::src() {
 #define PTR_CAST uint16_t
 #endif
 
-BipBuffer* Msg::_bb;
+BipBuffer* Msg::_bb=0;
+Msg* __msg;
+bool Msg::_init=false;
 
 IROM bool Msg::init() {
+	if ( _init ) return true;
 	if (!_bb) {
 		_bb = new BipBuffer();
 		_bb->allocateBuffer(1024);
+		__msg = new Msg(20);
+		_init=true;
 		return true;
 	}
 	return false;
@@ -68,17 +77,17 @@ IROM bool Msg::init() {
 
 IROM Msg& Msg::create(void* src, Signal signal) {
 	clear();
-	INFO("msg capacity : %d ",capacity());
+//	INFO("msg capacity : %d ",capacity());
 	add((PTR_CAST) src);
 	add(signal);
-	INFO("msg create %x : %d ",src,signal);
-	INFO("msg length : %d ",length());
+//	INFO("msg create %x : %d ",src,signal);
+//	INFO("msg length : %d ",length());
 	return *this;
 }
 
 IROM Msg& Msg::send() {
 	_size = length();
-	INFO(" send %d bytes ",_size);
+//	INFO(" send %d bytes ",_size);
 	int reserved;
 	_start = _bb->reserve((int) _size + 2, reserved);
 	if (reserved < (_size + 2)) {
@@ -93,16 +102,18 @@ IROM Msg& Msg::send() {
 	return *this;
 }
 
-Msg __msg(20);
+
 
 IROM void Msg::publish(void* src, Signal signal) {
-	INFO(" publish msg capacity %d bytes ",__msg.capacity());
-	__msg.create(src, signal).send();
+	init();
+//	INFO(" publish msg capacity %d bytes ",__msg->capacity());
+	__msg->create(src, signal).send();
 }
 
 IROM void Msg::publish(void* src, Signal signal, int par) {
-	__msg.create(src, signal) << par;
-	__msg.send();
+	init();
+	__msg->create(src, signal) << par;
+	__msg->send();
 }
 
 bool Msg::receive() {
@@ -116,12 +127,13 @@ bool Msg::receive() {
 	_size = *_start; // Big endian write of 16 bit size
 	_size <<= 8;
 	_size += *(_start + 1);
-	INFO(" received %d bytes ",_size);
+//	INFO(" received %d bytes ",_size);
 //   _start =_bb->getContiguousBlock(_size);
 	write(_start+2,0,_size);
 	offset(0);
 	get((PTR_CAST &) _src);
 	get((int&) _signal);
+//	INFO("msg recv %x : %d ",_src,_signal);
 	_offset = offset();
 	_bb->decommitBlock(_size + 2);
 	return true;
