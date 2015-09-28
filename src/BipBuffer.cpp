@@ -130,6 +130,11 @@ IROM void BipBuffer::freeBuffer() {
 //   Will return NULL if a previous reservation has not been committed.
 
 IROM uint8_t* BipBuffer::reserve(int size, int& reserved) {
+	if ( szResrv ) {
+		reserved=0;
+		ERROR("BipBuffer multithread issue  ");
+		return 0;
+	}
 	// We always allocate on B if B exists; this means we have two blocks and our buffer is filling.
 	if (szb) {
 		int freespace = getBFreeSpace();
