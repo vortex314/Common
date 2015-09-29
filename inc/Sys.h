@@ -16,6 +16,7 @@ extern const char* SysLogLevelStr[];
 
 void SysLog(SysLogLevel level, const char* file, const char* function,
 		const char * format, ...);
+uint64_t SysMillis();
 
 #define TRACE(fmt,...) SysLog(LOG_TRACE,__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
 #define DEBUG(fmt,...) SysLog(LOG_DEBUG,__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
