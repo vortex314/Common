@@ -53,7 +53,7 @@ public:
 
 	bool hasData();
 	bool hasData(int size);
-	bool hasSpace();
+	bool hasSpace(uint32_t size);
 	bool equals(const uint8_t* pb,uint32_t length);
 
 

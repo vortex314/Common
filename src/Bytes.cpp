@@ -262,8 +262,8 @@ IROM bool Bytes::hasData() {
 	return _offset < _limit;
 }
 
-IROM bool Bytes::hasSpace() {
-	return _limit < _capacity;
+IROM bool Bytes::hasSpace(uint32_t size) {
+	return (_capacity - _limit) > size;
 }
 const char *HEX = "0123456789ABCDEF";
 #include "Str.h"
