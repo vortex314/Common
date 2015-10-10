@@ -21,7 +21,7 @@ IROM Msg::Msg(uint32_t size) :
 	_src = 0;
 }
 
-bool Msg::is(void* src, Signal signal) {
+IROM bool Msg::is(void* src, Signal signal) {
 	if ((signal == 0) || (signal == _signal)) {
 		if ((src == 0) || (src == _src)) {
 			return true;
@@ -30,7 +30,7 @@ bool Msg::is(void* src, Signal signal) {
 	return false;
 }
 
-bool Msg::is(void* src, Signal signal, int v) {
+IROM bool Msg::is(void* src, Signal signal, int v) {
 	if (signal == 0 || signal == _signal) {
 		if (src == 0 || src == _src) {
 			rewind();
@@ -42,11 +42,11 @@ bool Msg::is(void* src, Signal signal, int v) {
 	return false;
 }
 
-Signal Msg::signal() {
+IROM Signal Msg::signal() {
 	return _signal;
 }
 
-void* Msg::src() {
+IROM void* Msg::src() {
 	return _src;
 }
 #define  __WORDSIZE 32
@@ -116,7 +116,7 @@ IROM void Msg::publish(void* src, Signal signal, int par) {
 	__msg->send();
 }
 
-bool Msg::receive() {
+IROM bool Msg::receive() {
 	uint32_t length;
 	clear();
 	_start = _bb->getContiguousBlock(length);
@@ -139,12 +139,12 @@ bool Msg::receive() {
 	return true;
 }
 
-Msg& Msg::rewind() {
+IROM Msg& Msg::rewind() {
 	offset(_offset);
 	return *this;
 }
 
-Msg& Msg::free() {
+IROM Msg& Msg::free() {
 //	_bb->decommitBlock(_size + 2);
 	return *this;
 }

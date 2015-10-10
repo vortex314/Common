@@ -670,7 +670,7 @@ IROM void Cbor::addToken(PackType ctype, uint64_t value)
     }
 }
 
-inline void Cbor::addHeader(uint8_t major, uint8_t minor)
+IROM void Cbor::addHeader(uint8_t major, uint8_t minor)
 {
     write((major << 5) | minor);
 }

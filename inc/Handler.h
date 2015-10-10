@@ -31,6 +31,7 @@ public:
 	static Handler* first();
 	Handler* next();
 	static void dispatchToChilds(Msg& msg);
+	static bool timeouts();
 	void reg(Handler* hdlr);
 };
 

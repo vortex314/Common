@@ -30,7 +30,7 @@ IROM CircBuf::~CircBuf() {
     delete[] start;
 }
 #include "Board.h"
-IROM int CircBuf::write(uint8_t b) {
+IROM int CircBuf::write(uint8_t b) { // not in IROM as it will be called in interrupt
     uint16_t newPos = (writePos + 1) % limit;
     if (newPos == readPos)
         return -EAGAIN;
@@ -41,7 +41,7 @@ IROM int CircBuf::write(uint8_t b) {
     return 0;
 }
 
-IROM int CircBuf::writeFromIsr(uint8_t b) {
+ int CircBuf::writeFromIsr(uint8_t b) {
     uint16_t newPos = (writePos + 1) % limit;
     if (newPos == readPos)
         return -EAGAIN;
@@ -50,7 +50,7 @@ IROM int CircBuf::writeFromIsr(uint8_t b) {
     return 0;
 }
 
-IROM int CircBuf::readFromIsr() {
+ int CircBuf::readFromIsr() {
     uint16_t newPos = (readPos + 1) % limit;
     int value;
     if (newPos == writePos)
@@ -88,11 +88,11 @@ IROM uint32_t CircBuf::space() {
 }
 
 
-IROM bool CircBuf::hasSpace() {
+bool CircBuf::hasSpace() {
     return ((writePos + 1) % limit) != readPos;
 }
 
-IROM bool CircBuf::hasData() {
+ bool CircBuf::hasData() { // not in IROM as it will be called in interrupt
     return ( ((readPos + 1) % limit) != writePos);
 }
 

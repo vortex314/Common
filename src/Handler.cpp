@@ -81,3 +81,19 @@ IROM void Handler::dispatchToChilds(Msg& msg) {
 			hdlr->dispatch(msg);
 	}
 }
+
+extern "C" IROM int HandlerTimeouts(){
+	return Handler::timeouts();
+}
+
+// return true if any handler has a timeout
+IROM bool Handler::timeouts() {
+	Handler* hdlr;
+	if (first() == 0)
+		ERROR(" no handlers ");
+	for (hdlr = first(); hdlr != 0; hdlr = hdlr->next()) {
+		if (hdlr->timeout())
+			return true;
+	}
+	return false;
+}
