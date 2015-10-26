@@ -10,7 +10,7 @@
 
 // #include "Event.h"
 //#include "Sequence.h"
-#include "Link.h"
+#include "Stream.h"
 #include "MqttIn.h"
 #include "CircBuf.h"
 #include "MqttConstants.h"
@@ -42,7 +42,7 @@ class Mqtt;
 
 class Mqtt: public Handler {
 public:
-	Link& _link;
+	Stream& _stream;
 	Str _prefix;
 	MqttSubscriber* _mqttSubscriber;
 	MqttPublisher* _mqttPublisher;
@@ -54,7 +54,7 @@ private:
 	uint32_t _retries;
 
 public:
-	Mqtt(Link& link);
+	Mqtt(Stream& stream);
 	~Mqtt();
 	void sendConnect();
 	void onMessage(Msg& msg);

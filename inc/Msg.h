@@ -11,7 +11,9 @@
 //#include "Event.h"
 
 typedef enum Signal {
-	SIG_INIT, SIG_IDLE, SIG_ERC,
+	SIG_INIT,
+	SIG_IDLE,
+	SIG_ERC,
 	SIG_TICK,
 	SIG_CONNECTED,
 	SIG_DISCONNECTED,
@@ -19,12 +21,18 @@ typedef enum Signal {
 	SIG_TXD,
 	SIG_START,
 	SIG_STOP,
-	SIG_DO
-
+	SIG_DO,
+	SIG_USER
 } Signal;
 
+typedef enum Src {
+	SRC_SYS='SYS',
+	SRC_TCP='TCP',
+	SRC_WIFI='WIFI'
+};
+
 extern
-const char* strSignal[] ;
+const char* strSignal[];
 
 #ifdef __cplusplus
 class Handler;
@@ -45,12 +53,12 @@ public:
 	uint32_t _offset;
 
 	Msg(uint32_t size);
-	bool is(void * src, Signal signal);
-	bool is(void * src, Signal signal, int v1);
+	bool is(const void * src, Signal signal);
+	bool is(const void * src, Signal signal, int v1);
 	static bool init();
-	Msg& create(void * src, Signal signal);
-	static void publish(void * src, Signal signal);
-	static void publish(void * src, Signal signal, int par);
+	Msg& create(const void * src, Signal signal);
+	static void publish(const void * src, Signal signal);
+	static void publish(const void * src, Signal signal, int par);
 	Msg& rewind();
 	Msg& send();
 	bool receive();

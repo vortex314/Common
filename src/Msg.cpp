@@ -21,7 +21,7 @@ IROM Msg::Msg(uint32_t size) :
 	_src = 0;
 }
 
-IROM bool Msg::is(void* src, Signal signal) {
+IROM bool Msg::is(const void* src, Signal signal) {
 	if ((signal == 0) || (signal == _signal)) {
 		if ((src == 0) || (src == _src)) {
 			return true;
@@ -30,7 +30,7 @@ IROM bool Msg::is(void* src, Signal signal) {
 	return false;
 }
 
-IROM bool Msg::is(void* src, Signal signal, int v) {
+IROM bool Msg::is(const void* src, Signal signal, int v) {
 	if (signal == 0 || signal == _signal) {
 		if (src == 0 || src == _src) {
 			rewind();
@@ -75,7 +75,7 @@ IROM bool Msg::init() {
 	return false;
 }
 
-IROM Msg& Msg::create(void* src, Signal signal) {
+IROM Msg& Msg::create(const void* src, Signal signal) {
 	clear();
 //	INFO("msg capacity : %d ",capacity());
 	add((PTR_CAST) src);
@@ -104,13 +104,13 @@ IROM Msg& Msg::send() {
 
 
 
-IROM void Msg::publish(void* src, Signal signal) {
+IROM void Msg::publish(const void* src, Signal signal) {
 	init();
 //	INFO(" publish msg capacity %d bytes ",__msg->capacity());
 	__msg->create(src, signal).send();
 }
 
-IROM void Msg::publish(void* src, Signal signal, int par) {
+IROM void Msg::publish(const void* src, Signal signal, int par) {
 	init();
 	__msg->create(src, signal) << par;
 	__msg->send();

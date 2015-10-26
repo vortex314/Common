@@ -13,13 +13,7 @@
 #include "Bytes.h"
 #include "CircBuf.h"
 
-class Stream {
-	virtual Erc write(Bytes& data)=0;
-	virtual Erc write(uint8_t b)=0;
-	virtual bool hasData()=0;
-	virtual bool hasSpace()=0;
-	virtual uint8_t read()=0;
-};
+#include "Stream.h"
 
 class Uart : public Stream {
 public:

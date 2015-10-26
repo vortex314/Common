@@ -29,6 +29,7 @@ public:
 	int read();
 	int readFromIsr();
         bool hasSpace();
+        bool hasSpace(uint32_t size);
         bool hasData();
         void clear();
 	uint32_t size();

@@ -13,7 +13,7 @@ const char* const MqttNames[] = { "UNKNOWN", "CONNECT", "CONNACK", "PUBLISH",
 		"PUBACK", "PUBREC", "PUBREL", "PUBCOMP", "SUBSCRIBE", "SUBACK",
 		"UNSUBSCRIBE", "UNSUBACK", "PINGREQ", "PINGRESP", "DISCONNECT" };
 const char* const QosNames[] = { "QOS0", "QOS1", "QOS2" };
-MqttIn::MqttIn(Bytes* bytes) :
+IROM MqttIn::MqttIn(Bytes* bytes) :
 		_topic(0), _message(0)   //+++ len=0
 {
 	_bytes = bytes;
@@ -27,7 +27,7 @@ MqttIn::MqttIn(Bytes* bytes) :
 	_messageId = 1;
 }
 
-MqttIn::MqttIn(int size) :
+IROM MqttIn::MqttIn(int size) :
 		_topic(0), _message(0)   //+++ len=0
 {
 	if (size)
@@ -43,7 +43,7 @@ MqttIn::MqttIn(int size) :
 
 }
 
-MqttIn::MqttIn() {
+IROM MqttIn::MqttIn() {
 	_bytes = 0;
 	_remainingLength = 0;
 	_header = 0;
@@ -55,44 +55,44 @@ MqttIn::MqttIn() {
 	_messageId = 1;
 }
 
-MqttIn::~MqttIn() {
+IROM MqttIn::~MqttIn() {
 	if (_isBytesOwner)
 		delete _bytes;
 }
 
-void MqttIn::remap(Bytes* bytes) {
+void IROM MqttIn::remap(Bytes* bytes) {
 	_bytes = bytes;
 	_recvState = ST_HEADER;
 	_isBytesOwner = false;
 }
 
-uint8_t MqttIn::type() {
+uint8_t IROM MqttIn::type() {
 	return _header & MQTT_TYPE_MASK;
 }
 
-uint8_t MqttIn::qos() {
+uint8_t IROM MqttIn::qos() {
 	return _header & MQTT_QOS_MASK;
 }
 
-uint16_t MqttIn::messageId() {
+uint16_t IROM MqttIn::messageId() {
 	return _messageId;
 }
 
-Str* MqttIn::topic() {
+Str* IROM MqttIn::topic() {
 	return &_topic;
 }
 
-Bytes* MqttIn::message() {
+Bytes* IROM MqttIn::message() {
 	return &_message;
 }
 
-void MqttIn::reset() {
+void IROM MqttIn::reset() {
 	_recvState = ST_HEADER;
 	_bytes->clear();
 
 }
 
-void MqttIn::Feed(uint8_t data) {
+void IROM MqttIn::Feed(uint8_t data) {
 	_bytes->write(data);
 	if (_recvState == ST_HEADER) {
 		_header = data;
@@ -115,21 +115,21 @@ void MqttIn::Feed(uint8_t data) {
 		Sys::warn(EINVAL, "");
 }
 
-bool MqttIn::complete() {
+bool IROM MqttIn::complete() {
 	return (_recvState == ST_COMPLETE);
 }
 
-void MqttIn::complete(bool b) {
+void IROM MqttIn::complete(bool b) {
 	if (b)
 		_recvState = ST_COMPLETE;
 }
 
-void MqttIn::readUint16(uint16_t* pi) {
+void IROM MqttIn::readUint16(uint16_t* pi) {
 	*pi = _bytes->read() << 8;
 	*pi += _bytes->read();
 }
 
-void MqttIn::readUtf(Str* str) {
+void IROM MqttIn::readUtf(Str* str) {
 	uint16_t length;
 	int i;
 	str->clear();
@@ -139,7 +139,7 @@ void MqttIn::readUtf(Str* str) {
 	}
 }
 
-void MqttIn::readBytes(Bytes* b, int length) {
+void IROM MqttIn::readBytes(Bytes* b, int length) {
 	int i;
 	b->clear();
 	for (i = 0; i < length; i++) {
@@ -147,13 +147,13 @@ void MqttIn::readBytes(Bytes* b, int length) {
 	}
 }
 
-bool MqttIn::addRemainingLength(uint8_t data) {
+bool IROM MqttIn::addRemainingLength(uint8_t data) {
 	_remainingLength <<= 7;
 	_remainingLength += (data & 0x7F);
 	return (data & 0x80);
 }
 
-void MqttIn::toString(Str& str) {
+void IROM MqttIn::toString(Str& str) {
 	parse();
 	str.append(MqttNames[type() >> 4]);
 	str.append(":");
@@ -181,7 +181,7 @@ void MqttIn::toString(Str& str) {
 	str.append(" }");
 }
 
-bool MqttIn::parse() {
+bool IROM MqttIn::parse() {
 	if (_bytes->length() < 2) {
 		Sys::warn(EINVAL, "MQTT_LEN");
 		return false;
