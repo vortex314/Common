@@ -1,6 +1,6 @@
 #include "Link.h"
 
-Link::Link()
+Link::Link() : Handler("Link")
 {
    _isConnected=false;
 }

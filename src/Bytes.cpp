@@ -267,7 +267,7 @@ IROM bool Bytes::hasSpace(uint32_t size) {
 }
 const char *HEX = "0123456789ABCDEF";
 #include "Str.h"
-IROM void Bytes::toString(Str& str) {
+IROM const char* Bytes::toHex(Str& str) {
 	uint32_t i;
 	uint8_t b;
 	for (i = 0; i < _limit; i++) {
@@ -276,5 +276,20 @@ IROM void Bytes::toString(Str& str) {
 		str.append(HEX[b & 0xF]);
 		str.append(' ');
 	}
+	return str.c_str();
+}
+
+IROM const char*  Bytes::toString(Str& str) {
+	uint32_t i;
+	uint8_t b;
+	for (i = 0; i < _limit; i++) {
+		b = *(_start + i);
+		if (b >= 0x20 && b < 0x7F)
+			str.append((char)b);
+		else
+			str.append('.');
+	}
+	return str.c_str();
+
 }
 

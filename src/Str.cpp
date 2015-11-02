@@ -104,9 +104,12 @@ IROM Str::Str(int size) :
 IROM Str::Str(uint8_t *pstart, int size) :
 		Bytes(pstart, size) {
 }
+
+
 #include <string.h>
 IROM Str::Str(const char* s) :
 		Bytes((uint8_t*) s, strlen(s)) {
+//	_limit=strlen(s);
 }
 
 IROM Str& Str::set(const char* const s) {

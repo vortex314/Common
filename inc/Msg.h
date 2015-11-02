@@ -8,9 +8,8 @@
 #ifndef SIG_H_
 #define SIG_H_
 
-//#include "Event.h"
-
 typedef enum Signal {
+	SIG_ALL=0,
 	SIG_INIT,
 	SIG_IDLE,
 	SIG_ERC,
@@ -25,20 +24,13 @@ typedef enum Signal {
 	SIG_USER
 } Signal;
 
-typedef enum Src {
-	SRC_SYS='SYS',
-	SRC_TCP='TCP',
-	SRC_WIFI='WIFI'
-};
 
-extern
-const char* strSignal[];
+extern const char* strSignal[];
 
 #ifdef __cplusplus
 class Handler;
 #include "Bytes.h"
 #include "BipBuffer.h"
-
 #include "Cbor.h"
 
 class Msg: public Cbor {
@@ -53,8 +45,8 @@ public:
 	uint32_t _offset;
 
 	Msg(uint32_t size);
-	bool is(const void * src, Signal signal);
-	bool is(const void * src, Signal signal, int v1);
+	bool is(const void* src, Signal signal);
+	bool is(const void* src, Signal signal, int v1);
 	static bool init();
 	Msg& create(const void * src, Signal signal);
 	static void publish(const void * src, Signal signal);

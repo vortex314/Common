@@ -9,18 +9,18 @@
 #include "Sys.h"
 #include "Msg.h"
 Handler* Handler::_firstChild = 0;
-IROM Handler::Handler() {
-	_timeout = UINT64_MAX;
-	_name = "UNDEFINED";
-	_next = 0;
-//      _firstChild = 0;
-	restart();
-	reg(this);
-}
+/*IROM Handler::Handler() {
+ _timeout = UINT64_MAX;
+ _name = "UNDEFINED";
+ _next = 0;
+ //      _firstChild = 0;
+ restart();
+ reg(this);
+ }*/
 
 IROM Handler::Handler(const char* name) {
 	_timeout = UINT64_MAX;
-	_name = name;
+	strncpy(_name, name, sizeof(_name));
 	_next = 0;
 //      _firstChild = 0;
 	restart();
@@ -82,7 +82,7 @@ IROM void Handler::dispatchToChilds(Msg& msg) {
 	}
 }
 
-extern "C" IROM int HandlerTimeouts(){
+extern "C" IROM int HandlerTimeouts() {
 	return Handler::timeouts();
 }
 

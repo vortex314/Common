@@ -13,11 +13,12 @@
 
 class Handler: public ProtoThread {
 	static Handler* _firstChild;
+	char _name[10];
 	Handler* _next;
 	uint64_t _timeout;
-	const char*_name;
+
 public:
-	Handler();
+//	Handler();
 	Handler(const char* name);
 
 	~Handler() {

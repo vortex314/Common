@@ -72,9 +72,10 @@ public:
 	void Decode();
 	bool isGoodCrc();
 	void Frame();
-	bool Feed(uint8_t b);
+//	bool Feed(uint8_t b);
 
-	void toString(Str& str);
+	const char* toString(Str& str);
+	const char* toHex(Str& str);
 public:
 	uint8_t *_start;
 	uint32_t _limit;
