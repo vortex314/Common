@@ -20,7 +20,7 @@ typedef enum {
 	CMD_GET, CMD_DESC, CMD_PUT
 } Cmd;
 
-typedef void (*Xdr)(void*, Cmd, Bytes&);
+typedef Erc (*Xdr)(void*,  Bytes&);
 
 class Mqtt;
 
@@ -39,6 +39,7 @@ public:
 	Prop(const char* name, Flags flags);
 	Prop(const char* name, const char* value);
 	Prop(const char* name, uint64_t& value);
+	Prop(const char* name,void* instance,Xdr func);
 	 ~Prop() {
 	}
 	void init(const char* name, Flags flags);
@@ -81,7 +82,7 @@ private:
 	} _state;
 
 public:
-	PropMgr();
+	PropMgr(Mqtt* mqtt);
 	~PropMgr() {
 	}
 

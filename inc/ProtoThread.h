@@ -109,7 +109,9 @@ public:
 	bool isRunning() {
 		return _ptLine != LineNumberInvalid;
 	}
-
+	bool isReady() {
+		return _ptLine == LineNumberInvalid;
+	}
 
 	// Run next part of protothread or return immediately if it's still
 	// waiting. Return true if protothread is still running, false if it

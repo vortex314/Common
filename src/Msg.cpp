@@ -16,7 +16,7 @@ const char* strSignal[] = { "SIG_ALL", "SIG_INIT", "SIG_IDLE", "SIG_ERC",
 
 IROM Msg::Msg(uint32_t size) :
 		Cbor(size) {
-	INFO(" Msg ctor : %d : %d ", size, _capacity);
+//	INFO(" Msg ctor : %d : %d ", size, _capacity);
 	_signal = SIG_IDLE;
 	_src = 0;
 }
@@ -86,6 +86,9 @@ IROM Msg& Msg::create(const void* src, Signal signal) {
 	return *this;
 }
 
+extern "C" bool system_os_post(uint8_t prio, uint32_t p1,uint32_t par);
+
+#define MSG_TASK_PRIO        		1
 IROM Msg& Msg::send() {
 	_size = length();
 //	INFO(" send %d bytes ",_size);
@@ -100,6 +103,7 @@ IROM Msg& Msg::send() {
 	memcpy(_start + 2, data(), _size);
 	_bb->commit(_size + 2);
 	clear();
+	system_os_post((uint8_t) MSG_TASK_PRIO, 0,0);
 	return *this;
 }
 
