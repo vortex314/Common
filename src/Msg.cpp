@@ -16,11 +16,8 @@ const char* strSignal[] = { "SIG_ALL", "SIG_INIT", "SIG_IDLE", "SIG_ERC",
 
 IROM Msg::Msg(uint32_t size) :
 		Cbor(size) {
-<<<<<<< HEAD
-	INFO(" Msg ctor : %d : %d ", size, _capacity);
-=======
+
 //	INFO(" Msg ctor : %d : %d ", size, _capacity);
->>>>>>> ba2e932e81ca0f0e0ca5b746c6e6bf126d9e3403
 	_signal = SIG_IDLE;
 	_src = 0;
 }
@@ -53,15 +50,12 @@ IROM Signal Msg::signal() {
 IROM void* Msg::src() {
 	return _src;
 }
-<<<<<<< HEAD
+
 #ifdef __CYGWIN__
 #define  __WORDSIZE 64
 #else
 #define  __WORDSIZE 32
 #endif
-=======
-#define  __WORDSIZE 32
->>>>>>> ba2e932e81ca0f0e0ca5b746c6e6bf126d9e3403
 
 #if __WORDSIZE==64
 #define PTR_CAST uint64_t
@@ -98,18 +92,16 @@ IROM Msg& Msg::create(const void* src, Signal signal) {
 	return *this;
 }
 
-<<<<<<< HEAD
-=======
-extern "C" bool system_os_post(uint8_t prio, uint32_t p1,uint32_t par);
+extern "C" bool system_os_post(uint8_t prio, uint32_t p1, uint32_t par);
 
 #define MSG_TASK_PRIO        		1
->>>>>>> ba2e932e81ca0f0e0ca5b746c6e6bf126d9e3403
+
 IROM Msg& Msg::send() {
 	_size = length();
 //	INFO(" send %d bytes ",_size);
 	int reserved;
 	_start = _bb->reserve((int) _size + 2, reserved);
-	if (reserved < (_size + 2)) {
+	if ((uint32_t)reserved < (_size + 2)) {
 		WARN("Bipbuffer alloc fails");
 		return *this;
 	}
@@ -118,10 +110,9 @@ IROM Msg& Msg::send() {
 	memcpy(_start + 2, data(), _size);
 	_bb->commit(_size + 2);
 	clear();
-<<<<<<< HEAD
-=======
-	system_os_post((uint8_t) MSG_TASK_PRIO, 0,0);
->>>>>>> ba2e932e81ca0f0e0ca5b746c6e6bf126d9e3403
+
+	system_os_post((uint8_t) MSG_TASK_PRIO, 0, 0);
+
 	return *this;
 }
 

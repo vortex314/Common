@@ -28,11 +28,8 @@ uint64_t SysMillis();
 //#define SYSTEM_ERROR(erc) ERROR("errno : %d",erc)
 
 // ---------------------- LINUX ------------------------------
-<<<<<<< HEAD
+
 #if defined( __CYGWIN__) || defined(__linux__)
-=======
-#ifdef __linux__
->>>>>>> ba2e932e81ca0f0e0ca5b746c6e6bf126d9e3403
 #define IRAM
 #define IROM
 #endif
