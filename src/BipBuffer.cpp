@@ -9,12 +9,16 @@
 #include "errno.h"
 #include "platform.h"
 #include "Sys.h"
+<<<<<<< HEAD
 #include "malloc.h"
 #if defined(__CYGWIN__)
 #include "stdio.h"
 #endif
 
 extern void free(void* p);
+=======
+
+>>>>>>> ba2e932e81ca0f0e0ca5b746c6e6bf126d9e3403
 
 /*
  Copyright (c) 2003 Simon Cooke, All Rights Reserved
@@ -45,7 +49,11 @@ BipBuffer::~BipBuffer() {
 	// We don't call FreeBuffer, because we don't need to reset our variables - our object is dying
 	if (pBuffer != NULL) {
 		//		::VirtualFree(pBuffer, buflen, MEM_DECOMMIT);
+<<<<<<< HEAD
 		::free(pBuffer); // LMR
+=======
+		free(pBuffer); // LMR
+>>>>>>> ba2e932e81ca0f0e0ca5b746c6e6bf126d9e3403
 	}
 }
 

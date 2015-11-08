@@ -6,7 +6,11 @@
  */
 
 #include "Bytes.h"
+<<<<<<< HEAD
 #if defined(__linux__) || defined(__CYGWIN__)
+=======
+#ifdef __linux__
+>>>>>>> ba2e932e81ca0f0e0ca5b746c6e6bf126d9e3403
 #include <stdlib.h>
 #else
 //#include "new.h"
