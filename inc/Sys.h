@@ -28,7 +28,8 @@ uint64_t SysMillis();
 //#define SYSTEM_ERROR(erc) ERROR("errno : %d",erc)
 
 // ---------------------- LINUX ------------------------------
-#ifdef __linux__
+
+#if defined( __CYGWIN__) || defined(__linux__)
 #define IRAM
 #define IROM
 #endif
@@ -65,8 +66,7 @@ public:
 	static void warn(int erc, const char* s);
 	static void interruptEnable();
 	static void interruptDisable();
-	static void log(SysLogLevel level, const char* file, const char* function,
-			const char * format, ...);
+	static void log(SysLogLevel level, const char* file, const char* function,const char * format, ...);
 protected:
 private:
 };

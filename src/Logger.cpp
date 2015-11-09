@@ -1,4 +1,5 @@
 #include "Logger.h"
+#ifdef __linux__
 #include <iostream>
 #include <sys/time.h>
 #include <stdio.h>
@@ -147,3 +148,4 @@ Logger&  Logger::perror(const char* s)
     flush();
     return *this;
 };
+#endif

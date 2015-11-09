@@ -22,15 +22,14 @@ uint64_t Sys::millis() {
 #include "stdio.h"
 #include "string.h"
 void Sys::warn(int erc, const char* msg) {
-	log("", "", "%lu %s : %s \n", millis(), strerror(erc), msg);
+	log(LOG_INFO,"", "", "%lu %s : %s \n", millis(), strerror(erc), msg);
 }
 
 
 
 #include "stdarg.h"
 
-void Sys::log(const char* file, const char* function, const char * format,
-		...) {
+void Sys::log(SysLogLevel level,const char* file, const char* function, const char * format,...) {
 	uint32_t time = millis();
 	char buffer[256];
 	va_list args;

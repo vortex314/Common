@@ -6,7 +6,8 @@
  */
 
 #include "Bytes.h"
-#ifdef __linux__
+
+#if defined(__linux__) || defined(__CYGWIN__)
 #include <stdlib.h>
 #else
 //#include "new.h"

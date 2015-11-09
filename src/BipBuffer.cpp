@@ -10,6 +10,10 @@
 #include "platform.h"
 #include "Sys.h"
 
+#include "malloc.h"
+#if defined(__CYGWIN__)
+#include "stdio.h"
+#endif
 
 /*
  Copyright (c) 2003 Simon Cooke, All Rights Reserved
@@ -22,14 +26,14 @@
 
  */
 /*
-void *memcpy(void *dest, const void *src, size_t n) {
-	uint8_t* dp = (uint8_t*) dest;
-	const uint8_t* sp = (uint8_t*) src;
-	while (n--)
-		*dp++ = *sp++;
-	return dest;
-}
-*/
+ void *memcpy(void *dest, const void *src, size_t n) {
+ uint8_t* dp = (uint8_t*) dest;
+ const uint8_t* sp = (uint8_t*) src;
+ while (n--)
+ *dp++ = *sp++;
+ return dest;
+ }
+ */
 
 IROM BipBuffer::BipBuffer() :
 		pBuffer(NULL), ixa(0), sza(0), ixb(0), szb(0), buflen(0), ixResrv(0), szResrv(
@@ -40,7 +44,7 @@ BipBuffer::~BipBuffer() {
 	// We don't call FreeBuffer, because we don't need to reset our variables - our object is dying
 	if (pBuffer != NULL) {
 		//		::VirtualFree(pBuffer, buflen, MEM_DECOMMIT);
-		free(pBuffer); // LMR
+		::free(pBuffer); // LMR
 	}
 }
 
@@ -130,12 +134,12 @@ IROM void BipBuffer::freeBuffer() {
 //   Will return NULL if a previous reservation has not been committed.
 
 IROM uint8_t* BipBuffer::reserve(int size, int& reserved) {
-	if ( szResrv ) {
-		reserved=0;
+	if (szResrv) {
+		reserved = 0;
 		ERROR("BipBuffer multithread issue  ");
 		return 0;
 	}
-	// We always allocate on B if B exists; this means we have two blocks and our buffer is filling.
+// We always allocate on B if B exists; this means we have two blocks and our buffer is filling.
 	if (szb) {
 		int freespace = getBFreeSpace();
 
@@ -143,7 +147,7 @@ IROM uint8_t* BipBuffer::reserve(int size, int& reserved) {
 			freespace = size;
 
 		if (freespace == 0) {
-			ERROR("BipBuffer overflow %d:%d %d:%d ",ixa,sza,ixb,szb);
+			ERROR("BipBuffer overflow %d:%d %d:%d ", ixa, sza, ixb, szb);
 			return NULL;
 		}
 
@@ -201,13 +205,13 @@ IROM void BipBuffer::commit(int size) {
 		return;
 	}
 
-	// If we try to commit more space than we asked for, clip to the size we asked for.
+// If we try to commit more space than we asked for, clip to the size we asked for.
 
 	if (size > szResrv) {
 		size = szResrv;
 	}
 
-	// If we have no blocks being used currently, we create one in A.
+// If we have no blocks being used currently, we create one in A.
 
 	if (sza == 0 && szb == 0) {
 		ixa = ixResrv;
