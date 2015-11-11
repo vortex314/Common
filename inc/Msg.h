@@ -18,6 +18,7 @@ typedef enum Signal {
 	SIG_DISCONNECTED,
 	SIG_RXD,
 	SIG_TXD,
+	SIG_CHANGE,
 	SIG_START,
 	SIG_STOP,
 	SIG_DO,
