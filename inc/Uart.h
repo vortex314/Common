@@ -30,8 +30,8 @@ public:
 	virtual void receive(uint8_t b)=0;
 	virtual Erc setBaudrate(uint32_t baudrate);
 	virtual uint32_t getBaudrate();
-	virtual Erc setMode(Str& str);
-	virtual void getMode(Str& str);
+	virtual Erc setMode(const char* str);
+	virtual void getMode(char* str);
 };
 
 #endif /* UART_H_ */

@@ -74,7 +74,7 @@ IROM bool BipBuffer::allocateBuffer(int buffersize = 4096) {
 
 	 buflen = buffersize;
 	 return true;*/
-	pBuffer = (uint8_t*) malloc(buffersize);
+	pBuffer = (uint8_t*) malloc((uint32_t)buffersize);
 	if (pBuffer == NULL)
 		return false;
 
@@ -342,3 +342,15 @@ IROM int BipBuffer::getBFreeSpace() const {
 	return ixa - ixb - szb;
 }
 
+IROM bool BipBuffer::hasSpace(uint32_t space) {
+	int size=space;
+	if (getSpaceAfterA() >= (size))
+		return true;
+	if (getBFreeSpace() >= (size))
+		return true;
+	return false;
+}
+
+IROM bool BipBuffer::hasData(){
+	return sza != 0;
+}

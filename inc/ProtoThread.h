@@ -92,6 +92,9 @@ public:
 			_ptLine(0) {
 	}
 
+	virtual ~ProtoThread() {
+	}
+
 	// Restart protothread.
 	void restart() {
 		_ptLine = 0;
@@ -113,7 +116,6 @@ public:
 	bool isReady() {
 		return _ptLine == LineNumberInvalid;
 	}
-
 
 	// Run next part of protothread or return immediately if it's still
 	// waiting. Return true if protothread is still running, false if it
@@ -148,7 +150,7 @@ protected:
 #define PT_WAIT_WHILE(condition) PT_WAIT_UNTIL(!(condition))
 
 // Cause protothread to wait until given child protothread completes.
-#define PT_WAIT_THREAD(child) PT_WAIT_WHILE((child).dispatch(0))
+#define PT_WAIT_THREAD(child) PT_WAIT_WHILE((child).dispatch(msg))
 
 // Restart and spawn given child protothread and wait until it completes.
 #define PT_SPAWN(child) \

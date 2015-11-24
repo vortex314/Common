@@ -9,6 +9,7 @@
 #define BIPBUFFER_H_
 #include <stdint.h>
 #include <string.h>
+#include "Sys.h"
 
 
 class BipBuffer {
@@ -23,23 +24,25 @@ private:
 	int szResrv;
 
 public:
-	BipBuffer() ;
-	~BipBuffer() ;
-	bool allocateBuffer(int buffersize);
-	void clear() ;
-	void freeBuffer() ;
-	uint8_t* reserve(int size, int& reserved);
-	void commit(int size);
-	uint8_t* getContiguousBlock(uint32_t& size);
-	void decommitBlock(int size);
-	int getCommittedSize() const ;
-	int getReservationSize() const;
-	int getBufferSize() const;
-	bool isInitialized() const;
+	BipBuffer() IROM ;
+	~BipBuffer() IROM;
+	bool allocateBuffer(int buffersize) IROM;
+	void clear()  IROM;
+	void freeBuffer()  IROM;
+	uint8_t* reserve(int size, int& reserved) IROM;
+	void commit(int size) IROM;
+	uint8_t* getContiguousBlock(uint32_t& size) IROM;
+	void decommitBlock(int size) IROM;
+	int getCommittedSize() const  IROM;
+	int getReservationSize() const IROM;
+	int getBufferSize() const IROM;
+	bool isInitialized() const IROM;
+	bool hasSpace(uint32_t) IROM;
+	 bool hasData() IROM;
 private:
-	int getSpaceAfterA() const ;
+	int getSpaceAfterA() const  IROM;
 
-	int getBFreeSpace() const ;
+	int getBFreeSpace() const  IROM;
 };
 
 

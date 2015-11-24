@@ -36,8 +36,10 @@ IROM bool Msg::is(const void* src, Signal signal, int v) {
 		if (signal == 0 || signal == _signal) {
 			rewind();
 			int _v;
-			if (get(_v) && _v == v)
+			if (get(_v) && _v == v) {
+				rewind();
 				return true;
+			}
 		}
 	}
 	return false;
