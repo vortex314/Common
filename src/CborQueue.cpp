@@ -8,6 +8,8 @@
 #include <CborQueue.h>
 
 IROM CborQueue::CborQueue(uint32_t size) {
+	_size = 0;
+	_start = 0;
 	_buffer.allocateBuffer(size);
 }
 
@@ -20,7 +22,7 @@ IROM bool CborQueue::hasData() {
 }
 
 IROM bool CborQueue::hasSpace(uint32_t size) {
-	return hasSpace(size + 2);
+	return _buffer.hasSpace(size + 2);
 }
 
 IROM Erc CborQueue::put(Cbor& cbor) {
@@ -60,6 +62,60 @@ IROM Erc CborQueue::get(Cbor& cbor) {
 		_buffer.decommitBlock(size + 2);
 		return E_OK;
 	}
-
+}
+#define MAX_SIZE 300
+IROM Erc CborQueue::putMap(Cbor& cbor) {
+	if (_size)
+		return EBUSY;
+	int reserved;
+	int size = MAX_SIZE;
+	_start = _buffer.reserve((int) size + 2, reserved);
+//	INFO(" map to %d reserved ",reserved);
+	cbor.map(_start + 2, reserved);
+	_size = reserved;
+	return E_OK;
 }
 
+IROM Erc CborQueue::putRelease(Cbor& cbor) {
+	if (_size == 0)
+		return ENOMEM;
+	uint32_t size = cbor.length();
+	*_start = size >> 8;
+	*(_start + 1) = size & 0xFF;
+	memcpy(_start + 2, cbor.data(), size);
+	_buffer.commit(size + 2);
+	cbor.map(0, 0);
+	_size = 0;
+	return E_OK;
+}
+
+IROM Erc CborQueue::getMap(Cbor& cbor) {
+	if (_size)
+		return EBUSY;
+	if (!hasData())
+		return ENOENT;
+	uint32_t length;
+	cbor.clear();
+	_start = _buffer.getContiguousBlock(length);
+	if (length == 0) {
+		return ENOENT;
+	}
+	_size = *_start; // --------------- Big endian write of 16 bit size
+	_size <<= 8;
+	_size += *(_start + 1);
+//	INFO(" map to : %X , %d", _start, _size);
+	cbor.map(_start + 2, _size);
+
+	return E_OK;
+}
+
+IROM Erc CborQueue::getRelease(Cbor& cbor) {
+	if (_size) {
+		cbor.map(0, 0);
+		_buffer.decommitBlock(_size + 2); 	// --------------- lost message
+		_size = 0;
+		return E_OK;
+	} else {
+		return ENOENT;
+	}
+}
