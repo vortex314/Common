@@ -99,6 +99,7 @@ IROM bool Cbor::get(Bytes& bytes) {
 	CborVariant v;
 	PackType type;
 	if (readToken(type, v) == E_OK && type == P_BYTES) {
+		bytes.clear();
 		for (int i = 0; i < v._length; i++)
 			bytes.write(read()); // skip data
 		return true;
@@ -110,6 +111,7 @@ IROM bool Cbor::get(Str& str) {
 	CborVariant v;
 	PackType type;
 	if (readToken(type, v) == E_OK && type == P_STRING) {
+		str.clear();
 		for (int i = 0; i < v._length; i++)
 			str.write(read()); // skip data
 		return true;
@@ -577,10 +579,7 @@ IROM void Cbor::addHeader(uint8_t major, uint8_t minor) {
 }
 
 #include <cstdarg>
-
-IROM bool Cbor::addf(const char *fmt, ...) {
-	va_list args;
-	va_start(args, fmt);
+IROM bool Cbor::vaddf(const char *fmt, va_list args) {
 
 	while (*fmt != '\0') {
 		if (*fmt == 'i') {
@@ -598,7 +597,55 @@ IROM bool Cbor::addf(const char *fmt, ...) {
 		} else if (*fmt == 'd') {
 			double v = va_arg(args, double);
 			add(v);
-		} else if (*fmt == 'b') {
+		} /*else if (*fmt == 'f') {
+		 float v = va_arg(args, float);
+		 add(v);
+		 } */else if (*fmt == 'b') {
+			int v = va_arg(args, int);
+			if (v)
+				add(true);
+			else
+				add(false);
+		} else if (*fmt == 'S') {
+			Str* s = va_arg(args, Str*);
+			add(*s);
+		} else if (*fmt == 'B') {
+			Bytes* s = va_arg(args, Bytes*);
+			add(*s);
+		} else
+			return false;
+		++fmt;
+	}
+	return true;
+}
+
+IROM bool Cbor::addf(const char *fmt, ...) {
+	va_list args;
+	va_start(args, fmt);
+	vaddf(fmt, args);
+	va_end(args);
+	return true;
+
+/*	while (*fmt != '\0') {
+		if (*fmt == 'i') {
+			int32_t i = va_arg(args, int32_t);
+			add(i);
+		} else if (*fmt == 'u') {
+			uint32_t i = va_arg(args, uint32_t);
+			add(i);
+		} else if (*fmt == 's') {
+			char * s = va_arg(args, char*);
+			add(s);
+		} else if (*fmt == 'l') {
+			int64_t v = va_arg(args, int64_t);
+			add(v);
+		} else if (*fmt == 'd') {
+			double v = va_arg(args, double);
+			add(v);
+		} /*else if (*fmt == 'f') {
+		 float v = va_arg(args, float);
+		 add(v);
+		 } *//*else if (*fmt == 'b') {
 			int v = va_arg(args, int);
 			if (v)
 				add(true);
@@ -615,12 +662,60 @@ IROM bool Cbor::addf(const char *fmt, ...) {
 		++fmt;
 	}
 	va_end(args);
+	return true;*/
+}
+
+IROM bool Cbor::vscanf(const char *fmt, va_list args) {
+
+	while (*fmt != '\0') {
+		if (*fmt == 'i') {
+			int32_t* pi = va_arg(args, int32_t*);
+			if (get(*pi) == false)
+				return false;
+		} else if (*fmt == 'u') {
+			uint32_t* pi = va_arg(args, uint32_t*);
+			if (get(*pi) == false)
+				return false;
+		} else if (*fmt == 'f') {
+			float* pv = va_arg(args, float*);
+			if (get(*pv) == false)
+				return false;
+		} else if (*fmt == 'd') {
+			double* pv = va_arg(args, double*);
+			if (get(*pv) == false)
+				return false;
+		} else if (*fmt == 'S') {
+			Str* s = va_arg(args, Str*);
+			if (get(*s) == false)
+				return false;
+		} else if (*fmt == 's') {
+			char * s = va_arg(args, char*);
+			int length = va_arg(args, int);
+			if (get(s, length) == false)
+				return false;
+		} else if (*fmt == 'b') {
+			bool* pv = va_arg(args, bool*);
+			if (get(*pv) == false)
+				return false;
+		} else if (*fmt == 'B') {
+			Bytes* s = va_arg(args, Bytes*);
+			if (get(*s) == false)
+				return false;
+		} else
+			return false;
+		++fmt;
+	}
+
 	return true;
 }
 
 IROM bool Cbor::scanf(const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
+	vscanf(fmt,args);
+	va_end(args);
+	return true;
+	/*
 
 	while (*fmt != '\0') {
 		if (*fmt == 'i') {
@@ -661,7 +756,7 @@ IROM bool Cbor::scanf(const char *fmt, ...) {
 		++fmt;
 	}
 	va_end(args);
-	return true;
+	return true;*/
 }
 
 IROM void Cbor::sprintf(Str& str) {

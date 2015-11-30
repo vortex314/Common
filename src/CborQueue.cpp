@@ -17,6 +17,14 @@ IROM CborQueue::~CborQueue() {
 	_buffer.freeBuffer();
 }
 
+IROM uint32_t CborQueue::getCapacity() {
+	return _buffer.getBufferSize();
+}
+
+IROM uint32_t CborQueue::getUsed() {
+	return _buffer.getCommittedSize();
+}
+
 IROM bool CborQueue::hasData() {
 	return _buffer.hasData();
 }
@@ -38,6 +46,32 @@ IROM Erc CborQueue::put(Cbor& cbor) {
 	memcpy(start + 2, cbor.data(), size);
 	_buffer.commit(size + 2);
 	return E_OK;
+}
+
+IROM Erc CborQueue::putf(const char * format, ...) {
+	va_list args;
+	Erc erc;
+	Cbor cbor(0);
+	erc = putMap(cbor);
+	if (erc)
+		return erc;
+	va_start(args, format);
+	cbor.vaddf(format, args);
+	va_end(args);
+	return putRelease(cbor);
+}
+
+IROM Erc CborQueue::getf(const char * format, ...) {
+	va_list args;
+	Erc erc;
+	Cbor cbor(0);
+	erc = getMap(cbor);
+	if (erc)
+		return erc;
+	va_start(args, format);
+	cbor.vscanf(format, args);
+	va_end(args);
+	return getRelease(cbor);
 }
 
 IROM Erc CborQueue::get(Cbor& cbor) {

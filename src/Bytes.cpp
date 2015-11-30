@@ -53,13 +53,12 @@ IROM Bytes::Bytes(uint32_t size) {
 	_start = 0;
 	_offset = 0;
 	_limit = 0;
+	_capacity = size;
 	if (size > 0) {
 //		INFO("calling malloc : %d ",size);
 		_start = (uint8_t*) malloc(size); // (uint8_t*) Sys::malloc(size);
 //		INFO("malloc result : %x",_start);
 		_capacity = size;
-	} else {
-		_capacity = 0;
 	}
 	isMemoryOwner = true;
 }
@@ -280,13 +279,13 @@ IROM const char* Bytes::toHex(Str& str) {
 	return str.c_str();
 }
 
-IROM const char*  Bytes::toString(Str& str) {
+IROM const char* Bytes::toString(Str& str) {
 	uint32_t i;
 	uint8_t b;
 	for (i = 0; i < _limit; i++) {
 		b = *(_start + i);
 		if (b >= 0x20 && b < 0x7F)
-			str.append((char)b);
+			str.append((char) b);
 		else
 			str.append('.');
 	}

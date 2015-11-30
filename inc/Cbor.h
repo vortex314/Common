@@ -60,7 +60,9 @@ public:
      Cbor& addNull();
 
      bool addf(const char *fmt,...);
+     bool vaddf(const char *fmt, va_list args);
      bool scanf(const char* fmt,... );
+     bool vscanf(const char* fmt,va_list args );
      void sprintf(Str& s);
 
      bool get(bool& bl);
