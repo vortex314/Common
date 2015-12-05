@@ -2,7 +2,8 @@
 #define __JSMN_H_
 
 #include <stddef.h>
-
+#include <Sys.h>
+#define JSMN_PARENT_LINKS
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -36,13 +37,14 @@ typedef enum {
  * @param		start	start position in JSON data string
  * @param		end		end position in JSON data string
  */
+typedef int offset_t;
 typedef struct {
 	jsmntype_t type;
-	int start;
-	int end;
-	int size;
+	offset_t start;
+	offset_t end;
+	offset_t size;
 #ifdef JSMN_PARENT_LINKS
-	int parent;
+	offset_t parent;
 #endif
 } jsmntok_t;
 
@@ -51,7 +53,7 @@ typedef struct {
  * the string being parsed now and current position in that string
  */
 typedef struct {
-	unsigned int pos; /* offset in the JSON string */
+	offset_t pos; /* offset in the JSON string */
 	unsigned int toknext; /* next token to allocate */
 	int toksuper; /* superior token node, e.g parent object or array */
 } jsmn_parser;
@@ -59,13 +61,13 @@ typedef struct {
 /**
  * Create JSON parser over an array of tokens
  */
-void jsmn_init(jsmn_parser *parser);
+IROM void jsmn_init(jsmn_parser *parser);
 
 /**
  * Run JSON parser. It parses a JSON data string into and array of tokens, each describing
  * a single JSON object.
  */
-jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
+IROM jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
 		jsmntok_t *tokens, unsigned int num_tokens);
 
 #ifdef __cplusplus
