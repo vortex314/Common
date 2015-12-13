@@ -67,16 +67,16 @@ IROM void* Msg::src() {
 #define PTR_CAST uint16_t
 #endif
 
-BipBuffer* Msg::_bb = 0;
+CborQueue* Msg::_queue = 0;
 Msg* __msg;
 bool Msg::_init = false;
 
 IROM bool Msg::init() {
 	if (_init)
 		return true;
-	if (!_bb) {
-		_bb = new BipBuffer();
-		_bb->allocateBuffer(1024);
+	if (!_queue) {
+		INFO("CBOR Queue created");
+		_queue = new CborQueue(1024);
 		__msg = new Msg(20);
 		_init = true;
 		return true;
@@ -96,61 +96,48 @@ IROM Msg& Msg::create(const void* src, Signal signal) {
 
 extern "C" bool system_os_post(uint8_t prio, uint32_t p1, uint32_t par);
 
-#define MSG_TASK_PRIO        		1
+#define MSG_TASK_PRIO      1
+
+IROM void Msg::wakeup(){
+	system_os_post((uint8_t) MSG_TASK_PRIO, 0, 0);
+}
 
 IROM Msg& Msg::send() {
-	_size = length();
+	_queue->put(*this);
+	wakeup();
 //	INFO(" send %d bytes ",_size);
-	int reserved;
-	_start = _bb->reserve((int) _size + 2, reserved);
-	if ((uint32_t)reserved < (_size + 2)) {
-		WARN("Bipbuffer alloc fails");
-		return *this;
-	}
-	*_start = _size >> 8;
-	*(_start + 1) = _size & 0xFF;
-	memcpy(_start + 2, data(), _size);
-	_bb->commit(_size + 2);
 	clear();
-
-	system_os_post((uint8_t) MSG_TASK_PRIO, 0, 0);
-
 	return *this;
 }
 
 IROM void Msg::publish(const void* src, Signal signal) {
 	init();
-//	INFO(" publish msg capacity %d bytes ",__msg->capacity());
-	__msg->create(src, signal).send();
+//	INFO(" publish %x %d ", src, signal);
+	Erc erc = _queue->putf("uu", src, signal);
+	wakeup();
+//	INFO("done %d",erc );
 }
 
 IROM void Msg::publish(const void* src, Signal signal, int par) {
 	init();
-	__msg->create(src, signal) << par;
-	__msg->send();
+//	INFO(" publish %x %d %d ", src, signal, par);
+	_queue->putf("uui", src, signal, par);
+	wakeup();
+//	INFO("done");
 }
 
 IROM bool Msg::receive() {
-	uint32_t length;
-	clear();
-	_start = _bb->getContiguousBlock(length);
-	if (length == 0) {
-//		WARN("No message ");
-		return false;
+	if (_queue->hasData()) {
+//		INFO("msg recv   ");
+		if (_queue->get(*this) == E_OK) {
+			get((PTR_CAST &) _src);
+			get((int&) _signal);
+			_offset = offset();
+//			INFO("msg recv %x : %d  ",_src,_signal);
+			return true;
+		}
 	}
-	_size = *_start; // Big endian write of 16 bit size
-	_size <<= 8;
-	_size += *(_start + 1);
-//	INFO(" received %d bytes ",_size);
-//   _start =_bb->getContiguousBlock(_size);
-	write(_start + 2, 0, _size);
-	offset(0);
-	get((PTR_CAST &) _src);
-	get((int&) _signal);
-//	INFO("msg recv %x : %d ",_src,_signal);
-	_offset = offset();
-	_bb->decommitBlock(_size + 2);
-	return true;
+	return false;
 }
 
 IROM Msg& Msg::rewind() {
@@ -158,7 +145,3 @@ IROM Msg& Msg::rewind() {
 	return *this;
 }
 
-IROM Msg& Msg::free() {
-//	_bb->decommitBlock(_size + 2);
-	return *this;
-}

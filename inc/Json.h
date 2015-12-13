@@ -49,6 +49,7 @@ public:
 	IROM bool get(Str& str);
 	IROM bool get(Bytes& str);
 	IROM bool get(int64_t& ul);
+	IROM bool get(uint32_t& ul);
 	IROM bool get( char* s,int length);
 	IROM bool getArray();
 	IROM bool getMap();

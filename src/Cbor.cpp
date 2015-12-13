@@ -328,96 +328,7 @@ IROM Erc Cbor::toString(Str& str) {
 	};
 	return E_OK;
 }
-/*
- CborType Cbor::parse(CborListener& listener) {
- CborToken token;
 
- while (hasData()) {
- token.value = 0;
- if (readToken(token) != E_OK)
- return P_ERROR;
- token.u._uint64 = token.value;
- switch (token.type) {
- case P_PINT: {
- token.u._uint64 = token.value;
- listener.onToken(token);
- break;
- }
- case P_NINT: {
- token.u._int64 = -token.value;
- listener.onToken(token);
- break;
- }
- case P_BYTES: {
- token.u.pb = data() + offset();
- listener.onToken(token);
- move(token.value); // skip bytes
- break;
- }
- case P_STRING: {
- token.u.pb = data() + offset();
- listener.onToken(token);
- move(token.value); // skip bytes
- break;
- }
- case P_MAP: {
- listener.onToken(token);
- int count = token.value;
- for (int i = 0; i < count; i++) {
- parse(listener);
- if (parse(listener) == P_BREAK)
- break;
- parse(listener);
- }
- break;
- }
- case P_ARRAY: {
- listener.onToken(token);
- int count = token.value;
- for (int i = 0; i < count; i++) {
- if (parse(listener) == P_BREAK)
- break;
- }
- break;
- }
- case P_TAG: {
- listener.onToken(token);
- parse(listener);
- break;
- }
- case P_BOOL: {
- token.u._bool = token.value == 1 ? true : false;
- listener.onToken(token);
- break;
- }
- case P_NILL:
- case P_BREAK: {
- listener.onToken(token);
- break;
- }
- case P_FLOAT: {
- token.u._uint64 = token.value;
- listener.onToken(token);
- break;
- }
- case P_DOUBLE: {
- token.u._uint64 = token.value;
- listener.onToken(token);
- break;
- }
- case P_SPECIAL: {
- listener.onToken(token);
- break;
- }
- default:  // avoid warnings about additional types > 7
- {
- return P_ERROR;
- }
- }
- };
- return token.type;
-
- }*/
 
 IROM Cbor& Cbor::operator<<(int i) {
 	return add(i);
@@ -625,44 +536,6 @@ IROM bool Cbor::addf(const char *fmt, ...) {
 	vaddf(fmt, args);
 	va_end(args);
 	return true;
-
-/*	while (*fmt != '\0') {
-		if (*fmt == 'i') {
-			int32_t i = va_arg(args, int32_t);
-			add(i);
-		} else if (*fmt == 'u') {
-			uint32_t i = va_arg(args, uint32_t);
-			add(i);
-		} else if (*fmt == 's') {
-			char * s = va_arg(args, char*);
-			add(s);
-		} else if (*fmt == 'l') {
-			int64_t v = va_arg(args, int64_t);
-			add(v);
-		} else if (*fmt == 'd') {
-			double v = va_arg(args, double);
-			add(v);
-		} /*else if (*fmt == 'f') {
-		 float v = va_arg(args, float);
-		 add(v);
-		 } *//*else if (*fmt == 'b') {
-			int v = va_arg(args, int);
-			if (v)
-				add(true);
-			else
-				add(false);
-		} else if (*fmt == 'S') {
-			Str* s = va_arg(args, Str*);
-			add(*s);
-		} else if (*fmt == 'B') {
-			Bytes* s = va_arg(args, Bytes*);
-			add(*s);
-		} else
-			return false;
-		++fmt;
-	}
-	va_end(args);
-	return true;*/
 }
 
 IROM bool Cbor::vscanf(const char *fmt, va_list args) {
@@ -712,66 +585,37 @@ IROM bool Cbor::vscanf(const char *fmt, va_list args) {
 IROM bool Cbor::scanf(const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
-	vscanf(fmt,args);
+	vscanf(fmt, args);
 	va_end(args);
 	return true;
-	/*
-
-	while (*fmt != '\0') {
-		if (*fmt == 'i') {
-			int32_t* pi = va_arg(args, int32_t*);
-			if (get(*pi) == false)
-				return false;
-		} else if (*fmt == 'u') {
-			uint32_t* pi = va_arg(args, uint32_t*);
-			if (get(*pi) == false)
-				return false;
-		} else if (*fmt == 'f') {
-			float* pv = va_arg(args, float*);
-			if (get(*pv) == false)
-				return false;
-		} else if (*fmt == 'd') {
-			double* pv = va_arg(args, double*);
-			if (get(*pv) == false)
-				return false;
-		} else if (*fmt == 'S') {
-			Str* s = va_arg(args, Str*);
-			if (get(*s) == false)
-				return false;
-		} else if (*fmt == 's') {
-			char * s = va_arg(args, char*);
-			int length = va_arg(args, int);
-			if (get(s, length) == false)
-				return false;
-		} else if (*fmt == 'b') {
-			bool* pv = va_arg(args, bool*);
-			if (get(*pv) == false)
-				return false;
-		} else if (*fmt == 'B') {
-			Bytes* s = va_arg(args, Bytes*);
-			if (get(*s) == false)
-				return false;
-		} else
-			return false;
-		++fmt;
-	}
-	va_end(args);
-	return true;*/
 }
 
-IROM void Cbor::sprintf(Str& str) {
+bool Cbor::skipToken() {
 	PackType pt;
-	CborVariant var;
-	while (readToken(pt, var) == E_OK) {
-		switch (pt) {
-		case P_PINT: {
-			str.append(var._uint64);
-			break;
-		}
-		default: {
-			break;
-		}
+	CborVariant cv;
+	if (readToken(pt, cv) == E_OK) {
+		if (pt == P_BYTES || pt == P_STRING) { // skip remaining bytes
+			int i;
+			for (i = 0; i < cv._length; i++)
+				read();
 		}
 	}
+	return true;
+}
+
+bool Cbor::gotoKey(uint32_t key) {
+	uint32_t _key;
+	offset(0);
+	while (available()) {
+		if (get(_key)) {
+			if (_key == key)
+				return true;
+		} else {
+			return false;
+		};
+		if (!skipToken())
+			return false;
+	}
+	return false;
 }
 

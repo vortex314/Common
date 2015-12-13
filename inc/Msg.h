@@ -33,25 +33,27 @@ class Handler;
 #include "Bytes.h"
 #include "BipBuffer.h"
 #include "Cbor.h"
+#include "CborQueue.h"
 
 class Msg: public Cbor {
 public:
-	static BipBuffer* _bb;
+	static CborQueue* _queue;
 	static bool _init;
+	IROM static void wakeup();
 public:
 	void* _src;
 	Signal _signal;
-	uint8_t* _start;
-	uint32_t _size; // includes 2 first bytes length
 	uint32_t _offset;
 
 	Msg(uint32_t size);
 	bool is(const void* src, Signal signal);
 	bool is(const void* src, Signal signal, int v1);
 	static bool init();
-	Msg& create(const void * src, Signal signal);
-	static void publish(const void * src, Signal signal);
-	static void publish(const void * src, Signal signal, int par);
+	IROM Msg& create(const void * src, Signal signal);
+	IROM static void publish(const void * src, Signal signal);
+	IROM static void publish(const void * src, Signal signal, int par);
+//	static void vpublish(const char* fmt, ...);
+
 	Msg& rewind();
 	Msg& send();
 	bool receive();
