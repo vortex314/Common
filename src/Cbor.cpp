@@ -585,9 +585,9 @@ IROM bool Cbor::vscanf(const char *fmt, va_list args) {
 IROM bool Cbor::scanf(const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
-	vscanf(fmt, args);
+	bool b = vscanf(fmt, args);
 	va_end(args);
-	return true;
+	return b;
 }
 
 bool Cbor::skipToken() {
@@ -599,8 +599,9 @@ bool Cbor::skipToken() {
 			for (i = 0; i < cv._length; i++)
 				read();
 		}
+		return true;
 	}
-	return true;
+	return false;
 }
 
 bool Cbor::gotoKey(uint32_t key) {

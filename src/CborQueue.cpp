@@ -35,8 +35,12 @@ IROM bool CborQueue::hasSpace(uint32_t size) {
 
 IROM Erc CborQueue::put(Cbor& cbor) {
 	uint32_t size = cbor.length();
-	int reserved;
+	if (size == 0)
+		return EINVAL;
+	int reserved = 0;
 	uint8_t* start = _buffer.reserve((int) size + 2, reserved);
+	if (start == 0)
+		return ENOMEM;
 	if ((uint32_t) reserved < (size + 2)) {
 		_buffer.commit(0);
 		return ENOMEM;
@@ -56,9 +60,12 @@ IROM Erc CborQueue::putf(const char * format, ...) {
 	if (erc)
 		return erc;
 	va_start(args, format);
-	cbor.vaddf(format, args);
+	bool b = cbor.vaddf(format, args);
+	b = b && cbor.hasSpace(1); // full suspect
 	va_end(args);
-	return putRelease(cbor);
+	if (b == false)
+		cbor.clear();
+	return putRelease(cbor) & b;
 }
 
 IROM Erc CborQueue::getf(const char * format, ...) {
@@ -69,18 +76,20 @@ IROM Erc CborQueue::getf(const char * format, ...) {
 	if (erc)
 		return erc;
 	va_start(args, format);
-	cbor.vscanf(format, args);
+	bool b = cbor.vscanf(format, args);
 	va_end(args);
-	return getRelease(cbor);
+	if (b == false)
+		cbor.clear();
+	return getRelease(cbor) & b;
 }
 
 IROM Erc CborQueue::get(Cbor& cbor) {
+	cbor.clear();
 	if (!hasData())
 		return ENOENT;
 	uint32_t length;
-	cbor.clear();
 	uint8_t* start = _buffer.getContiguousBlock(length);
-	if (length == 0) {
+	if (length == 0 || start==0) {
 		return ENOENT;
 	}
 	uint32_t size = *start; // --------------- Big endian write of 16 bit size
@@ -88,7 +97,7 @@ IROM Erc CborQueue::get(Cbor& cbor) {
 	size += *(start + 1);
 
 	if (size > (uint32_t) cbor.capacity()) {
-		_buffer.decommitBlock(size + 2); 	// --------------- lost message
+		_buffer.decommitBlock(size + 2); 	// --------------- lost message, not enough space
 		return ENOMEM;
 	} else {
 		cbor.write(start + 2, 0, size); 	//-------------- copy to cbor
@@ -101,9 +110,11 @@ IROM Erc CborQueue::get(Cbor& cbor) {
 IROM Erc CborQueue::putMap(Cbor& cbor) {
 	if (_size)
 		return EBUSY;
-	int reserved;
+	int reserved = 0;
 	int size = MAX_SIZE;
 	_start = _buffer.reserve((int) size + 2, reserved);
+	if (_start == 0 || reserved == 0)
+		return ENOMEM;
 //	INFO(" map to %d reserved ",reserved);
 	cbor.map(_start + 2, reserved);
 	_size = reserved;
@@ -128,11 +139,11 @@ IROM Erc CborQueue::getMap(Cbor& cbor) {
 		return EBUSY;
 	if (!hasData())
 		return ENOENT;
-	uint32_t length;
+	uint32_t length = 0;
 	cbor.clear();
 	_start = _buffer.getContiguousBlock(length);
 	if (length == 0) {
-		return ENOENT;
+		return ENOMEM;
 	}
 	_size = *_start; // --------------- Big endian write of 16 bit size
 	_size <<= 8;
@@ -150,6 +161,6 @@ IROM Erc CborQueue::getRelease(Cbor& cbor) {
 		_size = 0;
 		return E_OK;
 	} else {
-		return ENOENT;
+		return ENOMEM;
 	}
 }
