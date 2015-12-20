@@ -185,7 +185,7 @@ IROM bool Json::vscanf(const char *fmt, va_list args) {
 	int64_t ll;
 
 	while (*fmt != '\0') {
-		INFO(" *fmt : %c ", *fmt);
+//		INFO(" *fmt : %c ", *fmt);
 		if (*fmt == '[') {
 			if (getArray() == false) {
 				return false;
@@ -200,7 +200,7 @@ IROM bool Json::vscanf(const char *fmt, va_list args) {
 				return false;
 			}
 			*pi = ll;
-			INFO("ll : %d *pi :  %d ", ll, *pi);
+//			INFO("ll : %d *pi :  %d ", ll, *pi);
 		} else if (*fmt == 'u') {
 			uint32_t* pi = va_arg(args, uint32_t*);
 			if (get(ll) == false) {
@@ -254,17 +254,17 @@ IROM bool Json::scanf(const char *fmt, ...) {
 IROM Erc Json::parse() {
 	jsmn_init(&_parser);
 	_tokenIndex = 0;
-	INFO(" str : %s , length : %d , tokens : %x , max_tokens :  %d ", c_str(),
-			length(), _tokens, JSON_MAX_TOKENS);
+//	INFO(" str : %s , length : %d , tokens : %x , max_tokens :  %d ", c_str(),
+//			length(), _tokens, JSON_MAX_TOKENS);
 	_tokenCount = jsmn_parse(&_parser, c_str(), length(), _tokens,
 	JSON_MAX_TOKENS);
 	if (_tokenCount < 0)
 		return EINVAL;
 	int i;
 	for (i = 0; i < _tokenCount; i++) {
-		INFO(" token[%d] {%d,%d,%d} : %d , parent :  %d", i, _tokens[i].start,
-				_tokens[i].end, _tokens[i].size, _tokens[i].type,
-				_tokens[i].parent);
+//		INFO(" token[%d] {%d,%d,%d} : %d , parent :  %d", i, _tokens[i].start,
+//				_tokens[i].end, _tokens[i].size, _tokens[i].type,
+//				_tokens[i].parent);
 	}
 	return E_OK;
 }
@@ -336,7 +336,7 @@ bool Json::get(Str& str) {;
 			str.write(peek(i));
 		}
 	}
-	INFO("str:%s",str.c_str());
+//	INFO("str:%s",str.c_str());
 	_tokenIndex++;
 	return true;
 }

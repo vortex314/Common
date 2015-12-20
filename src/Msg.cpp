@@ -75,7 +75,7 @@ IROM bool Msg::init() {
 	if (_init)
 		return true;
 	if (!_queue) {
-		INFO("CBOR Queue created");
+//		INFO("CBOR Queue created");
 		_queue = new CborQueue(1024);
 		__msg = new Msg(20);
 		_init = true;

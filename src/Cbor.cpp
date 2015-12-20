@@ -26,7 +26,10 @@ IROM bool Cbor::get(bool& bl) {
 	if (type == P_BOOL) {
 		bl = v._bool;
 		return true;
+	}else if ( type == P_NILL ){
+		return true;
 	}
+	ERROR("get bool failed");
 	return false;
 }
 
@@ -41,7 +44,10 @@ IROM bool Cbor::get(int32_t& i) {
 	} else if (type == P_PINT) {
 		i = v._uint64;
 		return true;
+	}else if ( type == P_NILL ){
+		return true;
 	}
+	ERROR("get int32_t failed");
 	return false;
 }
 
@@ -51,7 +57,10 @@ IROM bool Cbor::get(uint32_t& i) {
 	if ((readToken(type, v) == E_OK) && (type == P_PINT)) {
 		i = v._uint64;
 		return true;
+	}else if ( type == P_NILL ){
+		return true;
 	}
+	ERROR("get uint32_t failed");
 	return false;
 }
 IROM bool Cbor::get(uint64_t& l) {
@@ -60,7 +69,10 @@ IROM bool Cbor::get(uint64_t& l) {
 	if ((readToken(type, v) == E_OK) && (type == P_PINT)) {
 		l = v._uint64;
 		return true;
+	}else if ( type == P_NILL ){
+		return true;
 	}
+	ERROR("get uint64_t failed");
 	return false;
 }
 
@@ -76,7 +88,10 @@ IROM bool Cbor::get(float& fl) {
 			b[i] = read();
 		fl = f;
 		return true;
+	} else if ( type == P_NILL ){
+		return true;
 	}
+	ERROR("get float failed");
 	return false;
 }
 IROM bool Cbor::get(double& d) {
@@ -91,7 +106,10 @@ IROM bool Cbor::get(double& d) {
 			b[i] = read();
 		d = f;
 		return true;
+	}else if ( type == P_NILL ){
+		return true;
 	}
+	ERROR("get double failed");
 	return false;
 }
 
@@ -103,7 +121,11 @@ IROM bool Cbor::get(Bytes& bytes) {
 		for (int i = 0; i < v._length; i++)
 			bytes.write(read()); // skip data
 		return true;
+	}else if ( type == P_NILL ){
+		return true;
 	}
+	ERROR("get Bytes failed");
+
 	return false;
 }
 
@@ -115,7 +137,11 @@ IROM bool Cbor::get(Str& str) {
 		for (int i = 0; i < v._length; i++)
 			str.write(read()); // skip data
 		return true;
+	}else if ( type == P_NILL ){
+		return true;
 	}
+	ERROR("get Str failed");
+
 	return false;
 
 }
@@ -131,7 +157,10 @@ IROM bool Cbor::get(char* s, int length) {
 				read(); // skip data
 		*s = '\0';
 		return true;
+	}else if ( type == P_NILL ){
+		return true;
 	}
+	ERROR("get char* failed");
 	return false;
 
 }
@@ -141,8 +170,10 @@ IROM Erc Cbor::readToken(PackType& type, CborVariant& v) {
 	int length;
 	uint64_t value;
 
-	if (!hasData())
-		return E_NO_DATA;
+	if (!hasData()) {
+		ERROR("no data");
+		return ENODATA;
+	}
 	uint8_t hdr = read();
 	type = (PackType) (hdr >> 5);
 	minor = hdr & 0x1F;
@@ -152,6 +183,7 @@ IROM Erc Cbor::readToken(PackType& type, CborVariant& v) {
 		length = tokenSize[minor - 24];
 		value = getUint64(length);
 	} else if (minor < 31) {
+		ERROR("invalid minor type CBOR");
 		return E_INVAL;
 	} else {
 		value = 65535; // suppoze very big length will be stopped by BREAK, side effect limited arrays and maps can also be breaked
@@ -200,6 +232,10 @@ IROM uint64_t Cbor::getUint64(int length) {
 	uint64_t l = 0;
 	while (length) {
 		l <<= 8;
+		if ( !hasData() ) {
+			ERROR(" no data ");
+			return l;
+		}
 		l += read();
 		length--;
 	}
@@ -574,8 +610,10 @@ IROM bool Cbor::vscanf(const char *fmt, va_list args) {
 			Bytes* s = va_arg(args, Bytes*);
 			if (get(*s) == false)
 				return false;
-		} else
+		} else {
+			ERROR("invalid format");
 			return false;
+		}
 		++fmt;
 	}
 

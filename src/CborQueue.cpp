@@ -65,22 +65,29 @@ IROM Erc CborQueue::putf(const char * format, ...) {
 	va_end(args);
 	if (b == false)
 		cbor.clear();
-	return putRelease(cbor) & b;
+	return putRelease(cbor) ;
 }
 
 IROM Erc CborQueue::getf(const char * format, ...) {
 	va_list args;
 	Erc erc;
 	Cbor cbor(0);
-	erc = getMap(cbor);
-	if (erc)
-		return erc;
 	va_start(args, format);
-	bool b = cbor.vscanf(format, args);
-	va_end(args);
-	if (b == false)
-		cbor.clear();
-	return getRelease(cbor) & b;
+	if ( (erc=getMap(cbor))==E_OK ) {
+		if ( cbor.vscanf(format, args)) {
+			getRelease(cbor);
+			va_end(args);
+			return E_OK;
+		} else {
+			cbor.clear();
+			getRelease(cbor);
+			va_end(args);
+			return EINVAL;
+		}
+	} else {
+		va_end(args);
+		return erc;
+	}
 }
 
 IROM Erc CborQueue::get(Cbor& cbor) {
@@ -125,6 +132,12 @@ IROM Erc CborQueue::putRelease(Cbor& cbor) {
 	if (_size == 0)
 		return ENOMEM;
 	uint32_t size = cbor.length();
+	if ( size==0) {
+		_buffer.commit(0);
+		cbor.map(0, 0);
+		_size = 0;
+		return ENOMEM;
+	}
 	*_start = size >> 8;
 	*(_start + 1) = size & 0xFF;
 	memcpy(_start + 2, cbor.data(), size);
