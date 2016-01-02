@@ -59,10 +59,7 @@ public:
 	IROM Cbor& addTag(int nr);
 	IROM Cbor& addBreak();
 	IROM Cbor& addNull();
-	inline IROM Cbor& addKey(uint32_t idx) {
-		return add(idx);
-	}
-
+	IROM Cbor& addKey(uint32_t idx);
 	IROM bool addf(const char *fmt, ...);
 	IROM bool vaddf(const char *fmt, va_list args);
 	IROM bool scanf(const char* fmt, ...);

@@ -10,6 +10,7 @@
 //#include "base.h"
 #include <stdint.h>
 #include <errno.h>
+#include <Sys.h>
 
 #define POW 4
 #define CIRCBUF_SIZE (1<<POW)
@@ -22,18 +23,18 @@ private:
 	uint16_t writePos;
 	uint16_t limit;
 public:
-	CircBuf(int size);
-	~CircBuf();
-	int write(uint8_t b);
-	int writeFromIsr(uint8_t b);
-	int read();
-	int readFromIsr();
-        bool hasSpace();
-        bool hasSpace(uint32_t size);
-        bool hasData();
-        void clear();
-	uint32_t size();
-    uint32_t space();
+	IROM CircBuf(int size);
+	IROM ~CircBuf();
+	int  write(uint8_t b);
+	int  writeFromIsr(uint8_t b);
+	int  read();
+	int  readFromIsr();
+	bool  hasSpace();
+	bool  hasSpace(uint32_t size);
+	bool  hasData();
+	void IROM clear();
+	uint32_t  size();
+	uint32_t  space();
 };
 
 #endif /* CIRCBUF_H_ */

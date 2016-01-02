@@ -15,11 +15,11 @@ class Stream {
 private:
 
 public:
-	IROM Stream(){};
+//	IROM  Stream() {};
 	IROM virtual Erc write(uint8_t b)=0;
 	IROM virtual Erc write(uint8_t* pb, uint32_t length)=0;
 	IROM virtual Erc write(Bytes& bytes)=0;
-	IROM  ~Stream(){};
+//	IROM  ~Stream(){};
 	IROM virtual bool hasData()=0;
 	IROM virtual bool hasSpace()=0;
 	IROM virtual uint8_t read()=0;

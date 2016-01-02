@@ -28,10 +28,10 @@ public:
 	virtual bool hasSpace()=0;
 	virtual uint8_t read()=0;
 	virtual void receive(uint8_t b)=0;
-	virtual Erc setBaudrate(uint32_t baudrate);
-	virtual uint32_t getBaudrate();
-	virtual Erc setMode(const char* str);
-	virtual void getMode(char* str);
+	virtual Erc setBaudrate(uint32_t baudrate)=0;
+	virtual uint32_t getBaudrate()=0;
+	virtual Erc setMode(const char* str)=0;
+	virtual void getMode(char* str)=0;
 };
 
 #endif /* UART_H_ */

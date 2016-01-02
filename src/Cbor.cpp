@@ -39,7 +39,7 @@ IROM bool Cbor::get(int32_t& i) {
 	if (readToken(type, v) != E_OK)
 		return false;
 	if (type == P_NINT) {
-		i = v._int64;
+		i = -v._uint64;
 		return true;
 	} else if (type == P_PINT) {
 		i = v._uint64;
@@ -640,6 +640,10 @@ bool Cbor::skipToken() {
 		return true;
 	}
 	return false;
+}
+
+Cbor& Cbor::addKey(uint32_t key) {
+	return add(key);
 }
 
 bool Cbor::gotoKey(uint32_t key) {

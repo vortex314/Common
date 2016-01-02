@@ -18,13 +18,17 @@ Handler* Handler::_firstChild = 0;
  reg(this);
  }*/
 
-IROM Handler::Handler(const char* name) {
+Handler::Handler(const char* name) {
 	_timeout = UINT64_MAX;
 	strncpy(_name, name, sizeof(_name));
 	_next = 0;
 //      _firstChild = 0;
 	restart();
 	reg(this);
+}
+
+Handler::~Handler() {
+//		unreg(this);
 }
 
 IROM void Handler::timeout(uint32_t msec) {
@@ -66,17 +70,32 @@ IROM void Handler::reg(Handler* hdlr) {
 	}
 }
 
+IROM void Handler::unreg(Handler* hdlr) {
+	Handler* prev;
+	INFO("");
+	prev = _firstChild;	// let's hope it is not the first
+
+	while (prev != 0) {
+		if (prev->_next == hdlr) {
+			prev->_next = prev->_next->_next;
+			break;
+		}
+		prev = prev->_next;
+	}
+}
+
 //_________________________________________________________________________________________________
 //
 //       LISTENER LIST
 //_________________________________________________________________________________________________
-Handler* hdlr;
+//Handler* hdlr;
 IROM void Handler::dispatchToChilds(Msg& msg) {
 	Handler* hdlr;
 	if (first() == 0)
 		ERROR(" no handlers ");
 	for (hdlr = first(); hdlr != 0; hdlr = hdlr->next()) {
 		msg.rewind();
+//	INFO("%s dispatch",hdlr->getName());
 		if (hdlr->isRunning())
 			hdlr->dispatch(msg);
 	}

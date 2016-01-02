@@ -19,10 +19,9 @@ class Handler: public ProtoThread {
 
 public:
 //	Handler();
-	Handler(const char* name);
+	IROM Handler(const char* name);
 
-	~Handler() {
-	}
+	IROM ~Handler() ;
 
 	void timeout(uint32_t msec);
 	bool timeout();
@@ -31,9 +30,11 @@ public:
 //_____________________________________
 	static Handler* first();
 	Handler* next();
-	static void dispatchToChilds(Msg& msg);
+	static void IROM dispatchToChilds(Msg& msg);
 	static bool timeouts();
-	void reg(Handler* hdlr);
+	static IROM void reg(Handler* hdlr);
+	static IROM void unreg(Handler* hdlr);
+
 };
 
 #endif /* HANDLER_H_ */
