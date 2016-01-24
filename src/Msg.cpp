@@ -75,7 +75,6 @@ IROM bool Msg::init() {
 	if (_init)
 		return true;
 	if (!_queue) {
-//		INFO("CBOR Queue created");
 		_queue = new CborQueue(1024);
 		__msg = new Msg(20);
 		_init = true;
@@ -110,30 +109,30 @@ IROM Msg& Msg::send() {
 	return *this;
 }
 
-IROM void Msg::publish(const void* src, Signal signal) {
+IROM  CborQueue& Msg::queue(){
+		return *_queue;
+	}
+
+IROM Erc Msg::publish(const void* src, Signal signal) {
 	init();
-//	INFO(" publish %x %d ", src, signal);
 	Erc erc = _queue->putf("uu", src, signal);
 	wakeup();
-//	INFO("done %d",erc );
+	return erc;
 }
 
-IROM void Msg::publish(const void* src, Signal signal, int par) {
+IROM Erc Msg::publish(const void* src, Signal signal, int par) {
 	init();
-//	INFO(" publish %x %d %d ", src, signal, par);
-	_queue->putf("uui", src, signal, par);
+	Erc erc =_queue->putf("uui", src, signal, par);
 	wakeup();
-//	INFO("done");
+	return erc;
 }
 
 IROM bool Msg::receive() {
 	if (_queue->hasData()) {
-//		INFO("msg recv   ");
 		if (_queue->get(*this) == E_OK) {
 			get((PTR_CAST &) _src);
 			get((int&) _signal);
 			_offset = offset();
-//			INFO("msg recv %x : %d  ",_src,_signal);
 			return true;
 		}
 	}

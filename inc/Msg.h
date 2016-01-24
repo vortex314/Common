@@ -11,6 +11,8 @@
 typedef enum Signal {
 	SIG_ALL=0,
 	SIG_INIT,
+	SIG_NEW,
+	SIG_DELETE,
 	SIG_IDLE,
 	SIG_ERC,
 	SIG_TICK,
@@ -50,8 +52,9 @@ public:
 	bool is(const void* src, Signal signal, int v1);
 	static bool init();
 	IROM Msg& create(const void * src, Signal signal);
-	IROM static void publish(const void * src, Signal signal);
-	IROM static void publish(const void * src, Signal signal, int par);
+	IROM static Erc publish(const void * src, Signal signal);
+	IROM static Erc publish(const void * src, Signal signal, int par);
+	IROM static CborQueue& queue();
 //	static void vpublish(const char* fmt, ...);
 
 	Msg& rewind();

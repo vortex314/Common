@@ -28,7 +28,7 @@ Handler::Handler(const char* name) {
 }
 
 Handler::~Handler() {
-//		unreg(this);
+	unreg(this);
 }
 
 IROM void Handler::timeout(uint32_t msec) {
@@ -71,16 +71,18 @@ IROM void Handler::reg(Handler* hdlr) {
 }
 
 IROM void Handler::unreg(Handler* hdlr) {
-	Handler* prev;
 	INFO("");
-	prev = _firstChild;	// let's hope it is not the first
-
-	while (prev != 0) {
-		if (prev->_next == hdlr) {
-			prev->_next = prev->_next->_next;
-			break;
+	if (_firstChild == hdlr)
+		_firstChild = hdlr->_next;
+	else {
+		Handler* cursor = _firstChild;
+		while (cursor->_next != 0) {
+			if (cursor->_next == hdlr) {
+				cursor->_next = hdlr->_next;
+				break;
+			}
+			cursor = cursor->_next;
 		}
-		prev = prev->_next;
 	}
 }
 
