@@ -64,7 +64,7 @@ public:
 	IROM bool vaddf(const char *fmt, va_list args);
 	IROM bool scanf(const char* fmt, ...);
 	IROM bool vscanf(const char* fmt, va_list args);
-	void sprintf(Str& s);
+	IROM void sprintf(Str& s);
 
 	IROM bool get(bool& bl);
 	IROM bool get(uint32_t& i);
@@ -76,6 +76,7 @@ public:
 	IROM bool get(Bytes& bytes);
 	IROM bool get(Str& str);
 	IROM bool gotoKey(uint32_t idx);
+	IROM bool getMapped(Bytes& bytes);
 
 	Erc readToken(PackType& type, CborVariant& variant);
 	Erc toString(Str& str);

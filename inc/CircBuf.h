@@ -23,18 +23,18 @@ private:
 	uint16_t writePos;
 	uint16_t limit;
 public:
-	IROM CircBuf(int size);
-	IROM ~CircBuf();
-	int  write(uint8_t b);
-	int  writeFromIsr(uint8_t b);
-	int  read();
-	int  readFromIsr();
-	bool  hasSpace();
-	bool  hasSpace(uint32_t size);
-	bool  hasData();
-	void IROM clear();
-	uint32_t  size();
-	uint32_t  space();
+	 IRAM CircBuf(int size);
+	 IRAM ~CircBuf();
+	int IRAM write(uint8_t b);
+	int  IRAM writeFromIsr(uint8_t b);
+	int IRAM read();
+	int IRAM readFromIsr();
+	bool IRAM  hasSpace();
+	bool IRAM hasSpace(uint32_t size);
+	bool  IRAM hasData();
+	void IRAM clear();
+	uint32_t IRAM  size();
+	uint32_t IRAM space();
 };
 
 #endif /* CIRCBUF_H_ */

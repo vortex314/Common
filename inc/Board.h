@@ -10,10 +10,10 @@
 
 class Board {
 public:
-	static void disableInterrupts() {
+	 static void IRAM disableInterrupts() {
 	}
 	;
-	static void enableInterrupts() {
+	 static void IRAM enableInterrupts() {
 	}
 	;
 };

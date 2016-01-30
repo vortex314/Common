@@ -124,8 +124,19 @@ IROM bool Cbor::get(Bytes& bytes) {
 	}else if ( type == P_NILL ){
 		return true;
 	}
-	ERROR("get Bytes failed");
+	return false;
+}
 
+IROM bool Cbor::getMapped(Bytes& bytes) {
+	CborVariant v;
+	PackType type;
+	bytes.clear();
+	if (readToken(type, v) == E_OK && type == P_BYTES) {
+		bytes.map(data()+offset(),v._length);
+		return true;
+	}else if ( type == P_NILL ){
+		return true;
+	}
 	return false;
 }
 

@@ -92,28 +92,28 @@ public:
 			_ptLine(0) {
 	}
 
-	virtual ~ProtoThread() {
+	virtual  ~ProtoThread() {
 	}
 
 	// Restart protothread.
-	void restart() {
+	void  restart() {
 		_ptLine = 0;
 	}
 
 	// Stop the protothread from running. Happens automatically at PT_END.
 	// Note: this differs from the Dunkels' original protothread behaviour
 	// (his restart automatically, which is usually not what you want).
-	void stop() {
+	void  stop() {
 		_ptLine = LineNumberInvalid;
 	}
 
 	// Return true if the protothread is running or waiting, false if it has
 	// ended or exited.
-	bool isRunning() {
+	bool  isRunning() {
 		return _ptLine != LineNumberInvalid;
 	}
 
-	bool isReady() {
+	bool  isReady() {
 		return _ptLine == LineNumberInvalid;
 	}
 
