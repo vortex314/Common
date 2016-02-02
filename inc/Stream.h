@@ -16,15 +16,15 @@ private:
 
 public:
 //	IROM  Stream() {};
-	IROM virtual Erc write(uint8_t b)=0;
-	IROM virtual Erc write(Bytes& bytes)=0;
+	 virtual Erc write(uint8_t b)=0;
+	 virtual Erc write(Bytes& bytes)=0;
 //	IROM  ~Stream(){};
-	IROM virtual bool hasData()=0;
-	IROM virtual bool hasSpace()=0;
-	IROM virtual uint8_t read()=0;
-	IROM virtual bool isConnected()=0;
-	IROM virtual void connect()=0;
-	IROM virtual void disconnect()=0;
+	 virtual bool hasData()=0;
+	 virtual bool hasSpace()=0;
+	 virtual uint8_t read()=0;
+	 virtual bool isConnected()=0;
+	 virtual void connect()=0;
+	 virtual void disconnect()=0;
 
 };
 

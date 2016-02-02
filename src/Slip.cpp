@@ -1,15 +1,13 @@
 #include "Slip.h"
 
-Slip::Slip(uint32_t size) : Bytes(size)
-{
-    //ctor
+Slip::Slip(uint32_t size) :
+		Bytes(size) {
+	_escaped=false;
 }
 
-Slip::~Slip()
-{
-    //dtor
+Slip::~Slip() {
+	//dtor
 }
-
 
 //PUBLIC
 //_________________________________________________________________________
@@ -63,7 +61,6 @@ Slip& Slip::removeCrc() //PUBLIC
 
 //PUBLIC
 //_________________________________________________________________________
-
 Slip& Slip::decode() //PUBLIC
 //_________________________________________________________________________
 {
@@ -90,11 +87,14 @@ Slip& Slip::encode() //PUBLIC
 	uint8_t *p, *q;
 	uint8_t *_capacity = _start + _limit;
 	for (p = _start; p < _capacity; p++) {
-		if ((*p == SOF) || (*p == ESC)) {
+		if ((*p == END) || (*p == ESC)) {
 			for (q = _capacity; q > p; q--)
 				*(q + 1) = *q;
 			_capacity++;
-			*(p + 1) = *p ^ 0x20;
+			if (*p == END)
+				*(p + 1) = ESC_END;
+			else
+				*(p + 1) = ESC_ESC;
 			*p = ESC;
 		}
 	}
@@ -111,21 +111,36 @@ Slip& Slip::frame() //PUBLIC
 	uint8_t *end = _start + _limit;
 	for (q = end; q >= _start; q--)
 		*(q + 1) = *q;
-	*_start = SOF;
-	*(end + 1) = SOF;
+	*_start = END;
+	*(end + 1) = END;
 	end += 2;
 	_limit = end - _start;
 	return *this;
 }
 
+void Slip::reset(){
+	clear();
+	_escaped=false;
+}
+
 bool Slip::fill(uint8_t b) {
-	if (b == SOF) {
-		if (_offset > 0)
+	if (b == END) {
+		if (offset() > 0)
 			return true;
 		else {
 			return false;  // don't add SOF
 		}
-	} else
+	} else if (b == ESC) {
+		_escaped = true;
+	} else if (b == ESC_ESC && _escaped) {
+		write(ESC);
+		_escaped = false;
+	} else if (b == ESC_END && _escaped) {
+		write(END);
+		_escaped = false;
+	} else {
 		write(b);
+	}
 	return false;
 }
+

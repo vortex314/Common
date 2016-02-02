@@ -25,6 +25,8 @@ uint64_t SysMillis();
 #define ERROR(fmt,...)  SysLog(LOG_ERROR,__FILE__, __FUNCTION__ ,fmt,##__VA_ARGS__)
 #define FATAL(fmt,...) SysLog(LOG_FATAL,__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
 #define PERROR()  SysLog(LOG_ERROR,__FILE__, __FUNCTION__ ,"line : %d - System failure : %d : %s ",__LINE__,errno,strerror(errno));
+#define ASSERT(xxx) if ((xxx)==0) INFO(" ASSERT FAILED " # xxx)
+
 //#define SYSTEM_ERROR(erc) ERROR("errno : %d",erc)
 
 // ---------------------- LINUX ------------------------------

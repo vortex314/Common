@@ -118,7 +118,7 @@ IROM bool Cbor::get(Bytes& bytes) {
 	PackType type;
 	if (readToken(type, v) == E_OK && type == P_BYTES) {
 		bytes.clear();
-		for (int i = 0; i < v._length; i++)
+		for (int i = 0; i < v._uint64; i++)
 			bytes.write(read()); // skip data
 		return true;
 	}else if ( type == P_NILL ){
@@ -132,7 +132,7 @@ IROM bool Cbor::getMapped(Bytes& bytes) {
 	PackType type;
 	bytes.clear();
 	if (readToken(type, v) == E_OK && type == P_BYTES) {
-		bytes.map(data()+offset(),v._length);
+		bytes.map(data()+offset(),v._uint64);
 		return true;
 	}else if ( type == P_NILL ){
 		return true;
@@ -145,7 +145,7 @@ IROM bool Cbor::get(Str& str) {
 	PackType type;
 	if (readToken(type, v) == E_OK && type == P_STRING) {
 		str.clear();
-		for (int i = 0; i < v._length; i++)
+		for (int i = 0; i < v._uint64; i++)
 			str.write(read()); // skip data
 		return true;
 	}else if ( type == P_NILL ){
@@ -161,7 +161,7 @@ IROM bool Cbor::get(char* s, int length) {
 	CborVariant v;
 	PackType type;
 	if (readToken(type, v) == E_OK && type == P_STRING) {
-		for (int i = 0; i < v._length; i++)
+		for (uint32_t i = 0; i < v._uint64; i++)
 			if (i < length)
 				*s++ = read();
 			else
@@ -197,7 +197,7 @@ IROM Erc Cbor::readToken(PackType& type, CborVariant& v) {
 		ERROR("invalid minor type CBOR");
 		return E_INVAL;
 	} else {
-		value = 65535; // suppoze very big length will be stopped by BREAK, side effect limited arrays and maps can also be breaked
+		value = 65535; // suppose very big length will be stopped by BREAK, side effect limited arrays and maps can also be breaked
 	}
 	if (type == P_SPECIAL)
 		switch (minor) {
@@ -270,7 +270,7 @@ IROM Cbor::PackType Cbor::tokenToString(Str& str) {
 	case P_BYTES: {
 		str << "0x";
 		int i;
-		for (i = 0; i < v._length; i++)
+		for (i = 0; i < v._uint64; i++)
 			if (hasData())
 				str.appendHex(read());
 		return P_BYTES;
@@ -278,14 +278,14 @@ IROM Cbor::PackType Cbor::tokenToString(Str& str) {
 	case P_STRING: {
 		str << "\"";
 		int i;
-		for (i = 0; i < v._length; i++)
+		for (i = 0; i < v._uint64; i++)
 			if (hasData())
 				str.append((char) read());
 		str << "\"";
 		return P_STRING;
 	}
 	case P_MAP: {
-		int count = v._length;
+		int count = v._uint64;
 		str << "{";
 		for (int i = 0; i < count; i++) {
 			if (i)
@@ -299,7 +299,7 @@ IROM Cbor::PackType Cbor::tokenToString(Str& str) {
 		return P_MAP;
 	}
 	case P_ARRAY: {
-		int count = v._length;
+		int count = v._uint64;
 		str << "[";
 		for (int i = 0; i < count; i++) {
 			if (i)
@@ -311,7 +311,7 @@ IROM Cbor::PackType Cbor::tokenToString(Str& str) {
 		return P_ARRAY;
 	}
 	case P_TAG: {
-		int count = v._length;
+		int count = v._uint64;
 		str << "(";
 		str << count;
 		str << ":";
@@ -418,6 +418,8 @@ IROM Cbor& Cbor::add(double d) {
 	return *this;
 }
 IROM Cbor& Cbor::add(Bytes& b) {
+	INFO(" BYTES  %x : %d %d ",&b,b.length(),b.capacity());
+
 	addToken(P_BYTES, b.length());
 	b.offset(0);
 	while (b.hasData())
@@ -568,8 +570,8 @@ IROM bool Cbor::vaddf(const char *fmt, va_list args) {
 			Str* s = va_arg(args, Str*);
 			add(*s);
 		} else if (*fmt == 'B') {
-			Bytes* s = va_arg(args, Bytes*);
-			add(*s);
+			Bytes* bytes = va_arg(args, Bytes*);
+			add(*bytes);
 		} else
 			return false;
 		++fmt;
@@ -645,7 +647,7 @@ bool Cbor::skipToken() {
 	if (readToken(pt, cv) == E_OK) {
 		if (pt == P_BYTES || pt == P_STRING) { // skip remaining bytes
 			int i;
-			for (i = 0; i < cv._length; i++)
+			for (i = 0; i < cv._uint64; i++)
 				read();
 		}
 		return true;
