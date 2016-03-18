@@ -11,16 +11,15 @@
 #include <Erc.h>
 #include <Str.h>
 
-
 class Base64 {
 private:
 	static const char encodeCharacterTable[];
-	static const char decodeCharacterTable[];
+	static const int8_t decodeCharacterTable[];
 public:
 	Base64();
 	~Base64();
-	static Erc Encode(Bytes& in, Str& out);
-	static Erc Decode(Str& in, Bytes& out);
+	static Erc encode( Str& out, Bytes& in);
+	static Erc decode( Bytes& out, Str& in);
 };
 
 #endif /* SRC_BASE64_H_ */
