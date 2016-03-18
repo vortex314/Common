@@ -103,7 +103,7 @@ Json& Json::add(const char* s) {
 Json& Json::addKey(const char* s) {
 //	addComma();
 	add(s);
-	_break[_breakIndex]--; // first key is not a comple value yet for comma reasons
+	_break[_breakIndex]=0; // first key is not a comple value yet for comma reasons
 	append(':');
 	return *this;
 }
