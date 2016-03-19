@@ -54,11 +54,12 @@ Base64::~Base64() {
  \param in The data to encode
  \param out The encoded data as characters
  */
-Erc Base64::encode(Str& out, Bytes &in) {
+Erc Base64::encode(Str& out, Bytes& in) {
 	char buff1[3];
 	char buff2[4];
 	uint8_t i = 0, j;
 	in.offset(0);
+	out.clear();
 	while (in.hasData()) {
 		buff1[i++] = in.read();
 		if (i == 3) {
@@ -73,8 +74,7 @@ Erc Base64::encode(Str& out, Bytes &in) {
 			i = 0;
 		}
 	}
-
-	if (--i) {
+	if (i) {
 		for (j = i; j < 3; j++)
 			buff1[j] = '\0';
 
@@ -102,6 +102,8 @@ Erc Base64::decode(Bytes& out,Str &in) {
 	char buff1[4];
 	char buff2[4];
 	uint8_t i = 0, j;
+	out.clear();
+	in.offset(0);
 
 	while (in.hasData()) {
 		buff2[i] = in.read();

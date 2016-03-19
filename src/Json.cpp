@@ -103,7 +103,7 @@ Json& Json::add(const char* s) {
 Json& Json::addKey(const char* s) {
 //	addComma();
 	add(s);
-	_break[_breakIndex]=0; // first key is not a comple value yet for comma reasons
+	_break[_breakIndex] = 0; // first key is not a comple value yet for comma reasons
 	append(':');
 	return *this;
 }
@@ -181,7 +181,7 @@ Json& Json::addNull() {
 #include "jsmn.h"
 #include <stdlib.h>
 
-IROM bool Json::vscanf(const char *fmt, va_list args) {
+bool Json::vscanf(const char *fmt, va_list args) {
 	int64_t ll;
 
 	while (*fmt != '\0') {
@@ -243,7 +243,7 @@ IROM bool Json::vscanf(const char *fmt, va_list args) {
 	return true;
 }
 
-IROM bool Json::scanf(const char *fmt, ...) {
+bool Json::scanf(const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
 	vscanf(fmt, args);
@@ -251,7 +251,7 @@ IROM bool Json::scanf(const char *fmt, ...) {
 	return true;
 }
 
-IROM Erc Json::parse() {
+Erc Json::parse() {
 	jsmn_init(&_parser);
 	_tokenIndex = 0;
 //	INFO(" str : %s , length : %d , tokens : %x , max_tokens :  %d ", c_str(),
@@ -260,12 +260,18 @@ IROM Erc Json::parse() {
 	JSON_MAX_TOKENS);
 	if (_tokenCount < 0)
 		return EINVAL;
+#ifdef DEBUG_LEVEL
 	int i;
 	for (i = 0; i < _tokenCount; i++) {
-//		INFO(" token[%d] {%d,%d,%d} : %d , parent :  %d", i, _tokens[i].start,
-//				_tokens[i].end, _tokens[i].size, _tokens[i].type,
-//				_tokens[i].parent);
+		INFO(" token[%d] {%d,%d}  count : %d : type : %d , parent index :  %d", //
+				i,//
+				_tokens[i].start,//
+				_tokens[i].end,//
+				_tokens[i].size,//
+				_tokens[i].type,//
+				_tokens[i].parent);
 	}
+#endif
 	return E_OK;
 }
 
@@ -322,14 +328,15 @@ bool Json::get(bool & bl) {
 	return false;
 }
 
-bool Json::get(Str& str) {;
+bool Json::get(Str& str) {
+	;
 	if (_tokenIndex > _tokenCount)
 		return false;
 	if (_tokens[_tokenIndex].type != JSMN_STRING)
 		return false;
 	const char* s = c_str() + _tokens[_tokenIndex].start;
 	/*if (s[_tokens[_tokenIndex].start] == '"'
-			&& s[_tokens[_tokenIndex].end] == '"')*/ {
+	 && s[_tokens[_tokenIndex].end] == '"')*/{
 		str.clear();
 		for (int i = _tokens[_tokenIndex].start; i < _tokens[_tokenIndex].end;
 				i++) {
@@ -394,5 +401,31 @@ bool Json::getMap() {
 		return false;
 	_tokenIndex++;
 	return true;
+}
+
+void Json::rewind() {
+	_tokenIndex = 0;
+}
+
+bool Json::findKey(const char* key) {
+	if (_tokens[_tokenIndex].type != JSMN_OBJECT)
+		return false;
+	uint32_t strLength = strlen(key);
+	for (int i = 0; i < _tokenCount; i++) {
+		uint32_t tokenLength = _tokens[i].end
+				- _tokens[i].start;
+//		INFO(" %d %d -> %d : %d %s ",_tokenIndex,i,strLength,tokenLength,data() + _tokens[i].start);
+		if ((_tokens[i].parent == _tokenIndex) && (strLength == tokenLength)
+				&& (strncmp(key,
+						(const char*) (data() + _tokens[i].start),
+						tokenLength) == 0)) {
+			int idx=i;
+			if ( (i+1)<_tokenCount && _tokens[i+1].parent==i ) {
+				_tokenIndex=i+1;
+				return true;
+			}
+		}
+	}
+	return false;
 }
 

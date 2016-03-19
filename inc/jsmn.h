@@ -44,7 +44,7 @@ typedef struct {
 	offset_t end;
 	offset_t size;
 #ifdef JSMN_PARENT_LINKS
-	offset_t parent;
+	offset_t parent; // index of parent token, object, array or the key of the value in an object
 #endif
 } jsmntok_t;
 
