@@ -43,6 +43,7 @@ public:
     Str& operator=(const char* const s);
     Str& operator=(Str& s);
     Str& append(const char* s);
+    Str& append(Str& str);
     Str& append(char s);
     Str& append(void* ptr);
     Str& append(uint64_t val);
@@ -65,6 +66,9 @@ public:
     Erc parse(uint32_t* pval);
     Erc parse(int32_t* pval);
     Erc parseHex(uint8_t* pb);
+    static bool ishex(uint8_t ch);
+    static bool isdigit(uint8_t ch);
+    static uint8_t hexToNibble(uint8_t ch);
 private:
 
 };

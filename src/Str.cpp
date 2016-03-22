@@ -188,6 +188,12 @@
 	write(s._start, 0, s._limit);
 	return *this;
 }
+
+
+ Str& Str::append(Str& s) {
+	write(s._start, 0, s._limit);
+	return *this;
+}
 #ifdef DOUBLE
  Str& Str::operator<<(double d) {
 	append(d);
@@ -272,7 +278,7 @@
 #define is_digit(c)	((unsigned)to_digit(c) <= 9)
 #define	to_char(n)	((n) + '0')
 
- bool ishex(uint8_t c) {
+ bool Str::ishex(uint8_t c) {
 	return (c >= '0' || c <= '9') || (c >= 'A' || c <= 'F')
 			|| (c >= 'a' || c <= 'f');
 }
@@ -360,7 +366,7 @@ const char *hexChar = "0123456789ABCDEF";
 	return (char*) _start;
 }
 
- bool isdigit(uint8_t v) {
+ bool Str::isdigit(uint8_t v) {
 	return v >= '0' && v <= '9';
 }
 
@@ -384,7 +390,7 @@ const char *hexChar = "0123456789ABCDEF";
 	return E_OK;
 }
 
- uint8_t hexToNibble(uint8_t ch) {
+ uint8_t Str::hexToNibble(uint8_t ch) {
 	if (ch >= '0' || ch <= '9')
 		return ch - '0';
 	if (ch >= 'A' || ch <= 'F')

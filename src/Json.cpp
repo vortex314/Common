@@ -49,6 +49,7 @@ void Json::addComma() {
 }
 
 Json& Json::add(int i) {
+	bool get(int64_t& ul);
 	addComma();
 	append(i);
 	return *this;
@@ -120,10 +121,38 @@ Json& Json::clear() {
 	_break[_breakIndex] = 0;
 	return *this;
 }
-
+bool get(int64_t& ul);
 Json& Json::add(int64_t i64) {
 	append(i64);
 	return *this;
+}
+
+Json& Json::addHex(uint64_t ui64) {
+	append("\"0x");
+	appendHex(ui64 >> 24 & 0xFF);
+	appendHex(ui64 >> 16 & 0xFF);
+	appendHex(ui64 >> 8 & 0xFF);
+	appendHex(ui64 & 0xFF);
+	append('"');
+	return *this;
+}
+
+
+bool Json::getHex(uint64_t& ui64) {
+	Str str(0);
+	mapToken(str);
+	if (str.startsWith("0x")) {
+		Str part(0);
+		for (uint16_t i = 2; i < str.length(); i++) {
+			ui64 <<= 4;
+			char ch = str.peek();
+			if (!ishex(ch))
+				return false;
+			ui64 += hexToNibble(ch);
+		}
+		return true;
+	}
+	return false;
 }
 
 Json& Json::add(bool b) {
@@ -412,16 +441,14 @@ bool Json::findKey(const char* key) {
 		return false;
 	uint32_t strLength = strlen(key);
 	for (int i = 0; i < _tokenCount; i++) {
-		uint32_t tokenLength = _tokens[i].end
-				- _tokens[i].start;
+		uint32_t tokenLength = _tokens[i].end - _tokens[i].start;
 //		INFO(" %d %d -> %d : %d %s ",_tokenIndex,i,strLength,tokenLength,data() + _tokens[i].start);
 		if ((_tokens[i].parent == _tokenIndex) && (strLength == tokenLength)
-				&& (strncmp(key,
-						(const char*) (data() + _tokens[i].start),
+				&& (strncmp(key, (const char*) (data() + _tokens[i].start),
 						tokenLength) == 0)) {
-			int idx=i;
-			if ( (i+1)<_tokenCount && _tokens[i+1].parent==i ) {
-				_tokenIndex=i+1;
+			int idx = i;
+			if ((i + 1) < _tokenCount && _tokens[i + 1].parent == i) {
+				_tokenIndex = i + 1;
 				return true;
 			}
 		}

@@ -23,6 +23,7 @@ public:
 	Json& clear();
 
 	Json& add(int i);
+	Json& add(bool b);
 	Json& add(uint32_t i);
 #ifdef DOUBLE
 	Json& add(float f);
@@ -33,7 +34,7 @@ public:
 	Json& add(char const* s);
 	Json& add(uint64_t i64);
 	Json& add(int64_t i64);
-	Json& add(bool b);
+	Json& addHex(uint64_t ui64);
 	Json& addMap(int size);
 	Json& addMap();
 	Json& addArray(int size);
@@ -50,6 +51,7 @@ public:
 	bool get(Str& str);
 	bool get(Bytes& str);
 	bool get(int64_t& ul);
+	bool getHex(uint64_t& ul);
 	bool get(uint32_t& ul);
 	bool get(char* s, int length);
 	bool getArray();
