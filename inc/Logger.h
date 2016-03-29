@@ -1,39 +1,76 @@
 #ifndef LOGGER_H
 #define LOGGER_H
+
+#define LOG_FILE __FILE__
+#define LOG_DATE __DATE__
+typedef enum {
+	FLUSH,  LOG_DEBUG, LOG_INFO, LOG_ERROR, LOG_WARN
+} LogCmd;
+
+#ifndef __cplusplus
+
+#define INFO(fmt,...) SysLogger(LOG_INFO,__FILE__,__FUNCTION__ ,fmt,##__VA_ARGS__)
+#define ERROR(fmt,...) SysLogger(LOG_INFO,__FILE__,__FUNCTION__ ,fmt,##__VA_ARGS__)
+#define WARN(fmt,...) SysLogger(LOG_INFO,__FILE__,__FUNCTION__ ,fmt,##__VA_ARGS__)
+void SysLogger(int level, const char* file, const char* function,
+		const char * format, ...);
+#else
 #include <time.h>
 #include <Str.h>
 #include <errno.h>
 #include <string.h>
-class Logger
-{
-public :
-    enum Level { DEBUG, INFO,WARN,ERROR, FATAL};
-    Logger(int size) ;
-    Logger& level(int level);
-    void setLevel(Level l);
-    Logger& module(const char * m);
-    Logger& log(const char *s);
-    Logger& log(int i);
-    Logger& operator<<(const char *s );
-    Logger& operator<<(int i );
-    Logger& operator<<(Bytes& b);
-    Logger& operator<<(Str& str);
-    Logger& flush();
-    Logger& debug();
-    Logger& warn();
-    Logger& info();
-    Logger& error();
-    Logger& fatal();
-    Logger& perror(const char* s);
-    const char* logTime();
+#include <stdarg.h>
+#define LOG Logger::logger->header(__FILE__,__FUNCTION__)
+#define INFO(fmt,...)  Logger::logger->header(__FILE__,__FUNCTION__).log(fmt,##__VA_ARGS__)
+#define ERROR(fmt,...)  Logger::logger->header(__FILE__,__FUNCTION__).log(fmt,##__VA_ARGS__)
+#define WARN(fmt,...)  Logger::logger->header(__FILE__,__FUNCTION__).log(fmt,##__VA_ARGS__)
 
-private :
-    int _level;
-    int _logLevel;
-    const char* _module;
-    time_t _time;
-    Str _str;
+#define PERROR()  Logger::logger->header(__FILE__,__FUNCTION__).log("line : %d - System failure : %d : %s ",__LINE__,errno,strerror(errno))
+
+
+
+#define ASSERT(xxx) if ((xxx)==0) INFO(" ASSERT FAILED " # xxx)
+
+
+class Logger: public Str {
+public:
+	enum Level {
+		DEBUG, INFO, WARN, ERROR, FATAL
+	};
+	static Logger* logger;
+
+	Logger(int size);
+
+	Logger& level(int level);
+	void setLevel(Level l);
+	Logger& header(const char* file_source, const char* function);
+	Logger& operator<<(LogCmd cmd);
+
+	Logger& operator<<(const char *s);
+	Logger& operator<<(int i);
+	Logger& operator<<(Bytes& b);
+	Logger& dump(Bytes& bytes);
+	Logger& operator<<(Str& str);
+	Logger& vlog(const char * format, va_list args);
+	Logger& log(const char *fmt, ...);
+
+
+	Logger& flush();
+	Logger& debug();
+	Logger& warn();
+	Logger& info();
+	Logger& error();
+	Logger& fatal();
+	Logger& perror(const char* s);
+	const char* logTime();
+
+private:
+
+	int _level;
+	int _logLevel;
+	const char* _module;
+	Str _str;
 };
-#define LOG_FILE __FILE__
-#define LOG_DATE __DATE__
+#endif // __cplusplus
+
 #endif // LOGGER_H

@@ -72,7 +72,7 @@ public:
 	IROM bool get(float& f);
 	IROM bool get(double& d);
 	IROM bool get(int32_t& i);
-	IROM bool get(char*s, int length);
+	IROM bool get(char*s, uint32_t length);
 	IROM bool get(Bytes& bytes);
 	IROM bool get(Str& str);
 	IROM bool gotoKey(uint32_t idx);

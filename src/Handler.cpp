@@ -7,6 +7,7 @@
 #define __STDC_LIMIT_MACROS
 #include "Handler.h"
 #include "Sys.h"
+#include <Logger.h>
 #include "Msg.h"
 Handler* Handler::_firstChild = 0;
 /*IROM Handler::Handler() {
@@ -71,7 +72,6 @@ IROM void Handler::reg(Handler* hdlr) {
 }
 
 IROM void Handler::unreg(Handler* hdlr) {
-	INFO("");
 	if (_firstChild == hdlr)
 		_firstChild = hdlr->_next;
 	else {

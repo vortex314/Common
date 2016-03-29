@@ -9,6 +9,7 @@
 #include "errno.h"
 #include "platform.h"
 #include "Sys.h"
+#include <Logger.h>
 
 #include "malloc.h"
 #if defined(__CYGWIN__)

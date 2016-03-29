@@ -9,7 +9,7 @@
 #define ERC_H_
 #include <stdint.h>
 #include <errno.h>
-#include "Sys.h"
+//#include "Sys.h"
 #define E_OK				0
 #define E_INVAL 			(1<<0)		// Inavlid arguments
 #define E_LACK_RESOURCE  	(1<<1)		// missing resource or capacity
@@ -27,6 +27,6 @@ typedef uint32_t Erc;
 
 #define CER(_x)	{ Erc erc; if ( erc=_x ) return erc;}
 #ifndef ASSERT
-#define ASSERT(__expr) if ((__expr)==false) {ERROR(" ASSERT failed "); while(1);};
+//#define ASSERT(__expr) if ((__expr)==false) {ERROR(" ASSERT failed "); while(1);};
 #endif
 #endif /* ERC_H_ */

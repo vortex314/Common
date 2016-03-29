@@ -4,28 +4,15 @@
 #include "stdint.h"
 #include "errno.h"
 #include <string.h>
+#include <Erc.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef enum  SysLogLevel {
-	LOG_TRACE = 0, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR, LOG_FATAL
-} SysLogLevel;
-extern const char* SysLogLevelStr[];
 
-void SysLog(SysLogLevel level, const char* file, const char* function,
-		const char * format, ...);
 uint64_t SysMillis();
 
-#define TRACE(fmt,...) SysLog(LOG_TRACE,__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
-#define DEBUG(fmt,...) SysLog(LOG_DEBUG,__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
-#define INFO(fmt,...)  SysLog(LOG_INFO,__FILE__,__FUNCTION__ ,fmt,##__VA_ARGS__)
-#define WARN(fmt,...)  SysLog(LOG_WARN,__FILE__, __FUNCTION__ ,fmt,##__VA_ARGS__)
-#define ERROR(fmt,...)  SysLog(LOG_ERROR,__FILE__, __FUNCTION__ ,fmt,##__VA_ARGS__)
-#define FATAL(fmt,...) SysLog(LOG_FATAL,__FILE__,__FUNCTION__,fmt,##__VA_ARGS__)
-#define PERROR()  SysLog(LOG_ERROR,__FILE__, __FUNCTION__ ,"line : %d - System failure : %d : %s ",__LINE__,errno,strerror(errno));
-#define ASSERT(xxx) if ((xxx)==0) INFO(" ASSERT FAILED " # xxx)
 
 //#define SYSTEM_ERROR(erc) ERROR("errno : %d",erc)
 
@@ -68,7 +55,7 @@ public:
 	static void warn(int erc, const char* s);
 	static void interruptEnable();
 	static void interruptDisable();
-	static void log(SysLogLevel level, const char* file, const char* function,const char * format, ...);
+	static void delayUs(uint32_t delay);
 protected:
 private:
 };
