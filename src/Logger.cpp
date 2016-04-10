@@ -16,7 +16,7 @@ Logger::Logger(int size) :
 	_level = INFO;
 }
 
-#ifdef _linux
+#ifdef _linux || __CYGWIN__
 Logger& Logger::header(const char* file_source,const char* function) {
 	if (_level >= _logLevel) {
 		std::cout << logTime();
@@ -79,7 +79,18 @@ Logger& Logger::header(const char* file_source, const char* function) {
 }
 
 extern "C" void uart0WriteBytes(uint8_t* data, uint32_t length);
-
+#ifdef __CYGWIN__
+#include <iostream>
+Logger& Logger::operator<<(LogCmd cmd) {
+	if (cmd == FLUSH) {
+		append("\n");
+		cout << c_str() << endl;
+		Sys::delayUs(10000);
+		clear();
+	}
+	return *this;
+}
+#else
 Logger& Logger::operator<<(LogCmd cmd) {
 	if (cmd == FLUSH) {
 		append("\n");
@@ -89,6 +100,7 @@ Logger& Logger::operator<<(LogCmd cmd) {
 	}
 	return *this;
 }
+#endif
 #include <stdarg.h>
 extern "C" int ets_vsnprintf(char *, size_t, const char *, va_list);
 
