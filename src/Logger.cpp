@@ -1,5 +1,6 @@
 #include "Logger.h"
-#ifdef __linux__
+#if defined(__linux__) | defined( __CYGWIN__)
+#include <cygwin/signal.h>
 #include <iostream>
 #include <sys/time.h>
 #include <stdio.h>
@@ -16,26 +17,31 @@ Logger::Logger(int size) :
 	_level = INFO;
 }
 
-#ifdef _linux || __CYGWIN__
-Logger& Logger::header(const char* file_source,const char* function) {
-	if (_level >= _logLevel) {
-		std::cout << logTime();
-		std::cout << " | ";
-		std::cout << sLevel[_level] << " | ";
-		std::cout << _module << " - ";
-		_str.offset(0);
-		while (_str.hasData())
-		std::cout << _str.read();
-		std::cout << std::endl;
-	}
-	_str.clear();
+Logger& Logger::header(const char* file_source, const char* function) {
+	if (length())
+		*this << FLUSH;
+	clear();
+	append(Sys::millis());
+	while (length() < 8)
+		append(' ');
+	append("| ");
+	append(file_source);
+	while (length() < 30)
+		append(' ');
+	append("| ");
+	append(function);
+	while (length() < 40)
+		append(' ');
+	append("| ");
 	return *this;
 }
+
+#if defined(__linux__) | defined( __CYGWIN__)
+
 Logger& Logger::operator<<(LogCmd cmd) {
-	if ( cmd==FLUSH) {
-		append("\n");
-		uart0WriteBytes((uint8_t*)c_str(),length());
-	}
+	if (cmd == FLUSH)
+		flush();
+	return *this;
 }
 
 const char* Logger::logTime() {
@@ -59,24 +65,6 @@ Logger& Logger::perror(const char* s) {
 	return *this;
 }
 #else
-Logger& Logger::header(const char* file_source, const char* function) {
-	if (length())
-		*this << FLUSH;
-	clear();
-	append(Sys::millis());
-	while (length() < 8)
-		append(' ');
-	append("| ");
-	append(file_source);
-	while (length() < 30)
-		append(' ');
-	append("| ");
-	append(function);
-	while (length() < 40)
-		append(' ');
-	append("| ");
-	return *this;
-}
 
 extern "C" void uart0WriteBytes(uint8_t* data, uint32_t length);
 #ifdef __CYGWIN__
@@ -104,8 +92,8 @@ Logger& Logger::operator<<(LogCmd cmd) {
 #include <stdarg.h>
 extern "C" int ets_vsnprintf(char *, size_t, const char *, va_list);
 
+#endif
 Logger& Logger::vlog(const char * format, va_list args) {
-
 	return *this;
 }
 
@@ -114,13 +102,15 @@ Logger& Logger::log(const char *fmt, ...) {
 	va_start(args, fmt);
 	char* buffer = (char*) (data() + length());
 	uint32_t size = capacity() - length();
+#ifdef __ESP8266__
 	ets_vsnprintf(buffer, size, fmt, args);
+#else
+	vsnprintf(buffer, size, fmt, args);
+#endif
 	length(length() + strlen(buffer));
 	va_end(args);
 	return *this;
 }
-
-#endif
 
 void Logger::setLevel(Level l) {
 	_logLevel = l;
@@ -153,11 +143,16 @@ Logger& Logger::operator<<(Str& str) {
 	return *this;
 }
 
-#ifdef _linux
+#ifdef __CYGWIN__
 Logger& Logger::flush() {
-
+	{
+		while (_str.hasData())
+			std::cout << _str.read();
+		std::cout << std::endl;
+	}
+	_str.clear();
+	return *this;
 }
-
 #endif
 
 //_______________________________________________________________________________
@@ -198,8 +193,8 @@ Logger& Logger::dump(Bytes& bytes) {
 	return *this;
 }
 
-extern "C" void SysLogger(int level, const char* file,
-		const char* function, const char * fmt, ...) {
+extern "C" void SysLogger(int level, const char* file, const char* function,
+		const char * fmt, ...) {
 	Logger::logger->header(file, function);
 	va_list args;
 	va_start(args, fmt);
