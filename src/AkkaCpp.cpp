@@ -27,7 +27,7 @@ typedef enum {
 	TIMEOUT, TXD, RXD, CONNECT, DISCONNECT, CONNECTED, DISCONNECTED
 } Event;
 
-// typedef uint8_t ActorRef;
+// typedef uint8_t Actor&;
 
 uint8_t masterIdx = 1;
 #include <CborQueue.h>
@@ -38,33 +38,33 @@ class Actor;
 
 //______________________________________________________
 //
-
-class ActorRef {
+/*
+class Actor {
 	uint8_t _idx;
 
 public:
-	ActorRef(int idx) {
+	Actor(int idx) {
 		_idx = idx;
 	}
 	Actor* actor();
 
-	ActorRef left(ActorRef ref);
-	ActorRef right(ActorRef ref);
-	ActorRef right(int i);
-	ActorRef sender(ActorRef sender);
-	ActorRef left();
-	ActorRef right();
-	ActorRef operator>>(ActorRef dst);
+	Actor& left(Actor& ref);
+	Actor& right(Actor& ref);
+	Actor& right(int i);
+	Actor& sender(Actor& sender);
+	Actor& left();
+	Actor& right();
+	Actor& operator>>(Actor& dst);
 
-	bool equals(ActorRef& ref) {
+	bool equals(Actor&& ref) {
 		return _idx == ref._idx;
 	}
 
-	ActorRef tell(ActorRef src, Event event, int detail = 0);
-	ActorRef tell(ActorRef src, Event event, int detail, Cbor& data);
-	ActorRef tell(ActorRef src, Event event, const char* format, ...);
-	void forward(ActorRef src, Event event, Cbor& data);
-};
+	Actor& tell(Actor& src, Event event, int detail = 0);
+	Actor& tell(Actor& src, Event event, int detail, Cbor& data);
+	Actor& tell(Actor& src, Event event, const char* format, ...);
+	void forward(Actor& src, Event event, Cbor& data);
+};*/
 
 //______________________________________________________
 //
@@ -74,13 +74,13 @@ public:
 #define MAX_ACTORS 255
 class Actor {
 	uint8_t _idx;
-	ActorRef _self;
-	ActorRef _left;
-	ActorRef _right;
-	ActorRef _sender;
+	Actor& _self;
+	Actor& _left;
+	Actor& _right;
+	Actor& _sender;
 	uint64_t _timeout;
 	const char* _path;
-	static ActorRef deadLetterActorRef;
+	static Actor& deadLetterActor;
 
 	static uint8_t _actorCount;
 public:
@@ -89,29 +89,33 @@ public:
 		return _actors[i];
 	}
 
-	static ActorRef addActor(Actor* actor) {
-		_actors[actor->index()] = actor;
-		return *new ActorRef(_actorCount);
-	}
 
 	Actor(const char* path) :
-			_self(_actorCount++), _left(deadLetterActorRef), _right(
-					deadLetterActorRef), _sender(deadLetterActorRef) {
-		_idx = _self.actor()->_idx;
+			_self(*this), _left(deadLetterActor), _right(
+					deadLetterActor), _sender(deadLetterActor) {
+		_idx=_actorCount++;
+		_actors[_idx]=this;
 		_path = path;
-		_left = _right = deadLetterActorRef;
+		_left = _right = deadLetterActor;
 		_timeout = UINT64_MAX;
 	}
+	bool equals(Actor& ref) {
+		return _idx == ref._idx;
+	}
 
+	Actor& tell(Actor& src, Event event, int detail = 0);
+	Actor& tell(Actor& src, Event event, int detail, Cbor& data);
+	Actor& tell(Actor& src, Event event, const char* format, ...);
+	void forward(Actor& src, Event event, Cbor& data);
 	const char* path() {
 		return _path;
 	}
 
-	static ActorRef create(const char* path) {
+	static Actor& create(const char* path) {
 		return addActor(new Actor(path));
 	}
 
-	ActorRef self() {
+	Actor& self() {
 		return _self;
 	}
 
@@ -119,34 +123,33 @@ public:
 		return _idx;
 	}
 
-	ActorRef sender() {
+	Actor& sender() {
 		return _sender;
 	}
 
-	void sender(ActorRef sender) {
+	void sender(Actor& sender) {
 		_sender = sender;
 	}
 
-	virtual void onReceive(Event event, int detail, Cbor& cbor){
+	virtual void onReceive(Event event, int detail, Cbor& cbor) {
 
 	}
-	 ~Actor() {
+	~Actor() {
+		_actors[_idx] = deadLetterActor;
 	}
 	void unhandled(Event event, int detail, Cbor& cbor) {
-		deadLetterActorRef.actor()->onReceive(event, detail, cbor);
+		deadLetterActor.onReceive(event, detail, cbor);
 	}
 	void timeout(uint32_t msec) {
 		_timeout = Sys::millis() + msec;
 	}
 
 };
-uint8_t Actor::_actorCount=0;
+uint8_t Actor::_actorCount = 1;
 Actor* Actor::_actors[MAX_ACTORS];
 //______________________________________________________
 //
-Actor* ActorRef::actor(){
-	return Actor::actor(_idx);
-}
+
 //______________________________________________________
 //
 class DeadLetterActor: public Actor {
@@ -158,20 +161,16 @@ public:
 	}
 	void onReceive(Event event, int detail, Bytes& bytes) {
 		cout << " Null Actor received event " << event;
-		cout << " from sender : " << sender().actor()->path() << endl;
+		cout << " from sender : " << sender().path() << endl;
 
 	}
 };
-ActorRef Actor::deadLetterActorRef = *new ActorRef(0);
+Actor& Actor::deadLetterActor = *new DeadLetterActor();
 //______________________________________________________
 //
-class Router {
-public:
-	Router& addDest(ActorRef& ref);
-	void route(ActorRef& src, Event event, Cbor& data);
-};
 
-ActorRef ActorRef::tell(ActorRef dst, Event event, int detail, Cbor& bytes) {
+
+Actor& Actor::tell(Actor& dst, Event event, int detail, Cbor& bytes) {
 	union {
 		struct {
 			uint8_t dst;
@@ -181,67 +180,69 @@ ActorRef ActorRef::tell(ActorRef dst, Event event, int detail, Cbor& bytes) {
 		};
 		uint32_t l;
 	} w;
-	w.dst=dst._idx;
-	w.src=_idx;
-	w.event=event;
-	w.detail=detail;
-	cborQueue.putf("UB",w,&bytes);
-return *this;
+	w.dst = dst._idx;
+	w.src = _idx;
+	w.event = event;
+	w.detail = detail;
+	cborQueue.putf("UB", w, &bytes);
+	return *this;
 }
 //______________________________________________________
 //
-/*
- #define MAX_RIGHTS 4
- class Router: public ActorInterface {
- ActorRef* _rights[MAX_RIGHTS];
- ActorRef _left;
- Router() {
 
- }
- void onReceive() {
- if (sender() == _left) {
- for(int i=0;i<MAX_RIGHTS);i++
- )
- if (_rights[i] != 0)
- _rights[i]->onreceive();
- } else {
- for (int i = 0; i < MAX_RIGHTS; i++)
- if (sender() == _rights[i]) {
- _left->setSender(sender())
- _left->onReceive();
- return;
- }
- deadLetterActor->onReceive();
- }
- }
- ActorRef left() {
- return _left;
- }
- ActorRef right(int i) {
- return _rights[i];
- }
- };
- */
+#define MAX_RIGHTS 4
+class Router: public Actor {
+	Actor&* _rights[MAX_RIGHTS];
+	Actor& _left;
+	Router() {
+
+	}
+	void onReceive() {
+		if (sender() == left()) {
+			for (int i = 0; i < MAX_RIGHTS; i++)
+				if (_rights[i] != 0) {
+					_rights->sender(sender());
+					_rights[i]->onReceive();
+				}
+		} else if ( sender()==right()){
+			for (int i = 0; i < MAX_RIGHTS; i++)
+				if (sender() == right(i)) {
+					_left->setSender(sender())
+					_left->onReceive();
+					return;
+				}
+			deadLetterActor->onReceive();
+		}
+	}
+	Actor& left() {
+		return _left;
+	}
+	Actor& right(int i) {
+		return _rights[i];
+	}
+};
+
 class ChildActor: public Actor {
 	ChildActor() :
 			Actor("child") {
 
 	}
 public:
-	static ActorRef create() {
+	static Actor& create() {
 		return addActor(new ChildActor());
 	}
-	void onReceive(Event event,int detail,Cbor& cbor){
+	void onReceive(Event event, int detail, Cbor& cbor) {
 
 	}
 };
 
 int main() {
-	ActorRef child = ChildActor::create();
+	Actor& child = ChildActor::create();
 
 	Cbor cbor;
 
-	child.tell(child, TXD, 0,cbor);
+	child.tell(child, TXD, 0, cbor);
+	child >> child >> child;
 
 	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 
