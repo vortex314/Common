@@ -24,8 +24,20 @@ typedef union {
 } Header;
 
 typedef enum {
-	TIMEOUT, TXD, RXD, CONNECT, DISCONNECT, CONNECTED, DISCONNECTED
+	TIMEOUT,
+	STOP,
+	RESTART,
+	INIT,
+	TXD,
+	RXD,
+	CONNECT,
+	DISCONNECT,
+	CONNECTED,
+	DISCONNECTED,
 } Event;
+typedef enum {
+	DEAD_LETTER, BROADCAST
+};
 
 // typedef uint8_t Actor&;
 
@@ -39,36 +51,35 @@ class Actor;
 //______________________________________________________
 //
 /*
-class Actor {
-	uint8_t _idx;
+ class Actor {
+ uint8_t _idx;
 
-public:
-	Actor(int idx) {
-		_idx = idx;
-	}
-	Actor* actor();
+ public:
+ Actor(int idx) {
+ _idx = idx;
+ }
+ Actor* actor();
 
-	Actor& left(Actor& ref);
-	Actor& right(Actor& ref);
-	Actor& right(int i);
-	Actor& sender(Actor& sender);
-	Actor& left();
-	Actor& right();
-	Actor& operator>>(Actor& dst);
+ Actor& left(Actor& ref);
+ Actor& right(Actor& ref);
+ Actor& right(int i);
+ Actor& sender(Actor& sender);
+ Actor& left();
+ Actor& right();
+ Actor& operator>>(Actor& dst);
 
-	bool equals(Actor&& ref) {
-		return _idx == ref._idx;
-	}
+ bool equals(Actor&& ref) {
+ return _idx == ref._idx;
+ }
 
-	Actor& tell(Actor& src, Event event, int detail = 0);
-	Actor& tell(Actor& src, Event event, int detail, Cbor& data);
-	Actor& tell(Actor& src, Event event, const char* format, ...);
-	void forward(Actor& src, Event event, Cbor& data);
-};*/
+ Actor& tell(Actor& src, Event event, int detail = 0);
+ Actor& tell(Actor& src, Event event, int detail, Cbor& data);
+ Actor& tell(Actor& src, Event event, const char* format, ...);
+ void forward(Actor& src, Event event, Cbor& data);
+ };*/
 
 //______________________________________________________
 //
-
 //______________________________________________________
 //
 #define MAX_ACTORS 255
@@ -89,12 +100,11 @@ public:
 		return _actors[i];
 	}
 
-
 	Actor(const char* path) :
-			_self(*this), _left(deadLetterActor), _right(
-					deadLetterActor), _sender(deadLetterActor) {
-		_idx=_actorCount++;
-		_actors[_idx]=this;
+			_self(*this), _left(deadLetterActor), _right(deadLetterActor), _sender(
+					deadLetterActor) {
+		_idx = _actorCount++;
+		_actors[_idx] = this;
 		_path = path;
 		_left = _right = deadLetterActor;
 		_timeout = UINT64_MAX;
@@ -111,11 +121,12 @@ public:
 		return _path;
 	}
 
-	static Actor& create(const char* path) {
-		return addActor(new Actor(path));
+	Actor& self() {
+		return _self;
 	}
 
-	Actor& self() {
+	Actor& right(Actor& r) {
+		_right = r;
 		return _self;
 	}
 
@@ -132,16 +143,23 @@ public:
 	}
 
 	virtual void onReceive(Event event, int detail, Cbor& cbor) {
+		deadLetterActor.onReceive(event, detail, cbor);
+	}
+	virtual void onInit() {
 
 	}
 	~Actor() {
 		_actors[_idx] = deadLetterActor;
+		Logger::logger << " Deleted Actor : " + path() + "." + _idx;
 	}
 	void unhandled(Event event, int detail, Cbor& cbor) {
 		deadLetterActor.onReceive(event, detail, cbor);
 	}
 	void timeout(uint32_t msec) {
 		_timeout = Sys::millis() + msec;
+	}
+	bool timeout() {
+		return _timeout > Sys::millis();
 	}
 
 };
@@ -169,7 +187,6 @@ Actor& Actor::deadLetterActor = *new DeadLetterActor();
 //______________________________________________________
 //
 
-
 Actor& Actor::tell(Actor& dst, Event event, int detail, Cbor& bytes) {
 	union {
 		struct {
@@ -192,26 +209,29 @@ Actor& Actor::tell(Actor& dst, Event event, int detail, Cbor& bytes) {
 
 #define MAX_RIGHTS 4
 class Router: public Actor {
-	Actor&* _rights[MAX_RIGHTS];
+	Actor& _rights[MAX_RIGHTS];
 	Actor& _left;
 	Router() {
-
+		_left = deadLetterActor;
+		for (int i = 0; i < MAX_RIGHTS; i++)
+			_rights[i] = deadLetterActor;
 	}
-	void onReceive() {
+
+	void onReceive(Event event, int detail, Cbor& cbor) {
 		if (sender() == left()) {
 			for (int i = 0; i < MAX_RIGHTS; i++)
 				if (_rights[i] != 0) {
-					_rights->sender(sender());
-					_rights[i]->onReceive();
+					_rights[i].sender(sender());
+					_rights[i].onReceive(event, detail, cbor);
 				}
-		} else if ( sender()==right()){
+		} else {
 			for (int i = 0; i < MAX_RIGHTS; i++)
 				if (sender() == right(i)) {
-					_left->setSender(sender())
-					_left->onReceive();
+					_left.sender(sender());
+					_left.onReceive(event, detail, cbor);
 					return;
 				}
-			deadLetterActor->onReceive();
+			deadLetterActor.onReceive(event, detail, cbor);
 		}
 	}
 	Actor& left() {
@@ -222,14 +242,60 @@ class Router: public Actor {
 	}
 };
 
+void EventLoop() {
+	while (true) {
+		while (cborQueue.hasData()) {
+			Cbor cbor();
+			Header h;
+			cborQueue.get(cbor);
+			cbor.get(h.l);
+			if (h.dst > Actor::_actorCount) {
+
+			} else if (h.dst == BROADCAST) {
+			} else {
+				Actor::_actors[h.dst]->sender(*Actor::_actors[h.src]);
+				Actor::_actors[h.dst]->onReceive((Event) h.event,
+						(int) h.detail, cbor);
+			}
+		}
+		for (int i = 0; i < Actor::_actorCount; i++) {
+			Actor* actor = Actor::_actors[i];
+			if (actor == 0)
+				break;
+			else {
+				if (actor->timeout()) {
+					Cbor& cbor(0);
+					Actor::deadLetterActor.tell(*actor, TIMEOUT, 0, cbor);
+				}
+			}
+		}
+	}
+}
+
 class ChildActor: public Actor {
-	ChildActor() :
+	Actor& _parent;
+public:
+	ChildActor(Actor& parent) :
+			Actor("child") {
+		_parent = parent;
+	}
+	~ChildActor() {
+
+	}
+	void onReceive(Event event, int detail, Cbor& cbor) {
+		if (event == TXD) {
+			_parent.tell(self(), TXD, 0, cbor)
+		}
+	}
+};
+class ParentActor: public Actor {
+public:
+	ParentActor() :
 			Actor("child") {
 
 	}
-public:
-	static Actor& create() {
-		return addActor(new ChildActor());
+	~ParentActor() {
+
 	}
 	void onReceive(Event event, int detail, Cbor& cbor) {
 
@@ -237,7 +303,7 @@ public:
 };
 
 int main() {
-	Actor& child = ChildActor::create();
+	Actor& child = ChildActor();
 
 	Cbor cbor;
 
