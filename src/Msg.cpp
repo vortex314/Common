@@ -98,7 +98,9 @@ extern "C" bool system_os_post(uint8_t prio, uint32_t p1, uint32_t par);
 #define MSG_TASK_PRIO      1
 
 IROM void Msg::wakeup(){
+#ifdef __ESP8266__
 	system_os_post((uint8_t) MSG_TASK_PRIO, 0, 0);
+#endif
 }
 
 IROM Msg& Msg::send() {

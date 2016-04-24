@@ -1,3 +1,4 @@
+
 #include "Logger.h"
 #ifdef __linux__
 #include <iostream>
@@ -227,4 +228,3 @@ extern "C" void SysLogger(int level, const char* file, const char* function,
 	va_end(args);
 	*Logger::logger << FLUSH;
 }
-
