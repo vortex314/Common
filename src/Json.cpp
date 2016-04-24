@@ -129,10 +129,7 @@ Json& Json::add(int64_t i64) {
 
 Json& Json::addHex(uint64_t ui64) {
 	append("\"0x");
-	appendHex(ui64 >> 24 & 0xFF);
-	appendHex(ui64 >> 16 & 0xFF);
-	appendHex(ui64 >> 8 & 0xFF);
-	appendHex(ui64 & 0xFF);
+	appendHex((uint32_t)ui64);
 	append('"');
 	return *this;
 }

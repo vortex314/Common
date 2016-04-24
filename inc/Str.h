@@ -53,6 +53,7 @@ public:
     Str& append(double d);
     Str& append(bool b);
     Str& appendHex(uint8_t byte);
+    Str& appendHex(uint32_t word);
     Str& substr(Str& master,uint32_t offset);
 
     bool operator==(Str& str);

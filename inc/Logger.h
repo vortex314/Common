@@ -9,6 +9,7 @@ typedef enum {
 
 #ifndef __cplusplus
 
+#define ASSERT(xxx) if ((xxx)==0) INFO(" ASSERT FAILED " # xxx)
 #define INFO(fmt,...) SysLogger(LOG_INFO,__FILE__,__FUNCTION__ ,fmt,##__VA_ARGS__)
 #define ERROR(fmt,...) SysLogger(LOG_INFO,__FILE__,__FUNCTION__ ,fmt,##__VA_ARGS__)
 #define WARN(fmt,...) SysLogger(LOG_INFO,__FILE__,__FUNCTION__ ,fmt,##__VA_ARGS__)

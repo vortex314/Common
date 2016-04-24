@@ -340,6 +340,13 @@ const char *hexChar = "0123456789ABCDEF";
 	return *this;
 }
 
+ Str& Str::appendHex(uint32_t word){
+	 appendHex((uint8_t)(word>>24));
+	 appendHex((uint8_t)(word>>16));
+	 appendHex((uint8_t)(word>>8));
+	 appendHex((uint8_t)(word));
+ }
+
  Str& Str::append(void* ptr) {
 	union {
 		void *ptr;

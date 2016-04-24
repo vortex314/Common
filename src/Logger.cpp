@@ -60,10 +60,40 @@ Logger& Logger::perror(const char* s) {
 }
 #else
 Logger& Logger::header(const char* file_source, const char* function) {
+	uint8_t hour, min, sec, msec;
+	uint32_t days;
+	uint64_t now = Sys::millis();
 	if (length())
 		*this << FLUSH;
 	clear();
-	append(Sys::millis());
+	msec = now % 1000;
+	now /= 1000;
+	sec = now % 60;
+	now /= 60;
+
+	min = now % 60;
+	now /= 60;
+	hour = now;
+//	append(Sys::millis());
+	append(hour);
+	if (min < 10)
+		append(":0");
+	else
+		append(":");
+	append(min);
+	if (sec < 10)
+		append(":0");
+	else
+		append(":");
+	append(sec);
+	if (msec < 10)
+		append(",00");
+	else if (msec < 100)
+		append(",0");
+	else
+		append(",");
+	append(msec);
+
 	while (length() < 8)
 		append(' ');
 	append("| ");
@@ -92,18 +122,20 @@ Logger& Logger::operator<<(LogCmd cmd) {
 #include <stdarg.h>
 extern "C" int ets_vsnprintf(char *, size_t, const char *, va_list);
 
-Logger& Logger::vlog(const char * format, va_list args) {
+Logger& Logger::vlog(const char * fmt, va_list args) {
 
+	char* buffer = (char*) (data() + length());
+	uint32_t size = capacity() - length();
+	ets_vsnprintf(buffer, size, fmt, args);
+	length(length() + strlen(buffer));
+	va_end(args);
 	return *this;
 }
 
 Logger& Logger::log(const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
-	char* buffer = (char*) (data() + length());
-	uint32_t size = capacity() - length();
-	ets_vsnprintf(buffer, size, fmt, args);
-	length(length() + strlen(buffer));
+	vlog(fmt, args);
 	va_end(args);
 	return *this;
 }
@@ -158,7 +190,7 @@ Logger& Logger::operator<<(Bytes& bytes) {
 	for (i = 0; i < bytes.length(); i++) {
 		if (i)
 			append(" ");
-		appendHex(bytes.peek(i));
+		appendHex((uint8_t) bytes.peek(i));
 	}
 	return *this;
 }
@@ -186,8 +218,8 @@ Logger& Logger::dump(Bytes& bytes) {
 	return *this;
 }
 
-extern "C" void SysLogger(int level, const char* file,
-		const char* function, const char * fmt, ...) {
+extern "C" void SysLogger(int level, const char* file, const char* function,
+		const char * fmt, ...) {
 	Logger::logger->header(file, function);
 	va_list args;
 	va_start(args, fmt);
