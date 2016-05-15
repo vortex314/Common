@@ -36,7 +36,7 @@
  }
  */
 
-IROM BipBuffer::BipBuffer() :
+ BipBuffer::BipBuffer() :
 		pBuffer(NULL), ixa(0), sza(0), ixb(0), szb(0), buflen(0), ixResrv(0), szResrv(
 				0) {
 }
@@ -59,7 +59,7 @@ BipBuffer::~BipBuffer() {
 // Returns:
 //   bool                        true if successful, false if buffer cannot be allocated
 
-IROM bool BipBuffer::allocateBuffer(int buffersize = 4096) {
+ bool BipBuffer::allocateBuffer(int buffersize = 4096) {
 	/*    if (buffersize <= 0) return false;
 
 	 if (pBuffer != NULL) FreeBuffer();
@@ -92,7 +92,7 @@ IROM bool BipBuffer::allocateBuffer(int buffersize = 4096) {
 /// allocations.
 ///
 
-IROM void BipBuffer::clear() {
+ void BipBuffer::clear() {
 	ixa = sza = ixb = szb = ixResrv = szResrv = 0;
 }
 
@@ -106,7 +106,7 @@ IROM void BipBuffer::clear() {
 // Returns:
 //   void
 
-IROM void BipBuffer::freeBuffer() {
+ void BipBuffer::freeBuffer() {
 	if (pBuffer == NULL)
 		return;
 
@@ -134,7 +134,7 @@ IROM void BipBuffer::freeBuffer() {
 //   Can return any value from 1 to size in reserved.
 //   Will return NULL if a previous reservation has not been committed.
 
-IROM uint8_t* BipBuffer::reserve(int size, int& reserved) {
+ uint8_t* BipBuffer::reserve(int size, int& reserved) {
 	if (szResrv) {
 		reserved = 0;
 		ERROR("BipBuffer multithread issue  ");
@@ -199,7 +199,7 @@ IROM uint8_t* BipBuffer::reserve(int size, int& reserved) {
 //   Committing a size of 0 will release the reservation.
 //
 
-IROM void BipBuffer::commit(int size) {
+ void BipBuffer::commit(int size) {
 	if (size == 0) {
 		// decommit any reservation
 		szResrv = ixResrv = 0;
@@ -243,7 +243,7 @@ IROM void BipBuffer::commit(int size) {
 // Returns:
 //   uint8_t*                    pointer to the first contiguous block, or NULL if empty.
 
-IROM uint8_t* BipBuffer::getContiguousBlock(uint32_t& size) {
+ uint8_t* BipBuffer::getContiguousBlock(uint32_t& size) {
 	if (sza == 0) {
 		size = 0;
 		return NULL;
@@ -264,7 +264,7 @@ IROM uint8_t* BipBuffer::getContiguousBlock(uint32_t& size) {
 // Returns:
 //   nothing
 
-IROM void BipBuffer::decommitBlock(int size) {
+ void BipBuffer::decommitBlock(int size) {
 	if (size >= sza) {
 		ixa = ixb;
 		sza = szb;
@@ -286,7 +286,7 @@ IROM void BipBuffer::decommitBlock(int size) {
 // Returns:
 //   int                    total amount of committed data in the buffer
 
-IROM int BipBuffer::getCommittedSize() const {
+ int BipBuffer::getCommittedSize() const {
 	return sza + szb;
 }
 
@@ -303,7 +303,7 @@ IROM int BipBuffer::getCommittedSize() const {
 // Notes:
 //   A return value of 0 indicates that no space has been reserved
 
-IROM int BipBuffer::getReservationSize() const {
+ int BipBuffer::getReservationSize() const {
 	return szResrv;
 }
 
@@ -317,7 +317,7 @@ IROM int BipBuffer::getReservationSize() const {
 // Returns:
 //   int                    total size of buffer
 
-IROM int BipBuffer::getBufferSize() const {
+ int BipBuffer::getBufferSize() const {
 	return buflen;
 }
 
@@ -331,19 +331,19 @@ IROM int BipBuffer::getBufferSize() const {
 // Returns:
 //   bool                    true if the buffer has been allocated
 
-IROM bool BipBuffer::isInitialized() const {
+ bool BipBuffer::isInitialized() const {
 	return pBuffer != NULL;
 }
 
-IROM int BipBuffer::getSpaceAfterA() const {
+ int BipBuffer::getSpaceAfterA() const {
 	return buflen - ixa - sza;
 }
 
-IROM int BipBuffer::getBFreeSpace() const {
+ int BipBuffer::getBFreeSpace() const {
 	return ixa - ixb - szb;
 }
 
-IROM bool BipBuffer::hasSpace(uint32_t space) {
+ bool BipBuffer::hasSpace(uint32_t space) {
 	int size=space;
 	if (getSpaceAfterA() >= (size))
 		return true;
@@ -352,6 +352,6 @@ IROM bool BipBuffer::hasSpace(uint32_t space) {
 	return false;
 }
 
-IROM bool BipBuffer::hasData(){
+ bool BipBuffer::hasData(){
 	return sza != 0;
 }

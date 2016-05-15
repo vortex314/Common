@@ -10,7 +10,7 @@
 #include <Logger.h>
 #include "Msg.h"
 Handler* Handler::_firstChild = 0;
-/*IROM Handler::Handler() {
+/* Handler::Handler() {
  _timeout = UINT64_MAX;
  _name = "UNDEFINED";
  _next = 0;
@@ -32,34 +32,34 @@ Handler::~Handler() {
 	unreg(this);
 }
 
-IROM void Handler::timeout(uint32_t msec) {
+ void Handler::timeout(uint32_t msec) {
 	_timeout = Sys::millis() + msec;
 }
 
-IROM bool Handler::timeout() {
+ bool Handler::timeout() {
 	return _timeout < Sys::millis();
 }
 
-IROM uint64_t Handler::getTimeout() {
+ uint64_t Handler::getTimeout() {
 	return _timeout;
 }
 
-IROM const char* Handler::getName() {
+ const char* Handler::getName() {
 	return _name;
 }
 //_________________________________________________________________________________________________
 //
 //       HANDLER LIST
 //_________________________________________________________________________________________________
-IROM Handler* Handler::first() {
+ Handler* Handler::first() {
 	return _firstChild;
 }
 
-IROM Handler* Handler::next() {
+ Handler* Handler::next() {
 	return _next;
 }
 
-IROM void Handler::reg(Handler* hdlr) {
+ void Handler::reg(Handler* hdlr) {
 	if (_firstChild == 0)
 		_firstChild = hdlr;
 	else {
@@ -71,7 +71,7 @@ IROM void Handler::reg(Handler* hdlr) {
 	}
 }
 
-IROM void Handler::unreg(Handler* hdlr) {
+ void Handler::unreg(Handler* hdlr) {
 	if (_firstChild == hdlr)
 		_firstChild = hdlr->_next;
 	else {
@@ -91,24 +91,33 @@ IROM void Handler::unreg(Handler* hdlr) {
 //       LISTENER LIST
 //_________________________________________________________________________________________________
 //Handler* hdlr;
-IROM void Handler::dispatchToChilds(Msg& msg) {
+
+extern "C" void uart0WriteWait(uint8_t TxChar);
+
+ void Handler::dispatchToChilds(Msg& msg) {
 	Handler* hdlr;
 	if (first() == 0)
 		ERROR(" no handlers ");
 	for (hdlr = first(); hdlr != 0; hdlr = hdlr->next()) {
 		msg.rewind();
 //	INFO("%s dispatch",hdlr->getName());
-		if (hdlr->isRunning())
+		if (hdlr->isRunning()) {
+			uart0WriteWait(hdlr->_name[0]);
+			uart0WriteWait(hdlr->_name[1]);
+			uart0WriteWait(hdlr->_name[2]);
+			uart0WriteWait('\r');
+			uart0WriteWait('\n');
 			hdlr->dispatch(msg);
+		}
 	}
 }
 
-extern "C" IROM int HandlerTimeouts() {
+extern "C"  int HandlerTimeouts() {
 	return Handler::timeouts();
 }
 
 // return true if any handler has a timeout
-IROM bool Handler::timeouts() {
+ bool Handler::timeouts() {
 	Handler* hdlr;
 	if (first() == 0)
 		ERROR(" no handlers ");

@@ -4,11 +4,12 @@
 #define LOG_FILE __FILE__
 #define LOG_DATE __DATE__
 typedef enum {
-	FLUSH,  LOG_DEBUG, LOG_INFO, LOG_ERROR, LOG_WARN
+	FLUSH, LOG_DEBUG, LOG_INFO, LOG_ERROR, LOG_WARN, HEX, DEC
 } LogCmd;
 
 #ifndef __cplusplus
-
+extern void uart0WriteWait(uint8_t TxChar);
+#define LOGNOW(ch) uart0WriteWait(ch)
 #define ASSERT(xxx) if ((xxx)==0) INFO(" ASSERT FAILED " # xxx)
 #define INFO(fmt,...) SysLogger(LOG_INFO,__FILE__,__FUNCTION__ ,fmt,##__VA_ARGS__)
 #define ERROR(fmt,...) SysLogger(LOG_INFO,__FILE__,__FUNCTION__ ,fmt,##__VA_ARGS__)
@@ -21,6 +22,8 @@ void SysLogger(int level, const char* file, const char* function,
 #include <errno.h>
 #include <string.h>
 #include <stdarg.h>
+extern "C" void uart0WriteWait(uint8_t TxChar);
+#define LOGNOW(ch) uart0WriteWait(ch)
 #define LOG Logger::logger->header(__FILE__,__FUNCTION__)
 #define INFO(fmt,...)  Logger::logger->header(__FILE__,__FUNCTION__).log(fmt,##__VA_ARGS__)
 #define ERROR(fmt,...)  Logger::logger->header(__FILE__,__FUNCTION__).log(fmt,##__VA_ARGS__)
@@ -28,10 +31,7 @@ void SysLogger(int level, const char* file, const char* function,
 
 #define PERROR()  Logger::logger->header(__FILE__,__FUNCTION__).log("line : %d - System failure : %d : %s ",__LINE__,errno,strerror(errno))
 
-
-
 #define ASSERT(xxx) if ((xxx)==0) INFO(" ASSERT FAILED " # xxx)
-
 
 class Logger: public Str {
 public:
@@ -49,12 +49,14 @@ public:
 
 	Logger& operator<<(const char *s);
 	Logger& operator<<(int i);
+	Logger& operator<<(uint32_t i);
+	Logger& operator<<(uint64_t i);
+	Logger& operator<<(float f);
 	Logger& operator<<(Bytes& b);
 	Logger& dump(Bytes& bytes);
 	Logger& operator<<(Str& str);
 	Logger& vlog(const char * format, va_list args);
 	Logger& log(const char *fmt, ...);
-
 
 	Logger& flush();
 	Logger& debug();
@@ -62,6 +64,8 @@ public:
 	Logger& info();
 	Logger& error();
 	Logger& fatal();
+	Logger& hex();
+	Logger& dec();
 	Logger& perror(const char* s);
 	const char* logTime();
 
@@ -69,6 +73,9 @@ private:
 
 	int _level;
 	int _logLevel;
+	enum {
+		FORMAT_DEC, FORMAT_HEX
+	} _format;
 	const char* _module;
 	Str _str;
 };

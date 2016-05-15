@@ -23,15 +23,15 @@ private:
 	Erc putMap(Cbor& cbor);
 	Erc putRelease(Cbor& cbor);
 public:
-	CborQueue(uint32_t size) IROM;
-	virtual ~CborQueue() IROM;
-	Erc put(Cbor& cbor) IROM;
-	Erc putf(const char * format, ...) IROM;
-	Erc get(Cbor& cbor) IROM;
-	Erc getf(const char * format, ...) IROM;
+	CborQueue(uint32_t size) ;
+	virtual ~CborQueue() ;
+	Erc put(Cbor& cbor) ;
+	Erc putf(const char * format, ...) ;
+	Erc get(Cbor& cbor) ;
+	Erc getf(const char * format, ...) ;
 
-	bool hasData() IROM;
-	bool hasSpace(uint32_t size) IROM;
+	bool hasData() ;
+	bool hasSpace(uint32_t size) ;
 	uint32_t getCapacity();
 	uint32_t getUsed();
 };

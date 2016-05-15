@@ -7,33 +7,33 @@
 
 #include <CborQueue.h>
 
-IROM CborQueue::CborQueue(uint32_t size) {
+ CborQueue::CborQueue(uint32_t size) {
 	_size = 0;
 	_start = 0;
 	_buffer.allocateBuffer(size);
 }
 
-IROM CborQueue::~CborQueue() {
+ CborQueue::~CborQueue() {
 	_buffer.freeBuffer();
 }
 
-IROM uint32_t CborQueue::getCapacity() {
+ uint32_t CborQueue::getCapacity() {
 	return _buffer.getBufferSize();
 }
 
-IROM uint32_t CborQueue::getUsed() {
+ uint32_t CborQueue::getUsed() {
 	return _buffer.getCommittedSize();
 }
 
-IROM bool CborQueue::hasData() {
+ bool CborQueue::hasData() {
 	return _buffer.hasData();
 }
 
-IROM bool CborQueue::hasSpace(uint32_t size) {
+ bool CborQueue::hasSpace(uint32_t size) {
 	return _buffer.hasSpace(size + 2);
 }
 
-IROM Erc CborQueue::put(Cbor& cbor) {
+ Erc CborQueue::put(Cbor& cbor) {
 	uint32_t size = cbor.length();
 	if (size == 0)
 		return EINVAL;
@@ -52,7 +52,7 @@ IROM Erc CborQueue::put(Cbor& cbor) {
 	return E_OK;
 }
 
-IROM Erc CborQueue::putf(const char * format, ...) {
+ Erc CborQueue::putf(const char * format, ...) {
 	va_list args;
 	Erc erc;
 	Cbor cbor(0);
@@ -68,7 +68,7 @@ IROM Erc CborQueue::putf(const char * format, ...) {
 	return putRelease(cbor) ;
 }
 
-IROM Erc CborQueue::getf(const char * format, ...) {
+ Erc CborQueue::getf(const char * format, ...) {
 	va_list args;
 	Erc erc;
 	Cbor cbor(0);
@@ -90,7 +90,7 @@ IROM Erc CborQueue::getf(const char * format, ...) {
 	}
 }
 
-IROM Erc CborQueue::get(Cbor& cbor) {
+ Erc CborQueue::get(Cbor& cbor) {
 	cbor.clear();
 	if (!hasData())
 		return ENOENT;
@@ -114,7 +114,7 @@ IROM Erc CborQueue::get(Cbor& cbor) {
 	}
 }
 #define MAX_SIZE 300
-IROM Erc CborQueue::putMap(Cbor& cbor) {
+ Erc CborQueue::putMap(Cbor& cbor) {
 	if (_size)
 		return EBUSY;
 	int reserved = 0;
@@ -128,7 +128,7 @@ IROM Erc CborQueue::putMap(Cbor& cbor) {
 	return E_OK;
 }
 
-IROM Erc CborQueue::putRelease(Cbor& cbor) {
+ Erc CborQueue::putRelease(Cbor& cbor) {
 	if (_size == 0)
 		return ENOMEM;
 	uint32_t size = cbor.length();
@@ -147,7 +147,7 @@ IROM Erc CborQueue::putRelease(Cbor& cbor) {
 	return E_OK;
 }
 
-IROM Erc CborQueue::getMap(Cbor& cbor) {
+ Erc CborQueue::getMap(Cbor& cbor) {
 	if (_size)
 		return EBUSY;
 	if (!hasData())
@@ -167,7 +167,7 @@ IROM Erc CborQueue::getMap(Cbor& cbor) {
 	return E_OK;
 }
 
-IROM Erc CborQueue::getRelease(Cbor& cbor) {
+ Erc CborQueue::getRelease(Cbor& cbor) {
 	if (_size) {
 		cbor.map(0, 0);
 		_buffer.decommitBlock(_size + 2); 	// --------------- lost message

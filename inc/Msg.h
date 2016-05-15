@@ -41,7 +41,7 @@ class Msg: public Cbor {
 public:
 	static CborQueue* _queue;
 	static bool _init;
-	IROM static void wakeup();
+	 static void wakeup();
 public:
 	void* _src;
 	Signal _signal;
@@ -51,10 +51,10 @@ public:
 	bool is(const void* src, Signal signal);
 	bool is(const void* src, Signal signal, int v1);
 	static bool init();
-	IROM Msg& create(const void * src, Signal signal);
-	IROM static Erc publish(const void * src, Signal signal);
-	IROM static Erc publish(const void * src, Signal signal, int par);
-	IROM static CborQueue& queue();
+	 Msg& create(const void * src, Signal signal);
+	 static Erc publish(const void * src, Signal signal);
+	 static Erc publish(const void * src, Signal signal, int par);
+	 static CborQueue& queue();
 //	static void vpublish(const char* fmt, ...);
 
 	Msg& rewind();

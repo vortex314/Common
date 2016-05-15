@@ -1,4 +1,3 @@
-
 #include "Logger.h"
 #ifdef __linux__
 #include <iostream>
@@ -15,6 +14,7 @@ Logger::Logger(int size) :
 	_module = "";
 	_logLevel = DEBUG;
 	_level = INFO;
+	_format = FORMAT_DEC;
 }
 
 #ifdef _linux
@@ -60,8 +60,10 @@ Logger& Logger::perror(const char* s) {
 	return *this;
 }
 #else
+
 Logger& Logger::header(const char* file_source, const char* function) {
-	uint8_t hour, min, sec, msec;
+	uint8_t hour, min, sec;
+	uint32_t msec;
 	uint32_t days;
 	uint64_t now = Sys::millis();
 	if (length())
@@ -74,19 +76,31 @@ Logger& Logger::header(const char* file_source, const char* function) {
 
 	min = now % 60;
 	now /= 60;
-	hour = now;
-//	append(Sys::millis());
+	hour = now % 24;
+	now /= 24;
+	days = now;
+
+	append(days);
+	append('d');
+
+	if (hour < 10)
+		append(":0");
+	else
+		append(":");
 	append(hour);
+
 	if (min < 10)
 		append(":0");
 	else
 		append(":");
 	append(min);
+
 	if (sec < 10)
 		append(":0");
 	else
 		append(":");
 	append(sec);
+
 	if (msec < 10)
 		append(",00");
 	else if (msec < 100)
@@ -95,28 +109,60 @@ Logger& Logger::header(const char* file_source, const char* function) {
 		append(",");
 	append(msec);
 
-	while (length() < 8)
+	while (length() < 10)
 		append(' ');
 	append("| ");
 	append(file_source);
-	while (length() < 30)
+	while (length() < 32)
 		append(' ');
 	append("| ");
 	append(function);
-	while (length() < 40)
+	while (length() < 42)
 		append(' ');
 	append("| ");
 	return *this;
 }
 
+#ifdef ARDUINO_ARCH_ESP8266
+#include <Arduino.h>
+Logger& Logger::operator<<(LogCmd cmd) {
+	if (cmd == FLUSH) {
+		_format = FORMAT_DEC;
+		Serial.println( c_str());
+		clear();
+	} else if (cmd == HEX) {
+		_format = FORMAT_HEX;
+	} else if (cmd == DEC) {
+		_format = FORMAT_DEC;
+	}
+	return *this;
+}
+#include <stdarg.h>
+
+
+Logger& Logger::vlog(const char * fmt, va_list args) {
+
+	char* buffer = (char*) (data() + length());
+	uint32_t size = capacity() - length();
+	vsnprintf(buffer, size, fmt, args);
+	length(length() + strlen(buffer));
+	va_end(args);
+	return *this;
+}
+#else
 extern "C" void uart0WriteBytes(uint8_t* data, uint32_t length);
 
 Logger& Logger::operator<<(LogCmd cmd) {
 	if (cmd == FLUSH) {
+		_format = FORMAT_DEC;
 		append("\n");
 		uart0WriteBytes((uint8_t*) c_str(), length());
 		Sys::delayUs(10000);
 		clear();
+	} else if (cmd == HEX) {
+		_format = FORMAT_HEX;
+	} else if (cmd == DEC) {
+		_format = FORMAT_DEC;
 	}
 	return *this;
 }
@@ -132,7 +178,7 @@ Logger& Logger::vlog(const char * fmt, va_list args) {
 	va_end(args);
 	return *this;
 }
-
+#endif
 Logger& Logger::log(const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
@@ -151,8 +197,42 @@ Logger& Logger::level(int level) {
 	return *this;
 }
 
+Logger& Logger::hex() {
+	_format = FORMAT_HEX;
+	return *this;
+}
+
+Logger& Logger::dec() {
+	_format = FORMAT_DEC;
+	return *this;
+}
+
 Logger& Logger::operator<<(int i) {
-	append(i);
+	if (_format == FORMAT_HEX)
+		appendHex((unsigned int) i);
+	else
+		append(i);
+	return *this;
+}
+
+Logger& Logger::operator<<(uint32_t i) {
+	if (_format == FORMAT_HEX)
+		appendHex(i);
+	else
+		append(i);
+	return *this;
+}
+
+Logger& Logger::operator<<(uint64_t i) {
+	if (_format == FORMAT_HEX)
+		appendHex(i);
+	else
+		append(i);
+	return *this;
+}
+
+Logger& Logger::operator<<(float f) {
+	append(f);
 	return *this;
 }
 

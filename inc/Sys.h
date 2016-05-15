@@ -27,7 +27,7 @@ uint64_t SysMillis();
 #include "mem.h"
 #define IROM __attribute__((section(".irom0.text")))
 #define IROM1 __attribute__((section(".irom01.text")))
-#define IRAM __attribute__((section(".text")))
+#define IRAM __attribute__((section(".iram.text")))
 #define noinline __attribute__ ((noinline))
 #define attr_pure __attribute__ ((pure))
 #define attr_const __attribute__ ((const))
