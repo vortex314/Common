@@ -9,7 +9,7 @@
 #include "errno.h"
 #include "platform.h"
 #include "Sys.h"
-#include <Logger.h>
+
 
 #include "malloc.h"
 #if defined(__CYGWIN__)
@@ -137,7 +137,7 @@ BipBuffer::~BipBuffer() {
  uint8_t* BipBuffer::reserve(int size, int& reserved) {
 	if (szResrv) {
 		reserved = 0;
-		ERROR("BipBuffer multithread issue  ");
+		LOGF("BipBuffer multithread issue  ");
 		return 0;
 	}
 // We always allocate on B if B exists; this means we have two blocks and our buffer is filling.
@@ -148,7 +148,7 @@ BipBuffer::~BipBuffer() {
 			freespace = size;
 
 		if (freespace == 0) {
-			ERROR("BipBuffer overflow %d:%d %d:%d ", ixa, sza, ixb, szb);
+			LOGF("BipBuffer overflow %d:%d %d:%d ", ixa, sza, ixb, szb);
 			return NULL;
 		}
 

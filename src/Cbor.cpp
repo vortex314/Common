@@ -1,5 +1,6 @@
 #include "Cbor.h"
-#include <Logger.h>
+#include <Sys.h>
+
 
  Cbor::Cbor() :
 		Bytes() {
@@ -29,7 +30,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 	}else if ( type == P_NILL ){
 		return true;
 	}
-	ERROR("get bool failed");
+//	LOGF("get bool failed");
 	return false;
 }
 
@@ -47,7 +48,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 	}else if ( type == P_NILL ){
 		return true;
 	}
-	ERROR("get int32_t failed");
+//	LOGF("get int32_t failed");
 	return false;
 }
 
@@ -60,7 +61,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 	}else if ( type == P_NILL ){
 		return true;
 	}
-	ERROR("get uint32_t failed");
+//	LOGF("get uint32_t failed");
 	return false;
 }
  bool Cbor::get(uint64_t& l) {
@@ -72,7 +73,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 	}else if ( type == P_NILL ){
 		return true;
 	}
-	ERROR("get uint64_t failed");
+//	LOGF("get uint64_t failed");
 	return false;
 }
 
@@ -91,7 +92,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 	} else if ( type == P_NILL ){
 		return true;
 	}
-	ERROR("get float failed");
+//	LOGF("get float failed");
 	return false;
 }
  bool Cbor::get(double& d) {
@@ -109,7 +110,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 	}else if ( type == P_NILL ){
 		return true;
 	}
-	ERROR("get double failed");
+//	LOGF("get double failed");
 	return false;
 }
 
@@ -151,7 +152,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 	}else if ( type == P_NILL ){
 		return true;
 	}
-	ERROR("get Str failed");
+//	LOGF("get Str failed");
 
 	return false;
 
@@ -171,7 +172,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 	}else if ( type == P_NILL ){
 		return true;
 	}
-	ERROR("get char* failed");
+//	LOGF("get char* failed");
 	return false;
 
 }
@@ -182,7 +183,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 	uint64_t value;
 
 	if (!hasData()) {
-		ERROR("no data");
+		LOGF("no data");
 		return ENODATA;
 	}
 	uint8_t hdr = read();
@@ -194,7 +195,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 		length = tokenSize[minor - 24];
 		value = getUint64(length);
 	} else if (minor < 31) {
-		ERROR("invalid minor type CBOR");
+		LOGF("invalid minor type CBOR");
 		return E_INVAL;
 	} else {
 		value = 65535; // suppose very big length will be stopped by BREAK, side effect limited arrays and maps can also be breaked
@@ -244,7 +245,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 	while (length) {
 		l <<= 8;
 		if ( !hasData() ) {
-			ERROR(" no data ");
+			LOGF(" no data ");
 			return l;
 		}
 		l += read();
@@ -624,7 +625,7 @@ int tokenSize[] = { 1, 2, 4, 8 };
 			if (get(*s) == false)
 				return false;
 		} else {
-			ERROR("invalid format");
+			LOGF("invalid format");
 			return false;
 		}
 		++fmt;

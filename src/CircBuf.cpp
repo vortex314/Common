@@ -9,8 +9,8 @@
 #include "Erc.h"
 #include "Sys.h"
 #include "Board.h"
-#include <Logger.h>
-
+//#include <Logger.h>
+#define ASSERT(x)
 //#include "Message.h"
 //#include "assert.h"
 

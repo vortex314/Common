@@ -59,7 +59,7 @@ Logger& Logger::perror(const char* s) {
 	flush();
 	return *this;
 }
-#else
+#endif
 
 Logger& Logger::header(const char* file_source, const char* function) {
 	uint8_t hour, min, sec;
@@ -123,7 +123,7 @@ Logger& Logger::header(const char* file_source, const char* function) {
 	return *this;
 }
 
-#ifdef ARDUINO_ARCH_ESP8266
+#ifdef ARDUINO_ARCH_ESP8266__
 #include <Arduino.h>
 Logger& Logger::operator<<(LogCmd cmd) {
 	if (cmd == FLUSH) {
@@ -149,7 +149,7 @@ Logger& Logger::vlog(const char * fmt, va_list args) {
 	va_end(args);
 	return *this;
 }
-#else
+#ifdef ___1__
 extern "C" void uart0WriteBytes(uint8_t* data, uint32_t length);
 
 Logger& Logger::operator<<(LogCmd cmd) {
@@ -159,9 +159,9 @@ Logger& Logger::operator<<(LogCmd cmd) {
 		uart0WriteBytes((uint8_t*) c_str(), length());
 		Sys::delayUs(10000);
 		clear();
-	} else if (cmd == HEX) {
+	} else if (cmd == LOG_HEX) {
 		_format = FORMAT_HEX;
-	} else if (cmd == DEC) {
+	} else if (cmd == LOG_DEC) {
 		_format = FORMAT_DEC;
 	}
 	return *this;

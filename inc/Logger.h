@@ -4,7 +4,7 @@
 #define LOG_FILE __FILE__
 #define LOG_DATE __DATE__
 typedef enum {
-	FLUSH, LOG_DEBUG, LOG_INFO, LOG_ERROR, LOG_WARN, HEX, DEC
+	FLUSH, LOG_DEBUG, LOG_INFO, LOG_ERROR, LOG_WARN, LOG_HEX, LOG_DEC
 } LogCmd;
 
 #ifndef __cplusplus

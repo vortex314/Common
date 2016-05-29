@@ -27,6 +27,7 @@ public:
 	virtual ~CborQueue() ;
 	Erc put(Cbor& cbor) ;
 	Erc putf(const char * format, ...) ;
+	Erc vputf(const char *fmt, va_list args);
 	Erc get(Cbor& cbor) ;
 	Erc getf(const char * format, ...) ;
 

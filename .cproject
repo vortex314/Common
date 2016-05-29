@@ -31,6 +31,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include\c++&quot;"/>
+									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.479172627" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__ESP8266__"/>
@@ -47,6 +48,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include\c++&quot;"/>
+									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.638764984" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__ESP8266__"/>
@@ -65,6 +67,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include\c++&quot;"/>
+									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.747196544" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -103,6 +106,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\cygwin64\usr\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include\c++&quot;"/>
+									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1942537894" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -116,6 +120,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include\c++&quot;"/>
+									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1758561393" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__CYGWIN__=1"/>
@@ -132,6 +137,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\cygwin64\usr\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include\c++&quot;"/>
+									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1228880597" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__CYGWIN__=1"/>

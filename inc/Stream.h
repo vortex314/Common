@@ -11,7 +11,7 @@
 #include "Erc.h"
 #include "Bytes.h"
 
-class Stream {
+class ByteStream {
 private:
 
 public:

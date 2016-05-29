@@ -7,11 +7,23 @@
 #include <Erc.h>
 
 #ifdef __cplusplus
+
+
+
+#ifdef ARDUINO
+#include <Arduino.h>
+#define __FLE__ strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
+#define LOGF(fmt,...) Serial.printf("%d | %s:%d-%s | ", millis(),__FILE__,__LINE__,__FUNCTION__);Serial.printf(fmt,##__VA_ARGS__);Serial.println();//delay(10);
+#else
+#define LOGF(fmt,...)
+#endif
 extern "C" {
 #endif
 
 
 uint64_t SysMillis();
+
+
 
 
 //#define SYSTEM_ERROR(erc) ERROR("errno : %d",erc)

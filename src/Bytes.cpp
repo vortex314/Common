@@ -265,15 +265,15 @@ bool Bytes::hasData() {
 bool Bytes::hasSpace(uint32_t size) {
 	return (_capacity - _limit) > size;
 }
-const char *HEX = "0123456789ABCDEF";
+const char *HEX_VALUES = "0123456789ABCDEF";
 #include "Str.h"
 const char* Bytes::toHex(Str& str) {
 	uint32_t i;
 	uint8_t b;
 	for (i = 0; i < _limit; i++) {
 		b = *(_start + i);
-		str.append(HEX[b >> 4]);
-		str.append(HEX[b & 0xF]);
+		str.append(HEX_VALUES[b >> 4]);
+		str.append(HEX_VALUES[b & 0xF]);
 		str.append(' ');
 	}
 	return str.c_str();
