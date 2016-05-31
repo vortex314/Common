@@ -44,6 +44,7 @@ public:
 	 Cbor& add(int i);
 	 Cbor& operator<<(int i);
 	 Cbor& operator<<(const char *s);
+	 Cbor& operator=(const char* s);
 	 Cbor& operator<<(uint64_t l);
 	 Cbor& add(uint32_t i);
 	 Cbor& add(float f);
@@ -62,6 +63,7 @@ public:
 	 Cbor& addKey(uint32_t idx);
 	 bool addf(const char *fmt, ...);
 	 bool vaddf(const char *fmt, va_list args);
+	 Cbor& putf(const char *fmt, ...);
 	 bool scanf(const char* fmt, ...);
 	 bool vscanf(const char* fmt, va_list args);
 	 void sprintf(Str& s);
