@@ -13,6 +13,7 @@
 #include <stdarg.h>
 // #define DOUBLE
 #define JSON_MAX_TOKENS 20
+#define DOUBLE
 
 class Json: public Str {
 public:

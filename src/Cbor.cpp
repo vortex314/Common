@@ -116,7 +116,7 @@ bool Cbor::get(double& d) {
 bool Cbor::get(Bytes& bytes) {
 	CborVariant v;
 	PackType type;
-	if (readToken(type, v) == E_OK && type == P_BYTES) {
+	if (readToken(type, v) == E_OK && (type == P_BYTES || type==P_STRING)) {
 		bytes.clear();
 		for (uint32_t i = 0; i < v._uint64; i++)
 			bytes.write(read()); // skip data
@@ -539,8 +539,10 @@ void Cbor::addHeader(uint8_t major, uint8_t minor) {
 
 #include <cstdarg>
 bool Cbor::vaddf(const char *fmt, va_list args) {
+//	LOGF(" fmt : '%s'",fmt );
 
 	while (*fmt != '\0') {
+//		LOGF("%c",*fmt);
 		if (*fmt == 'i') {
 			int32_t i = va_arg(args, int32_t);
 			add(i);

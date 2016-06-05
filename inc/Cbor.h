@@ -4,7 +4,7 @@
 //#include "Packer.h"
 #include "Str.h"
 #include "errno.h"
-#include <cstdarg>
+#include <stdarg.h>
 #include "Sys.h"
 
 class Cbor: public Bytes {

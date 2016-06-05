@@ -14,6 +14,7 @@
 
 class CborQueue {
 private:
+public:
 	BipBuffer _buffer;
 //	Cbor cbor;
 	uint32_t _size;

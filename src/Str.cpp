@@ -287,10 +287,11 @@ Str& Str::append(uint64_t val) {
 	str[MAX_CHAR - 1] = '\0';
 	register char *cp = str + MAX_CHAR - 1;
 	do {
-		*--cp = to_char(val % 10);
+		*--cp = to_char(val % 10LL);
 		val /= 10;
 	} while (val != 0);
 	append(cp);
+	LOGF("%s",cp);
 	return *this;
 }
 
@@ -343,12 +344,14 @@ Str& Str::appendHex(uint32_t word) {
 	appendHex((uint8_t) (word >> 16));
 	appendHex((uint8_t) (word >> 8));
 	appendHex((uint8_t) (word));
+	return *this;
 }
 
 Str& Str::appendHex(uint64_t word) {
 	uint32_t msb = word >> 32;
 	appendHex(msb);
 	appendHex((uint32_t) (word));
+	return *this;
 }
 
 Str& Str::append(void* ptr) {

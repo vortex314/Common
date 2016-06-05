@@ -148,7 +148,7 @@ BipBuffer::~BipBuffer() {
 			freespace = size;
 
 		if (freespace == 0) {
-			LOGF("BipBuffer overflow %d:%d %d:%d ", ixa, sza, ixb, szb);
+			LOGF("BipBuffer overflow A=%d:%d B=%d:%d Req=%d", ixa, sza, ixb, szb,size);
 			return NULL;
 		}
 

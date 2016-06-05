@@ -7,33 +7,34 @@
 
 #include <CborQueue.h>
 
- CborQueue::CborQueue(uint32_t size) {
+CborQueue::CborQueue(uint32_t size) {
 	_size = 0;
 	_start = 0;
 	_buffer.allocateBuffer(size);
+//	LOGF(" CborQueue %X:%d ",this,_size);
 }
 
- CborQueue::~CborQueue() {
+CborQueue::~CborQueue() {
 	_buffer.freeBuffer();
 }
 
- uint32_t CborQueue::getCapacity() {
+uint32_t CborQueue::getCapacity() {
 	return _buffer.getBufferSize();
 }
 
- uint32_t CborQueue::getUsed() {
+uint32_t CborQueue::getUsed() {
 	return _buffer.getCommittedSize();
 }
 
- bool CborQueue::hasData() {
+bool CborQueue::hasData() {
 	return _buffer.hasData();
 }
 
- bool CborQueue::hasSpace(uint32_t size) {
+bool CborQueue::hasSpace(uint32_t size) {
 	return _buffer.hasSpace(size + 2);
 }
 
- Erc CborQueue::put(Cbor& cbor) {
+Erc CborQueue::put(Cbor& cbor) {
 	uint32_t size = cbor.length();
 	if (size == 0)
 		return EINVAL;
@@ -52,31 +53,39 @@
 	return E_OK;
 }
 
- Erc CborQueue::putf(const char * format, ...) {
+Erc CborQueue::putf(const char * fmt, ...) {
 	va_list args;
+	va_start(args, fmt);
+	Erc erc = vputf(fmt,args);
+	va_end(args);
+	return erc;
+}
+
+Erc CborQueue::vputf(const char* fmt, va_list args) {
+//		va_list args;
 	Erc erc;
 	Cbor cbor(0);
 	erc = putMap(cbor);
-	if (erc)
+	if (erc) {
+		LOGF(" putMap failed : %d ",erc)
 		return erc;
-	va_start(args, format);
-	bool b = cbor.vaddf(format, args);
+	}
+
+	bool b = cbor.vaddf(fmt, args);
 	b = b && cbor.hasSpace(1); // full suspect
-	va_end(args);
+
 	if (b == false)
 		cbor.clear();
-	return putRelease(cbor) ;
+	return putRelease(cbor);
 }
 
-
-
- Erc CborQueue::getf(const char * format, ...) {
+Erc CborQueue::getf(const char * format, ...) {
 	va_list args;
 	Erc erc;
 	Cbor cbor(0);
 	va_start(args, format);
-	if ( (erc=getMap(cbor))==E_OK ) {
-		if ( cbor.vscanf(format, args)) {
+	if ((erc = getMap(cbor)) == E_OK) {
+		if (cbor.vscanf(format, args)) {
 			getRelease(cbor);
 			va_end(args);
 			return E_OK;
@@ -92,13 +101,13 @@
 	}
 }
 
- Erc CborQueue::get(Cbor& cbor) {
+Erc CborQueue::get(Cbor& cbor) {
 	cbor.clear();
 	if (!hasData())
 		return ENOENT;
 	uint32_t length;
 	uint8_t* start = _buffer.getContiguousBlock(length);
-	if (length == 0 || start==0) {
+	if (length == 0 || start == 0) {
 		return ENOENT;
 	}
 	uint32_t size = *start; // --------------- Big endian write of 16 bit size
@@ -106,7 +115,7 @@
 	size += *(start + 1);
 
 	if (size > (uint32_t) cbor.capacity()) {
-		_buffer.decommitBlock(size + 2); 	// --------------- lost message, not enough space
+		_buffer.decommitBlock(size + 2); // --------------- lost message, not enough space
 		return ENOMEM;
 	} else {
 		cbor.write(start + 2, 0, size); 	//-------------- copy to cbor
@@ -116,9 +125,11 @@
 	}
 }
 #define MAX_SIZE 300
- Erc CborQueue::putMap(Cbor& cbor) {
-	if (_size)
+Erc CborQueue::putMap(Cbor& cbor) {
+	if (_size) {
+		LOGF(" CborQueue %X:%d ",this,_size);
 		return EBUSY;
+	}
 	int reserved = 0;
 	int size = MAX_SIZE;
 	_start = _buffer.reserve((int) size + 2, reserved);
@@ -130,11 +141,11 @@
 	return E_OK;
 }
 
- Erc CborQueue::putRelease(Cbor& cbor) {
+Erc CborQueue::putRelease(Cbor& cbor) {
 	if (_size == 0)
 		return ENOMEM;
 	uint32_t size = cbor.length();
-	if ( size==0) {
+	if (size == 0) {
 		_buffer.commit(0);
 		cbor.map(0, 0);
 		_size = 0;
@@ -149,7 +160,7 @@
 	return E_OK;
 }
 
- Erc CborQueue::getMap(Cbor& cbor) {
+Erc CborQueue::getMap(Cbor& cbor) {
 	if (_size)
 		return EBUSY;
 	if (!hasData())
@@ -169,7 +180,7 @@
 	return E_OK;
 }
 
- Erc CborQueue::getRelease(Cbor& cbor) {
+Erc CborQueue::getRelease(Cbor& cbor) {
 	if (_size) {
 		cbor.map(0, 0);
 		_buffer.decommitBlock(_size + 2); 	// --------------- lost message

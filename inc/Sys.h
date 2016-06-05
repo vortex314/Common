@@ -11,11 +11,13 @@
 
 
 #ifdef ARDUINO
+#define nullptr 0
 #include <Arduino.h>
 #define __FLE__ strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
-#define LOGF(fmt,...) Serial.printf("%d | %s:%d-%s | ", millis(),__FILE__,__LINE__,__FUNCTION__);Serial.printf(fmt,##__VA_ARGS__);Serial.println();//delay(10);
+#define LOGF(fmt,...) Serial.printf("%ld | %s:%d-%s | ", millis(),__FILE__,__LINE__,__FUNCTION__);Serial.printf(fmt,##__VA_ARGS__);Serial.println();//delay(10);
+#define ASSERT_LOG(xxx) if ( !(xxx)) { LOGF(" Assertion failed %s",#xxx); while(1){};}
 #else
-#define LOGF(fmt,...)
+#define LOGF(fmt,...) ASSERT_LOG(false)
 #endif
 extern "C" {
 #endif

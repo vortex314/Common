@@ -10,6 +10,7 @@
 Json::Json(uint32_t size) :
 		Str(size) {
 	_breakIndex = 0;
+	_break[_breakIndex]=0;
 	_tokenIndex = 0;
 }
 /*
@@ -56,6 +57,7 @@ Json& Json::add(int i) {
 }
 
 Json& Json::add(uint32_t i) {
+	LOGF(" add %d ",i);
 	addComma();
 	append((int64_t) i);
 	return *this;
@@ -304,7 +306,7 @@ Erc Json::parse() {
 void Json::mapToken(Str& str) {
 	str.map(data() + _tokens[_tokenIndex].start, _tokens[_tokenIndex].end);
 }
-
+#include <stdlib.h>
 bool Json::get(int64_t& ll) {
 	if (_tokenIndex > _tokenCount)
 		return false;
@@ -316,7 +318,8 @@ bool Json::get(int64_t& ll) {
 	mapToken(value);
 //	INFO("get int64_t >%s<",value.data());
 	_tokenIndex++;
-	ll = atoll(value.c_str());
+	ll=0;
+//	ll = atoll(value.c_str());
 //	INFO("get int64_t >%d<",ll);
 	return true;
 }
@@ -360,7 +363,7 @@ bool Json::get(Str& str) {
 		return false;
 	if (_tokens[_tokenIndex].type != JSMN_STRING)
 		return false;
-	const char* s = c_str() + _tokens[_tokenIndex].start;
+//	const char* s = c_str() + _tokens[_tokenIndex].start;
 	/*if (s[_tokens[_tokenIndex].start] == '"'
 	 && s[_tokens[_tokenIndex].end] == '"')*/{
 		str.clear();
@@ -443,7 +446,7 @@ bool Json::findKey(const char* key) {
 		if ((_tokens[i].parent == _tokenIndex) && (strLength == tokenLength)
 				&& (strncmp(key, (const char*) (data() + _tokens[i].start),
 						tokenLength) == 0)) {
-			int idx = i;
+//			int idx = i;
 			if ((i + 1) < _tokenCount && _tokens[i + 1].parent == i) {
 				_tokenIndex = i + 1;
 				return true;
