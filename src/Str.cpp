@@ -287,7 +287,7 @@ Str& Str::append(uint64_t val) {
 	str[MAX_CHAR - 1] = '\0';
 	register char *cp = str + MAX_CHAR - 1;
 	do {
-		*--cp = to_char(val % 10LL);
+		*--cp = to_char(val % 10);
 		val /= 10;
 	} while (val != 0);
 	append(cp);
