@@ -426,6 +426,18 @@ Cbor& Cbor::add(Bytes& b) {
 
 	return *this;
 }
+
+
+Cbor& Cbor::add(uint8_t * data,int length) {
+//	INFO(" BYTES  %x : %d %d ",&b,b.length(),b.capacity());
+
+	addToken(P_BYTES,length);
+	for(int i=0;i<length;i++){
+		write(*(data+i));
+	}
+	return *this;
+}
+
 Cbor& Cbor::add(Str& str) {
 	addToken(P_STRING, str.length());
 	str.offset(0);

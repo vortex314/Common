@@ -291,7 +291,7 @@ Str& Str::append(uint64_t val) {
 		val /= 10;
 	} while (val != 0);
 	append(cp);
-	LOGF("%s",cp);
+//	LOGF("%s",cp);
 	return *this;
 }
 

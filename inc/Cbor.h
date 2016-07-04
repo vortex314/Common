@@ -50,6 +50,7 @@ public:
 	 Cbor& add(float f);
 	 Cbor& add(double d);
 	 Cbor& add(Bytes& b);
+	 Cbor& add(uint8_t* data,int length);
 	 Cbor& add(Str& str);
 	 Cbor& add(const char* s);
 	 Cbor& add(uint64_t i64);

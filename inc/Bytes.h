@@ -50,6 +50,7 @@ public:
 	int poke(uint32_t offset, uint8_t b);
 	int peek(int32_t offset);
 	int peek();
+	int used();
 
 	bool hasData();
 	bool hasData(int size);

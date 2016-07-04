@@ -183,6 +183,10 @@ int Bytes::length(int l) {
 	return 0;
 }
 
+int Bytes::used(){
+	return _limit;
+}
+
 int Bytes::available() {
 	if (_offset < _limit)
 		return _limit - _offset;

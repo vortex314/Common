@@ -57,7 +57,7 @@ Json& Json::add(int i) {
 }
 
 Json& Json::add(uint32_t i) {
-	LOGF(" add %d ",i);
+//	LOGF(" add %d ",i);
 	addComma();
 	append((uint64_t) i);
 	return *this;

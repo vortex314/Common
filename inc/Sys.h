@@ -13,9 +13,12 @@
 #ifdef ARDUINO
 #define nullptr 0
 #include <Arduino.h>
+#include <Log.h>
 #define __FLE__ strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
-#define LOGF(fmt,...) Serial.printf("%ld | %s:%d-%s | ", millis(),__FILE__,__LINE__,__FUNCTION__);Serial.printf(fmt,##__VA_ARGS__);Serial.println();//delay(10);
-#define ASSERT_LOG(xxx) if ( !(xxx)) { LOGF(" Assertion failed %s",#xxx); while(1){};}
+//#define LOGF(fmt,...) {Serial.printf("%ld | %s\t%s:%d \t| ", millis(),__FILE__,__FUNCTION__,__LINE__);Serial.printf(fmt,##__VA_ARGS__);Serial.println();}//delay(10);
+#define LOGF(fmt,...)  if ( Log.enabled()) {Log.printf("%ld | %s:%d \t| ", millis(),__PRETTY_FUNCTION__,__LINE__);Log.printf(fmt,##__VA_ARGS__);Log.flush();}//delay(10);
+#define ASSERT_LOG(xxx) if ( !(xxx)) { LOGF(" Assertion failed %s",#xxx); while(1){delay(1000);};}
+#define ASSERT(xxx) if ( !(xxx)) { LOGF(" Assertion failed %s",#xxx); while(1){delay(1000);};}
 #else
 #define LOGF(fmt,...) ASSERT_LOG(false)
 #endif

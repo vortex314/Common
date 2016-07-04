@@ -6,7 +6,7 @@
 class Slip : public Bytes
 {
 public:
-    enum Magic {ESC=0xDC,END=0xC0,ESC_ESC=0xDD,ESC_END=0xDC};
+    enum Magic {ESC=0xDB,END=0xC0,ESC_ESC=0xDD,ESC_END=0xDC};
     Slip(uint32_t size);
     virtual ~Slip();
     Slip& addCrc();
@@ -18,11 +18,17 @@ public:
     Slip& frame();
     bool fill(uint8_t b);
     void reset();
+    static uint16_t Fletcher16(uint8_t *begin, int length);
+    static void Encode(Bytes& bytes);
+    static void Decode(Bytes& bytes);
+    static void AddCrc(Bytes&);
+    static void Frame(Bytes&);
+
 
 protected:
 private:
     bool _escaped;
-    static uint16_t Fletcher16(uint8_t *begin, int length);
+
 };
 
 #endif // SLIP_H

@@ -2,7 +2,7 @@
 
 Slip::Slip(uint32_t size) :
 		Bytes(size) {
-	_escaped=false;
+	_escaped = false;
 }
 
 Slip::~Slip() {
@@ -15,11 +15,15 @@ Slip::~Slip() {
 Slip& Slip::addCrc() //PUBLIC
 //_________________________________________________________________________
 {
-	offset(-1); // position at end
-	uint16_t crc = Fletcher16(_start, _limit);
-	write(crc & 0xFF);
-	write(crc >> 8);
+	AddCrc(*this);
 	return *this;
+}
+
+void Slip::AddCrc(Bytes& bytes) {
+	bytes.offset(-1); // position at end
+	uint16_t crc = Fletcher16(bytes.data(), bytes.used());
+	bytes.write(crc & 0xFF);
+	bytes.write(crc >> 8);
 }
 
 uint16_t Slip::Fletcher16(uint8_t *begin, int length) {
@@ -31,6 +35,7 @@ uint16_t Slip::Fletcher16(uint8_t *begin, int length) {
 	for (index = begin; index < end; index++) {
 		sum1 = (sum1 + *index) % 255;
 		sum2 = (sum2 + sum1) % 255;
+//		LOGF(" %X , %X ", sum1, sum2);
 	}
 
 	return (sum2 << 8) | sum1;
@@ -41,10 +46,10 @@ bool Slip::isGoodCrc() //PUBLIC
 //_________________________________________________________________________
 {
 	if (_limit < 3)
-		return false; // need at least 3 Slip
+		return false; // need at least 3 bytes
 	uint16_t crc = Fletcher16(_start, _limit - 2);
-	if ((*(_start + _limit - 2) == (crc & 0xFF))
-			&& ((*(_start + _limit - 1) == (crc >> 8))))
+	if ((*(_start + _limit - 2) == (crc >> 8))
+			&& ((*(_start + _limit - 1) == (crc & 0xFF))))
 		return true;
 	return false;
 }
@@ -68,7 +73,11 @@ Slip& Slip::decode() //PUBLIC
 	uint8_t *_capacity = _start + _limit;
 	for (p = _start; p < _capacity; p++) {
 		if (*p == ESC) {
-			*p = (uint8_t) (*(p + 1) ^ 0x20);
+			if (*(p + 1) == ESC_ESC)
+				*p = ESC;
+			else if (*(p + 1) == ESC_END)
+				*p = END;
+//			*p = (uint8_t) (*(p + 1) ^ 0x20);
 			for (q = p + 1; q < _capacity; q++)
 				*q = *(q + 1);
 			_capacity--;
@@ -78,19 +87,27 @@ Slip& Slip::decode() //PUBLIC
 	_limit = _capacity - _start;
 	return *this;
 }
-
+/*
+ #define END 0xC0
+ #define ESC 0xDB
+ */
 //_________________________________________________________________________
-
 Slip& Slip::encode() //PUBLIC
 //_________________________________________________________________________
 {
+	Encode(*this);
+
+	return *this;
+}
+
+void Slip::Encode(Bytes& bytes){
 	uint8_t *p, *q;
-	uint8_t *_capacity = _start + _limit;
-	for (p = _start; p < _capacity; p++) {
+	uint8_t *end = bytes._start +bytes._limit;
+	for (p = bytes._start; p < end; p++) {
 		if ((*p == END) || (*p == ESC)) {
-			for (q = _capacity; q > p; q--)
+			for (q = end; q > p; q--)
 				*(q + 1) = *q;
-			_capacity++;
+			end++;
 			if (*p == END)
 				*(p + 1) = ESC_END;
 			else
@@ -98,8 +115,7 @@ Slip& Slip::encode() //PUBLIC
 			*p = ESC;
 		}
 	}
-	_limit = _capacity - _start;
-	return *this;
+	bytes._limit = end - bytes._start;
 }
 
 //_________________________________________________________________________
@@ -118,9 +134,20 @@ Slip& Slip::frame() //PUBLIC
 	return *this;
 }
 
-void Slip::reset(){
+void Slip::Frame(Bytes& bytes){
+	uint8_t *q;
+		uint8_t *end = bytes._start + bytes._limit;
+		for (q = end; q >= bytes._start; q--)
+			*(q + 1) = *q;
+		*bytes._start = END;
+		*(end + 1) = END;
+		end += 2;
+		bytes._limit = end - bytes._start;
+}
+
+void Slip::reset() {
 	clear();
-	_escaped=false;
+	_escaped = false;
 }
 
 bool Slip::fill(uint8_t b) {
@@ -128,7 +155,7 @@ bool Slip::fill(uint8_t b) {
 		if (offset() > 0)
 			return true;
 		else {
-			return false;  // don't add SOF
+			return false; // don't add SOF
 		}
 	} else if (b == ESC) {
 		_escaped = true;

@@ -10,7 +10,6 @@
 #include "Sys.h"
 #include "Board.h"
 //#include <Logger.h>
-#define ASSERT(x)
 //#include "Message.h"
 //#include "assert.h"
 
