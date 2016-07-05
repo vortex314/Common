@@ -22,8 +22,8 @@ Slip& Slip::addCrc() //PUBLIC
 void Slip::AddCrc(Bytes& bytes) {
 	bytes.offset(-1); // position at end
 	uint16_t crc = Fletcher16(bytes.data(), bytes.used());
-	bytes.write(crc & 0xFF);
 	bytes.write(crc >> 8);
+	bytes.write(crc & 0xFF);
 }
 
 uint16_t Slip::Fletcher16(uint8_t *begin, int length) {

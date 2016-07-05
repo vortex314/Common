@@ -446,7 +446,7 @@ Cbor& Cbor::add(Str& str) {
 
 	return *this;
 }
-#include <cstring>
+
 Cbor& Cbor::add(const char* s) {
 	uint32_t size = strlen(s);
 	addToken(P_STRING, size);
