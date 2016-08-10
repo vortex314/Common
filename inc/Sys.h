@@ -20,7 +20,10 @@
 #define ASSERT_LOG(xxx) if ( !(xxx)) { Log.printf(" Assertion failed %s",#xxx); Log.flush();while(1){delay(1000);};}
 #define ASSERT(xxx) if ( !(xxx)) { Log.printf(" Assertion failed %s",#xxx); Log.flush();while(1){delay(1000);};}
 #else
-#define LOGF(fmt,...) ASSERT_LOG(false)
+#include <Log.h>
+#define LOGF(fmt,...)  if ( Log.enabled()) {Log.printf("%ld | %s:%d \t| ", Sys::millis(),__PRETTY_FUNCTION__,__LINE__);Log.printf(fmt,##__VA_ARGS__);Log.flush();}//delay(10);
+#define ASSERT_LOG(xxx) if ( !(xxx)) { Log.printf(" Assertion failed %s",#xxx); Log.flush();while(1){Sys::delay(1000);};}
+#define ASSERT(xxx) if ( !(xxx)) { Log.printf(" Assertion failed %s",#xxx); Log.flush();while(1){Sys::delay(1000);};}
 #endif
 extern "C" {
 #endif
@@ -73,6 +76,8 @@ public:
 	static void interruptEnable();
 	static void interruptDisable();
 	static void delayUs(uint32_t delay);
+	static void delay(uint32_t msec);
+	static void tick();
 protected:
 private:
 };
