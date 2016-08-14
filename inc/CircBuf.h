@@ -15,6 +15,7 @@
 #define POW 4
 #define CIRCBUF_SIZE (1<<POW)
 #define CIRCBUF_MASK (CIRCBUF_SIZE-1)
+#define IRAM
 
 class CircBuf {
 private:

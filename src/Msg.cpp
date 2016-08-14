@@ -35,7 +35,7 @@ const char* strSignal[] = { "SIG_ALL", "SIG_INIT", "SIG_IDLE", "SIG_ERC",
 	if (src == 0 || src == _src) {
 		if (signal == 0 || signal == _signal) {
 			rewind();
-			int _v;
+			int32_t _v;
 			if (get(_v) && _v == v) {
 				rewind();
 				return true;
@@ -133,7 +133,7 @@ extern "C" bool system_os_post(uint8_t prio, uint32_t p1, uint32_t par);
 	if (_queue->hasData()) {
 		if (_queue->get(*this) == E_OK) {
 			get((PTR_CAST &) _src);
-			get((int&) _signal);
+			get((int32_t&) _signal);
 			_offset = offset();
 			return true;
 		}

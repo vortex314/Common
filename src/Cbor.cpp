@@ -1,5 +1,6 @@
 #include "Cbor.h"
 #include <Sys.h>
+#include <string.h>
 
 Cbor::Cbor() :
 		Bytes() {
@@ -380,7 +381,7 @@ Cbor& Cbor::operator<<(int i) {
 	return add(i);
 }
 
-Cbor& Cbor::add(int32_t i) {
+Cbor& Cbor::add(int i) {
 	if (i >= 0)
 		addToken(P_PINT, (uint64_t) i);
 	else
@@ -557,7 +558,7 @@ bool Cbor::vaddf(const char *fmt, va_list args) {
 //		LOGF("%c",*fmt);
 		if (*fmt == 'i') {
 			int32_t i = va_arg(args, int32_t);
-			add(i);
+			add((int)i);
 		} else if (*fmt == 'u') {
 			uint32_t i = va_arg(args, uint32_t);
 			add(i);

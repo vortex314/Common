@@ -61,13 +61,13 @@ typedef struct {
 /**
  * Create JSON parser over an array of tokens
  */
-IROM void jsmn_init(jsmn_parser *parser);
+void jsmn_init(jsmn_parser *parser);
 
 /**
  * Run JSON parser. It parses a JSON data string into and array of tokens, each describing
  * a single JSON object.
  */
-IROM jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
+jsmnerr_t jsmn_parse(jsmn_parser *parser, const char *js, size_t len,
 		jsmntok_t *tokens, unsigned int num_tokens);
 
 #ifdef __cplusplus

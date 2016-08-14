@@ -52,7 +52,7 @@ void Json::addComma() {
 Json& Json::add(int i) {
 	bool get(int64_t& ul);
 	addComma();
-	append(i);
+	append((int64_t)i);
 	return *this;
 }
 

@@ -87,19 +87,19 @@ Logger& Logger::header(const char* file_source, const char* function) {
 		append(":0");
 	else
 		append(":");
-	append(hour);
+	append((int32_t)hour);
 
 	if (min < 10)
 		append(":0");
 	else
 		append(":");
-	append(min);
+	append((int32_t)min);
 
 	if (sec < 10)
 		append(":0");
 	else
 		append(":");
-	append(sec);
+	append((int32_t)sec);
 
 	if (msec < 10)
 		append(",00");
@@ -209,9 +209,9 @@ Logger& Logger::dec() {
 
 Logger& Logger::operator<<(int i) {
 	if (_format == FORMAT_HEX)
-		appendHex((unsigned int) i);
+		appendHex((uint32_t) i);
 	else
-		append(i);
+		append((int32_t)i);
 	return *this;
 }
 

@@ -71,7 +71,7 @@ class Sys {
 public:
 	Sys();
 	virtual ~Sys();
-	static uint64_t millis();
+	static uint32_t millis();
 	static void warn(int erc, const char* s);
 	static void interruptEnable();
 	static void interruptDisable();

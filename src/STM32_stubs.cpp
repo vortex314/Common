@@ -1,4 +1,5 @@
 //#include <stdio.h>
+#ifdef TOET
 #ifdef __arm__
 #include <stdlib.h>
 #include <string.h>
@@ -28,7 +29,7 @@ int errno;
  */
 void *operator new(size_t size) {
 //	return malloc(size);
-	return Sys::malloc(size);
+	return malloc(size);
 }
 
 void *operator new[](size_t size) {
@@ -439,5 +440,6 @@ int _write(int file, char *ptr, int len) {
 
 #ifdef __cplusplus
 }
+#endif
 #endif
 #endif
