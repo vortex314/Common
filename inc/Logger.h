@@ -36,7 +36,7 @@ extern "C" void uart0WriteWait(uint8_t TxChar);
 class Logger: public Str {
 public:
 	enum Level {
-		DEBUG, INFO, WARN, ERROR, FATAL
+		L_DEBUG, L_INFO, L_WARN, L_ERROR, L_FATAL
 	};
 	static Logger* logger;
 

@@ -71,7 +71,7 @@ void Strpack::pack(bool b) {
 void Strpack::pack(float f) {
     int i;
 
-    register union {
+    union {
         uint8_t b[4];
         uint32_t ui32;
         float f;

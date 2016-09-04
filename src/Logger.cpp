@@ -13,7 +13,7 @@ Logger::Logger(int size) :
 		Str(size) {
 	_module = "";
 	_logLevel = DEBUG;
-	_level = INFO;
+	_level = L_INFO;
 	_format = FORMAT_DEC;
 }
 

@@ -23,7 +23,7 @@ public:
     Str& clear();
     Str& set(const char* const s);
     Str& operator<<(const char* s);
-    Str& operator+(const char* s) { return append(s);};;
+    Str& operator+(const char* s) { return append(s);};
     Str& operator<<(char ch);
     Str& operator<<(int i);
     Str& operator<<(Str& s);

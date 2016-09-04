@@ -68,6 +68,7 @@ extern const char* WIFI_ID;
 
 #ifdef __cplusplus
 class Sys {
+	static char _hostname[30];
 public:
 	Sys();
 	virtual ~Sys();
@@ -78,6 +79,8 @@ public:
 	static void delayUs(uint32_t delay);
 	static void delay(uint32_t msec);
 	static void tick();
+	static void hostname(const char*hn);
+	static const char* hostname();
 protected:
 private:
 };
