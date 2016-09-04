@@ -33,12 +33,13 @@ Bytes::Bytes(uint8_t *st, uint32_t length) {
 	isMemoryOwner = false;
 }
 
-void Bytes::map(uint8_t* st, uint32_t length) {
+Bytes& Bytes::map(uint8_t* st, uint32_t length) {
 	_start = st;
 	_offset = 0;
 	_limit = length;
 	_capacity = length;
 	isMemoryOwner = false;
+	return *this;
 }
 
 /* Bytes::Bytes() {

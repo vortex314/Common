@@ -12,7 +12,7 @@ Logger* Logger::logger = new Logger(256);
 Logger::Logger(int size) :
 		Str(size) {
 	_module = "";
-	_logLevel = DEBUG;
+	_logLevel = L_DEBUG;
 	_level = L_INFO;
 	_format = FORMAT_DEC;
 }
