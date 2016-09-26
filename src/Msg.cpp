@@ -53,18 +53,17 @@ const char* strSignal[] = { "SIG_ALL", "SIG_INIT", "SIG_IDLE", "SIG_ERC",
 	return _src;
 }
 
-#ifdef __CYGWIN__
-#define  __WORDSIZE 64
-#else
-#define  __WORDSIZE 32
-#endif
+#include <stdint.h>
 
-#if __WORDSIZE==64
+// C++
+#include <cstdint>
+
+#if INTPTR_MAX == INT64_MAX
 #define PTR_CAST uint64_t
-#elif __WORDSIZE==32
+#elif INTPTR_MAX == INT32_MAX
 #define PTR_CAST uint32_t
-#elif __WORDSIZE==16
-#define PTR_CAST uint16_t
+#else
+#error Unknown pointer size or missing size macros!
 #endif
 
 CborQueue* Msg::_queue = 0;
