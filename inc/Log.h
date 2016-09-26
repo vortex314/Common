@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include <stdarg.h>
+#include <Sys.h>
 #define LINE_LENGTH 256
 typedef void (*LogFunction)(char* start,uint32_t length);
 
@@ -31,6 +32,7 @@ public:
 	 void setOutput(LogFunction function);
 	 void printf(const char* fmt,...);
 	 void vprintf(const char* fmt,va_list args);
+	 void time();
 	 void flush();
 };
 

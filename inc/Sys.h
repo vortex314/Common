@@ -16,12 +16,12 @@
 #include <Log.h>
 #define __FLE__ strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
 //#define LOGF(fmt,...) {Serial.printf("%ld | %s\t%s:%d \t| ", millis(),__FILE__,__FUNCTION__,__LINE__);Serial.printf(fmt,##__VA_ARGS__);Serial.println();}//delay(10);
-#define LOGF(fmt,...)  if ( Log.enabled()) {Log.printf("%ld | %s:%d \t| ", millis(),__PRETTY_FUNCTION__,__LINE__);Log.printf(fmt,##__VA_ARGS__);Log.flush();}//delay(10);
+#define LOGF(fmt,...)  if ( Log.enabled()) {Log.printf("%lu | %s:%d | ", millis(),__PRETTY_FUNCTION__,__LINE__);Log.printf(fmt,##__VA_ARGS__);Log.flush();}//delay(10);
 #define ASSERT_LOG(xxx) if ( !(xxx)) { Log.printf(" Assertion failed %s",#xxx); Log.flush();while(1){delay(1000);};}
 #define ASSERT(xxx) if ( !(xxx)) { Log.printf(" Assertion failed %s",#xxx); Log.flush();while(1){delay(1000);};}
 #else
 #include <Log.h>
-#define LOGF(fmt,...)  if ( Log.enabled()) {Log.printf("%ld | %s:%d \t| ", Sys::millis(),__PRETTY_FUNCTION__,__LINE__);Log.printf(fmt,##__VA_ARGS__);Log.flush();}//delay(10);
+#define LOGF(fmt,...)  if ( Log.enabled()) {Log.time();Log.printf(" | %s:%d | ",__PRETTY_FUNCTION__,__LINE__);Log.printf(fmt,##__VA_ARGS__);Log.flush();}//delay(10);
 #define ASSERT_LOG(xxx) if ( !(xxx)) { Log.printf(" Assertion failed %s",#xxx); Log.flush();while(1){Sys::delay(1000);};}
 #define ASSERT(xxx) if ( !(xxx)) { Log.printf(" Assertion failed %s",#xxx); Log.flush();while(1){Sys::delay(1000);};}
 #endif
@@ -72,7 +72,7 @@ class Sys {
 public:
 	Sys();
 	virtual ~Sys();
-	static uint32_t millis();
+	static uint64_t millis();
 	static void warn(int erc, const char* s);
 	static void interruptEnable();
 	static void interruptDisable();

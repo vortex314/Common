@@ -1,32 +1,26 @@
 /*
- * File:   Streams.h
- * Author: lieven2
+ * Stream.h
  *
- * Created on 15 september 2013, 17:58
+ *  Created on: 2-sep.-2016
+ *      Author: lieven2
  */
 
-#ifndef STREAM_H
-#define	STREAM_H
-#include <stdint.h>
-#include "Erc.h"
-#include "Bytes.h"
-
+#ifndef BYTE_STREAM_H_
+#define BYTE_STREAM_H_
+#include <Bytes.h>
 class ByteStream {
-private:
-
 public:
-//	IROM  Stream() {};
-	 virtual Erc write(uint8_t b)=0;
-	 virtual Erc write(Bytes& bytes)=0;
-//	IROM  ~Stream(){};
-	 virtual bool hasData()=0;
-	 virtual bool hasSpace()=0;
-	 virtual uint8_t read()=0;
-	 virtual bool isConnected()=0;
-//	 virtual void connect()=0;
-	 virtual void disconnect()=0;
-
+	ByteStream(){};
+	virtual ~ByteStream(){};
+	virtual Erc open()=0;
+	virtual Erc close()=0;
+	virtual Erc write(Bytes& data)=0;
+	virtual Erc write(uint8_t data)=0;
+	virtual uint8_t read()=0;
+	virtual Erc read(Bytes& data)=0;
+	virtual bool hasData()=0;
+	virtual bool hasSpace()=0;
+	virtual void flush()=0;
 };
 
-#endif	/* STREAM_H */
-
+#endif /* BYTE_STREAM_H_ */
