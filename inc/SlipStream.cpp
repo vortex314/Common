@@ -95,14 +95,17 @@ void SlipStream::send(Bytes& bytes){
 	_stream.write(END);
 	}
 
-
+#include <Cbor.h>
+#include <EventBus.h>
 
 void SlipStream::onRecv(uint8_t b) {
+Cbor cbor(100);
 	if (b == END) {
 		if (offset() > 2){
 			if ( isGoodCrc()) {
 				removeCrc();
-				publishSync(Header(RXD));
+				cbor.addKey(H("data")).add(*this);
+				eb.publish(H("SLIP_RXD"),cbor);
 			}
 			else
 				_error_bad_crc++;

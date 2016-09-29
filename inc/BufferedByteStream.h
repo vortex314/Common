@@ -11,9 +11,10 @@
 #include <ByteStream.h>
 #include <CircBuf.h>
 class BufferedByteStream : public ByteStream{
+
+public:
 	CircBuf _rxd;
 	CircBuf _txd;
-public:
 	// user interface
 	BufferedByteStream(uint32_t sizeBuffer);
 	~BufferedByteStream();
