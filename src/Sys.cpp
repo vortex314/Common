@@ -16,6 +16,5 @@ uint64_t Sys::millis() {
 	return ((unsigned long long)t.tv_sec*1000) + ( (unsigned long long)t.tv_nsec/1000000);
 }
 
-
 #endif
 

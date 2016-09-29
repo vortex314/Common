@@ -14,26 +14,31 @@
 #define LINE_LENGTH 256
 typedef void (*LogFunction)(char* start,uint32_t length);
 
-class LogManager {
+class LogManager
+{
+public:
+    typedef enum  LogLevel{ DEBUG,INFO,WARN,ERROR,FATAL } LogLevel;
+private:
+    bool _enabled;
+    LogFunction _logFunction;
+    char* _record;
+    uint16_t _offset;
+    LogLevel _level;
 public:
 
-private:
-	 bool _enabled;
-	 LogFunction _logFunction;
-	 char* _record;
-	 uint16_t _offset;
-public:
-	 LogManager();
-	 ~LogManager();
-	 bool enabled();
-	 void disable();
-	 void enable();
-	 void defaultOutput();
-	 void setOutput(LogFunction function);
-	 void printf(const char* fmt,...);
-	 void vprintf(const char* fmt,va_list args);
-	 void time();
-	 void flush();
+    LogManager();
+    ~LogManager();
+    bool enabled();
+    void disable();
+    void enable();
+    void defaultOutput();
+    void setOutput(LogFunction function);
+    void printf(const char* fmt,...);
+    void vprintf(const char* fmt,va_list args);
+    void time();
+    void flush();
+    void level(LogLevel l);
+    LogLevel level();
 };
 
 extern LogManager Log;
