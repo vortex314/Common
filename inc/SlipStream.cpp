@@ -36,7 +36,7 @@ Crc SlipStream::Fletcher16(uint8_t *begin, int length) {
 		sum2 = (sum2 + sum1) % 255;
 //		LOGF(" %X , %X ", sum1, sum2);
 	};
-	Crc crc={sum2,sum1};
+	Crc crc={(uint8_t)sum2,(uint8_t)sum1};
 	return crc;
 }
 //_________________________________________________________________________

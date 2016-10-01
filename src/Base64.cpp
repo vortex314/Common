@@ -84,7 +84,7 @@ Erc Base64::encode(Str& out, Bytes& in) {
 		buff2[3] = buff1[2] & 0x3f;
 
 		for (j = 0; j < (i + 1); j++)
-			out.write(encodeCharacterTable[buff2[j]]);
+			out.write(encodeCharacterTable[(int)buff2[j]]);
 
 		while (i++ < 3)
 			out.write( '=');
@@ -111,7 +111,7 @@ Erc Base64::decode(Bytes& out,Str &in) {
 			break;
 		if (++i == 4) {
 			for (i = 0; i != 4; i++)
-				buff2[i] = decodeCharacterTable[buff2[i]];
+				buff2[i] = decodeCharacterTable[(int)buff2[i]];
 
 			out.write((char) ((buff2[0] << 2) + ((buff2[1] & 0x30) >> 4)));
 			out.write(
@@ -126,7 +126,7 @@ Erc Base64::decode(Bytes& out,Str &in) {
 		for (j = i; j < 4; j++)
 			buff2[j] = '\0';
 		for (j = 0; j < 4; j++)
-			buff2[j] = decodeCharacterTable[buff2[j]];
+			buff2[j] = decodeCharacterTable[(int)buff2[j]];
 
 		buff1[0] = (buff2[0] << 2) + ((buff2[1] & 0x30) >> 4);
 		buff1[1] = ((buff2[1] & 0xf) << 4) + ((buff2[2] & 0x3c) >> 2);

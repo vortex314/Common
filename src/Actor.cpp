@@ -49,7 +49,7 @@ const char* Actor::eventToString(uint8_t event) {
 	};
 	return sEvent;
 }
-#define UINT_LEAST64_MAX 0xFFFFFFFFFFFFFFFFL
+//#define UINT_LEAST64_MAX 0xFFFFFFFFFFFFFFFFL
 Actor::Actor(const char* name) {
 	_timeout = UINT_LEAST64_MAX;
 	_name = name;

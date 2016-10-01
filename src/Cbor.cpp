@@ -687,7 +687,7 @@ bool Cbor::skipToken() {
 	CborVariant cv;
 	if (readToken(pt, cv) == E_OK) {
 		if (pt == P_BYTES || pt == P_STRING) { // skip remaining bytes
-			int i;
+			uint32_t i;
 			for (i = 0; i < cv._uint64; i++)
 				read();
 		}
