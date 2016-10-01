@@ -17,11 +17,11 @@ typedef void (*LogFunction)(char* start,uint32_t length);
 class LogManager
 {
 public:
-    typedef enum  LogLevel{ DEBUG,INFO,WARN,ERROR,FATAL } LogLevel;
+    typedef enum  LogLevel{ LOG_DEBUG,INFO,WARN,ERROR,FATAL } LogLevel;
 private:
     bool _enabled;
     LogFunction _logFunction;
-    char* _record;
+    char _record[LINE_LENGTH];
     uint16_t _offset;
     LogLevel _level;
 public:

@@ -46,6 +46,7 @@ public:
 	 Cbor& operator<<(const char *s);
 	 Cbor& operator=(const char* s);
 	 Cbor& operator<<(uint64_t l);
+	 Cbor& add(uint16_t i);
 	 Cbor& add(uint32_t i);
 	 Cbor& add(float f);
 	 Cbor& add(double d);
@@ -70,6 +71,7 @@ public:
 	 void sprintf(Str& s);
 
 	 bool get(bool& bl);
+	 bool get(uint16_t& i);
 	 bool get(uint32_t& i);
 	 bool get(uint64_t& l);
 	 bool get(float& f);
