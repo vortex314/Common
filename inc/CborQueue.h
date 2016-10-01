@@ -17,7 +17,8 @@ private:
 public:
 	BipBuffer _buffer;
 //	Cbor cbor;
-	uint32_t _size;
+	uint32_t _read_size;
+	uint32_t _write_size;
 	uint8_t* _start;
 	Erc getMap(Cbor& cbor);
 	Erc getRelease(Cbor& cbor);

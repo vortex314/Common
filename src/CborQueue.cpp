@@ -8,7 +8,8 @@
 #include <CborQueue.h>
 
 CborQueue::CborQueue(uint32_t size) {
-	_size = 0;
+	_read_size = 0;
+	_write_size = 0;
 	_start = 0;
 	_buffer.allocateBuffer(size);
 //	LOGF(" CborQueue %X:%d ",this,_size);
@@ -126,8 +127,8 @@ Erc CborQueue::get(Cbor& cbor) {
 }
 #define MAX_SIZE 300
 Erc CborQueue::putMap(Cbor& cbor) {
-	if (_size) {
-		LOGF(" CborQueue %X:%d ",this,_size);
+	if (_write_size) {
+		LOGF(" CborQueue %X:%d ",this,_write_size);
 		return EBUSY;
 	}
 	int reserved = 0;
@@ -137,18 +138,18 @@ Erc CborQueue::putMap(Cbor& cbor) {
 		return ENOMEM;
 //	INFO(" map to %d reserved ",reserved);
 	cbor.map(_start + 2, reserved);
-	_size = reserved;
+	_write_size = reserved;
 	return E_OK;
 }
 
 Erc CborQueue::putRelease(Cbor& cbor) {
-	if (_size == 0)
+	if (_write_size == 0)
 		return ENOMEM;
 	uint32_t size = cbor.length();
 	if (size == 0) {
 		_buffer.commit(0);
 		cbor.map(0, 0);
-		_size = 0;
+		_write_size = 0;
 		return ENOMEM;
 	}
 	*_start = size >> 8;
@@ -156,12 +157,12 @@ Erc CborQueue::putRelease(Cbor& cbor) {
 	memcpy(_start + 2, cbor.data(), size);
 	_buffer.commit(size + 2);
 	cbor.map(0, 0);
-	_size = 0;
+	_write_size = 0;
 	return E_OK;
 }
 
 Erc CborQueue::getMap(Cbor& cbor) {
-	if (_size)
+	if (_read_size)
 		return EBUSY;
 	if (!hasData())
 		return ENOENT;
@@ -171,20 +172,20 @@ Erc CborQueue::getMap(Cbor& cbor) {
 	if (length == 0) {
 		return ENOMEM;
 	}
-	_size = *_start; // --------------- Big endian write of 16 bit size
-	_size <<= 8;
-	_size += *(_start + 1);
+	_read_size = *_start; // --------------- Big endian write of 16 bit size
+	_read_size <<= 8;
+	_read_size += *(_start + 1);
 //	INFO(" map to : %X , %d", _start, _size);
-	cbor.map(_start + 2, _size);
+	cbor.map(_start + 2, _read_size);
 
 	return E_OK;
 }
 
 Erc CborQueue::getRelease(Cbor& cbor) {
-	if (_size) {
+	if (_read_size) {
 		cbor.map(0, 0);
-		_buffer.decommitBlock(_size + 2); 	// --------------- lost message
-		_size = 0;
+		_buffer.decommitBlock(_read_size + 2); 	// --------------- lost message
+		_read_size = 0;
 		return E_OK;
 	} else {
 		return ENOMEM;

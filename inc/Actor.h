@@ -179,6 +179,8 @@ public:
 	}
 
 	static void logHeader(const char* prefix, Header hdr);
+	virtual void onTimeout(){};
+	virtual uint32_t ticker() { return 1000000000;};
 };
 
 class SystemClass: public Actor {

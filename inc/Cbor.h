@@ -90,7 +90,7 @@ public:
 	}
 
 	template<typename T>
-	bool getKeyValue(uint32_t key, T value) {
+	bool getKeyValue(uint32_t key, T& value) {
 		if (gotoKey(key) && get(value))
 			return true;
 		return false;
@@ -101,11 +101,12 @@ public:
 	Bytes& bytes() {
 		return *this;
 	}
+		bool skipToken();
 
 protected:
 private:
 	void addToken(PackType type, uint64_t data);
-	bool skipToken();
+
 	void addHeader(uint8_t major, uint8_t minor);
 	uint64_t getUint64(int length);
 	PackType tokenToString(Str& str);
