@@ -38,50 +38,63 @@ public:
 	Cbor(uint32_t size);
 	~Cbor();
 
-	 Cbor& operator<<(uint32_t i) {
+	Cbor& operator<<(uint32_t i) {
 		return add(i);
 	}
-	 Cbor& add(int i);
-	 Cbor& operator<<(int i);
-	 Cbor& operator<<(const char *s);
-	 Cbor& operator=(const char* s);
-	 Cbor& operator<<(uint64_t l);
-	 Cbor& add(uint16_t i);
-	 Cbor& add(uint32_t i);
-	 Cbor& add(float f);
-	 Cbor& add(double d);
-	 Cbor& add(Bytes& b);
-	 Cbor& add(uint8_t* data,int length);
-	 Cbor& add(Str& str);
-	 Cbor& add(const char* s);
-	 Cbor& add(uint64_t i64);
-	 Cbor& add(int64_t i64);
-	 Cbor& add(bool b);
-	 Cbor& addMap(int size);
-	 Cbor& addArray(int size);
-	 Cbor& addTag(int nr);
-	 Cbor& addBreak();
-	 Cbor& addNull();
-	 Cbor& addKey(uint32_t idx);
-	 bool addf(const char *fmt, ...);
-	 bool vaddf(const char *fmt, va_list args);
-	 Cbor& putf(const char *fmt, ...);
-	 bool scanf(const char* fmt, ...);
-	 bool vscanf(const char* fmt, va_list args);
-	 void sprintf(Str& s);
+	Cbor& add(int i);
+	Cbor& operator<<(int i);
+	Cbor& operator<<(const char *s);
+	Cbor& operator=(const char* s);
+	Cbor& operator<<(uint64_t l);
+	Cbor& add(uint16_t i);
+	Cbor& add(uint32_t i);
+	Cbor& add(float f);
+	Cbor& add(double d);
+	Cbor& add(Bytes& b);
+	Cbor& add(uint8_t* data, int length);
+	Cbor& add(Str& str);
+	Cbor& add(const char* s);
+	Cbor& add(uint64_t i64);
+	Cbor& add(int64_t i64);
+	Cbor& add(bool b);
+	Cbor& addMap(int size);
+	Cbor& addArray(int size);
+	Cbor& addTag(int nr);
+	Cbor& addBreak();
+	Cbor& addNull();
+	Cbor& addKey(uint32_t idx);
+	bool addf(const char *fmt, ...);
+	bool vaddf(const char *fmt, va_list args);
+	Cbor& putf(const char *fmt, ...);
+	bool scanf(const char* fmt, ...);
+	bool vscanf(const char* fmt, va_list args);
+	void sprintf(Str& s);
 
-	 bool get(bool& bl);
-	 bool get(uint16_t& i);
-	 bool get(uint32_t& i);
-	 bool get(uint64_t& l);
-	 bool get(float& f);
-	 bool get(double& d);
-	 bool get(int32_t& i);
-	 bool get(char*s, uint32_t length);
-	 bool get(Bytes& bytes);
-	 bool get(Str& str);
-	 bool gotoKey(uint32_t idx);
-	 bool getMapped(Bytes& bytes);
+	bool get(bool& bl);
+	bool get(uint16_t& i);
+	bool get(uint32_t& i);
+	bool get(uint64_t& l);
+	bool get(float& f);
+	bool get(double& d);
+	bool get(int32_t& i);
+	bool get(char*s, uint32_t length);
+	bool get(Bytes& bytes);
+	bool get(Str& str);
+	bool gotoKey(uint32_t idx);
+	bool getMapped(Bytes& bytes);
+	template<typename T>
+	Cbor& addKeyValue(uint32_t key, T value) {
+		addKey(key);
+		add(value);
+		return *this;
+	}
+
+	template<typename T>
+	bool getKeyValue(uint32_t key, T value) {
+		if (gotoKey(key) && get(value))
+			return true;
+		return false;
+	}
 
 	Erc readToken(PackType& type, CborVariant& variant);
 	Erc toString(Str& str);
