@@ -1,13 +1,72 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
-		<cconfiguration id="cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+		<cconfiguration id="cdt.managedbuild.config.gnu.lib.debug.688255153">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.lib.debug.688255153" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<externalSettings>
 					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/Common2"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/Common2/Debug"/>
-						<entry flags="RESOLVED" kind="libraryFile" name="Common2"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/Common"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/Common/Debug"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="Common"/>
+					</externalSetting>
+				</externalSettings>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="a" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.lib.debug.688255153" name="Debug" parent="cdt.managedbuild.config.gnu.lib.debug">
+					<folderInfo id="cdt.managedbuild.config.gnu.lib.debug.688255153." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.lib.debug.564716970" name="Linux GCC" nonInternalBuilderId="cdt.managedbuild.target.gnu.builder.lib.debug" superClass="cdt.managedbuild.toolchain.gnu.lib.debug">
+							<targetPlatform id="cdt.managedbuild.target.gnu.platform.lib.debug.1855204515" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.lib.debug"/>
+							<builder autoBuildTarget="all" buildPath="${workspace_loc:/Common/Debug}" cleanBuildTarget="clean" id="org.eclipse.cdt.build.core.internal.builder.21471686" incrementalBuildTarget="all" managedBuildOn="true" name="CDT Internal Builder" superClass="org.eclipse.cdt.build.core.internal.builder"/>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.lib.debug.726221839" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.lib.debug"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug.921030435" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug">
+								<option id="gnu.cpp.compiler.lib.debug.option.optimization.level.923683387" name="Optimization Level" superClass="gnu.cpp.compiler.lib.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.lib.debug.option.debugging.level.661721907" name="Debug Level" superClass="gnu.cpp.compiler.lib.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.other.other.468944323" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++11" valueType="string"/>
+								<option id="gnu.cpp.compiler.option.include.paths.719670700" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common/inc}&quot;"/>
+								</option>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1362908535" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.65821980" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.lib.debug.2075242773" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.lib.debug">
+								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.lib.debug.option.optimization.level.827237940" name="Optimization Level" superClass="gnu.c.compiler.lib.debug.option.optimization.level" valueType="enumerated"/>
+								<option id="gnu.c.compiler.lib.debug.option.debugging.level.1016155012" name="Debug Level" superClass="gnu.c.compiler.lib.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.include.paths.755932959" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common/inc}&quot;"/>
+								</option>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.605316134" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.307095911" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1140969803" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.2018619443" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.lib.debug.1993725460" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.lib.debug">
+								<option id="gnu.both.asm.option.include.paths.378670261" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common/inc}&quot;"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.362035504" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="cdt.managedbuild.config.gnu.lib.release.209566867">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.lib.release.209566867" moduleId="org.eclipse.cdt.core.settings" name="Release">
+				<externalSettings>
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/Common"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/Common/Release"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="Common"/>
 					</externalSetting>
 				</externalSettings>
 				<extensions>
@@ -19,171 +78,42 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="a" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674" name="Debug" parent="cdt.managedbuild.config.gnu.cygwin.lib.debug">
-					<folderInfo id="cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674." name="/" resourcePath="">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.base.1475437853" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.base">
-							<option id="cdt.managedbuild.option.gnu.cross.prefix.216709448" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" value="xtensa-lx106-elf-" valueType="string"/>
-							<option id="cdt.managedbuild.option.gnu.cross.path.1007293403" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/bin" valueType="string"/>
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1333577614" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
-							<builder buildPath="${workspace_loc:/Common}/Debug" id="cdt.managedbuild.builder.gnu.cross.67216142" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1101371056" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
-								<option id="gnu.c.compiler.option.include.paths.102165756" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+				<configuration artifactExtension="a" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.lib.release.209566867" name="Release" parent="cdt.managedbuild.config.gnu.lib.release">
+					<folderInfo id="cdt.managedbuild.config.gnu.lib.release.209566867." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.lib.release.226625546" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.lib.release">
+							<targetPlatform id="cdt.managedbuild.target.gnu.platform.lib.release.1321995683" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.lib.release"/>
+							<builder buildPath="${workspace_loc:/Common/Release}" id="cdt.managedbuild.target.gnu.builder.lib.release.10945713" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.lib.release"/>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.lib.release.101905874" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.lib.release"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.lib.release.2093492723" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.lib.release">
+								<option id="gnu.cpp.compiler.lib.release.option.optimization.level.1650076013" name="Optimization Level" superClass="gnu.cpp.compiler.lib.release.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.lib.release.option.debugging.level.532913568" name="Debug Level" superClass="gnu.cpp.compiler.lib.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.include.paths.1526123604" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include\c++&quot;"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/sdk/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/lib/gcc/xtensa-lx106-elf/4.8.2/include/"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/variants/nodemcu"/>
 								</option>
-								<option id="gnu.c.compiler.option.preprocessor.def.symbols.479172627" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__ESP8266__"/>
-									<listOptionValue builtIn="false" value="ARDUINO_ARCH_ESP8266"/>
-									<listOptionValue builtIn="false" value="ARDUINO"/>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1010041391" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__"/>
 								</option>
-								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.815134061" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.debugging.level.1309925014" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.dialect.std.648533948" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.630676417" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.432561065" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.2147042413" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
-								<option id="gnu.cpp.compiler.option.include.paths.1491344494" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.lib.release.1319562611" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.lib.release">
+								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.lib.release.option.optimization.level.1585084872" name="Optimization Level" superClass="gnu.c.compiler.lib.release.option.optimization.level" valueType="enumerated"/>
+								<option id="gnu.c.compiler.lib.release.option.debugging.level.973919282" name="Debug Level" superClass="gnu.c.compiler.lib.release.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.include.paths.1926859476" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include\c++&quot;"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/sdk/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/lib/gcc/xtensa-lx106-elf/4.8.2/include/"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/variants/nodemcu"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.preprocessor.def.638764984" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__ESP8266__"/>
-									<listOptionValue builtIn="false" value="ARDUINO_ARCH_ESP8266"/>
-									<listOptionValue builtIn="false" value="ARDUINO"/>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.987220086" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.optimization.level.2048588382" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.debugging.level.571790231" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.other.other.1562984951" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-std=c++11 -c -fmessage-length=0 -ffunction-sections -fno-rtti -fno-exceptions -mlongcalls -mtext-section-literals -fno-jump-tables" valueType="string"/>
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.259384689" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.435088982" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.930538941" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.356777905" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1395680401" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1687963023" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
-								<option id="gnu.both.asm.option.include.paths.775896119" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.1314191449" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.1590096071" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base"/>
+							<tool id="cdt.managedbuild.tool.gnu.assembler.lib.release.151461961" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.lib.release">
+								<option id="gnu.both.asm.option.include.paths.424734304" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/sdk/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/lib/gcc/xtensa-lx106-elf/4.8.2/include/"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/variants/nodemcu"/>
 								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.747196544" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1767590075" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-				</configuration>
-			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-		</cconfiguration>
-		<cconfiguration id="cdt.managedbuild.config.gnu.cygwin.lib.release.64409242">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cygwin.lib.release.64409242" moduleId="org.eclipse.cdt.core.settings" name="Release">
-				<externalSettings>
-					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/Common2"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/Common2/Release"/>
-						<entry flags="RESOLVED" kind="libraryFile" name="Common2"/>
-					</externalSetting>
-				</externalSettings>
-				<extensions>
-					<extension id="org.eclipse.cdt.core.Cygwin_PE" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-				</extensions>
-			</storageModule>
-			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="a" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.cygwin.lib.release.64409242" name="Release" parent="cdt.managedbuild.config.gnu.cygwin.lib.release">
-					<folderInfo id="cdt.managedbuild.config.gnu.cygwin.lib.release.64409242." name="/" resourcePath="">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cygwin.lib.release.1470813955" name="Cygwin GCC" superClass="cdt.managedbuild.toolchain.gnu.cygwin.lib.release">
-							<targetPlatform id="cdt.managedbuild.target.gnu.platform.cygwin.lib.release.1083223042" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.cygwin.lib.release"/>
-							<builder buildPath="${workspace_loc:/Common2}/Release" id="cdt.managedbuild.target.gnu.builder.cygwin.lib.release.1460908197" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.cygwin.lib.release"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.cygwin.lib.release.915661794" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.cygwin.lib.release">
-								<option id="gnu.both.asm.option.include.paths.827584306" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common2/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\cygwin64\usr\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include\c++&quot;"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
-									<listOptionValue builtIn="false" value="/home/lieven/esp8266/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/esp8266/sdk/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/esp8266/xtensa-lx106-elf/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/sdk/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/lib/gcc/xtensa-lx106-elf/4.8.2/include/"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/variants/nodemcu"/>
-								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1942537894" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.archiver.cygwin.lib.release.296269707" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.cygwin.lib.release"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.lib.release.27155486" name="Cygwin C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.lib.release">
-								<option id="gnu.cpp.compiler.cygwin.lib.release.option.optimization.level.712750" name="Optimization Level" superClass="gnu.cpp.compiler.cygwin.lib.release.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.cygwin.lib.release.option.debugging.level.963465069" name="Debug Level" superClass="gnu.cpp.compiler.cygwin.lib.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.include.paths.131900834" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common2/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\cygwin64\usr\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include\c++&quot;"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
-									<listOptionValue builtIn="false" value="/home/lieven/esp8266/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/esp8266/sdk/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/esp8266/xtensa-lx106-elf/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/sdk/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/lib/gcc/xtensa-lx106-elf/4.8.2/include/"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/variants/nodemcu"/>
-								</option>
-								<option id="gnu.cpp.compiler.option.preprocessor.def.1758561393" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__CYGWIN__=1"/>
-									<listOptionValue builtIn="false" value="__ESP8266__"/>
-									<listOptionValue builtIn="false" value="ARDUINO_ARCH_ESP8266"/>
-									<listOptionValue builtIn="false" value="ARDUINO"/>
-								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.721433148" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.release.730713300" name="Cygwin C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.release">
-								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.cygwin.lib.release.option.optimization.level.292055177" name="Optimization Level" superClass="gnu.c.compiler.cygwin.lib.release.option.optimization.level" valueType="enumerated"/>
-								<option id="gnu.c.compiler.cygwin.lib.release.option.debugging.level.996863772" name="Debug Level" superClass="gnu.c.compiler.cygwin.lib.release.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.include.paths.882853258" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common2/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\cygwin64\usr\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Data\lieven\mingw\lib\gcc\mingw32\4.9.3\include\c++&quot;"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/cores/esp8266"/>
-									<listOptionValue builtIn="false" value="/home/lieven/esp8266/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/esp8266/sdk/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/esp8266/xtensa-lx106-elf/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/sdk/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/xtensa-lx106-elf/include"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/lib/gcc/xtensa-lx106-elf/4.8.2/include/"/>
-									<listOptionValue builtIn="false" value="/home/lieven/workspace/Arduino/variants/nodemcu"/>
-								</option>
-								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1228880597" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="__CYGWIN__=1"/>
-									<listOptionValue builtIn="false" value="__ESP8266__"/>
-									<listOptionValue builtIn="false" value="ARDUINO_ARCH_ESP8266"/>
-									<listOptionValue builtIn="false" value="ARDUINO"/>
-								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.83379960" superClass="cdt.managedbuild.tool.gnu.c.compiler.input.cygwin"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.cygwin.base.369052777" name="Cygwin C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.cygwin.base"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.cygwin.base.47470912" name="Cygwin C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.cygwin.base"/>
 						</toolChain>
 					</folderInfo>
 				</configuration>
@@ -192,32 +122,15 @@
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="Common.cdt.managedbuild.target.gnu.cross.lib.156234582" name="Static Library" projectType="cdt.managedbuild.target.gnu.cross.lib"/>
+		<project id="Common.cdt.managedbuild.target.gnu.lib.1608364849" name="Static Library" projectType="cdt.managedbuild.target.gnu.lib"/>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/Common"/>
-		</configuration>
-		<configuration configurationName="Release">
-			<resource resourceType="PROJECT" workspacePath="/Common"/>
-		</configuration>
-	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.lib.release.780632792;cdt.managedbuild.config.gnu.cross.lib.release.780632792.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.1952828413;cdt.managedbuild.tool.gnu.cpp.compiler.input.1195501488">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD &quot;${plugin_state_location}/specs.cpp&quot;" command="xtensa-lx106-elf-g++" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674;cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674.;cdt.managedbuild.tool.gnu.cross.c.compiler.1101371056;cdt.managedbuild.tool.gnu.c.compiler.input.630676417">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.lib.debug.688255153;cdt.managedbuild.config.gnu.lib.debug.688255153.;cdt.managedbuild.tool.gnu.c.compiler.lib.debug.2075242773;cdt.managedbuild.tool.gnu.c.compiler.input.307095911">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.lib.debug.770575628;cdt.managedbuild.config.gnu.cross.lib.debug.770575628.;cdt.managedbuild.tool.gnu.cross.c.compiler.310809329;cdt.managedbuild.tool.gnu.c.compiler.input.493822211">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
@@ -232,11 +145,43 @@
 				</scannerInfoProvider>
 			</profile>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674;cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.2147042413;cdt.managedbuild.tool.gnu.cpp.compiler.input.259384689">
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.lib.release.780632792;cdt.managedbuild.config.gnu.cross.lib.release.780632792.;cdt.managedbuild.tool.gnu.cross.c.compiler.1281105673;cdt.managedbuild.tool.gnu.c.compiler.input.1744411514">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD &quot;${plugin_state_location}/specs.c&quot;" command="xtensa-lx106-elf-gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.lib.release.209566867;cdt.managedbuild.config.gnu.lib.release.209566867.;cdt.managedbuild.tool.gnu.c.compiler.lib.release.1319562611;cdt.managedbuild.tool.gnu.c.compiler.input.435088982">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.1501473997;cdt.managedbuild.config.gnu.exe.debug.1501473997.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.696301228;cdt.managedbuild.tool.gnu.c.compiler.input.1458473742">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.634159016;cdt.managedbuild.config.gnu.exe.release.634159016.;cdt.managedbuild.tool.gnu.c.compiler.exe.release.623376247;cdt.managedbuild.tool.gnu.c.compiler.input.1999272308">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.lib.release.64409242;cdt.managedbuild.config.gnu.cygwin.lib.release.64409242.;cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.release.730713300;cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.83379960">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674;cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674.;cdt.managedbuild.tool.gnu.cross.c.compiler.1101371056;cdt.managedbuild.tool.gnu.c.compiler.input.630676417">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.lib.release.780632792;cdt.managedbuild.config.gnu.cross.lib.release.780632792.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.1952828413;cdt.managedbuild.tool.gnu.cpp.compiler.input.1195501488">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD &quot;${plugin_state_location}/specs.cpp&quot;" command="xtensa-lx106-elf-g++" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.lib.debug.770575628;cdt.managedbuild.config.gnu.cross.lib.debug.770575628.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.2067493796;cdt.managedbuild.tool.gnu.cpp.compiler.input.1181492081">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
@@ -251,25 +196,26 @@
 				</scannerInfoProvider>
 			</profile>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.lib.release.64409242;cdt.managedbuild.config.gnu.cygwin.lib.release.64409242.;cdt.managedbuild.tool.gnu.c.compiler.cygwin.lib.release.730713300;cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.83379960">
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.1501473997;cdt.managedbuild.config.gnu.exe.debug.1501473997.;cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.672575928;cdt.managedbuild.tool.gnu.cpp.compiler.input.1926975366">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674;cdt.managedbuild.config.gnu.cygwin.lib.debug.985023674.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.2147042413;cdt.managedbuild.tool.gnu.cpp.compiler.input.259384689">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.lib.debug.688255153;cdt.managedbuild.config.gnu.lib.debug.688255153.;cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug.921030435;cdt.managedbuild.tool.gnu.cpp.compiler.input.65821980">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.lib.release.209566867;cdt.managedbuild.config.gnu.lib.release.209566867.;cdt.managedbuild.tool.gnu.cpp.compiler.lib.release.2093492723;cdt.managedbuild.tool.gnu.cpp.compiler.input.432561065">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.634159016;cdt.managedbuild.config.gnu.exe.release.634159016.;cdt.managedbuild.tool.gnu.cpp.compiler.exe.release.1093663175;cdt.managedbuild.tool.gnu.cpp.compiler.input.980338817">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cygwin.lib.release.64409242;cdt.managedbuild.config.gnu.cygwin.lib.release.64409242.;cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.lib.release.27155486;cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.721433148">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.lib.release.780632792;cdt.managedbuild.config.gnu.cross.lib.release.780632792.;cdt.managedbuild.tool.gnu.cross.c.compiler.1281105673;cdt.managedbuild.tool.gnu.c.compiler.input.1744411514">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
-			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
-				<buildOutputProvider>
-					<openAction enabled="true" filePath=""/>
-					<parser enabled="true"/>
-				</buildOutputProvider>
-				<scannerInfoProvider id="specsFile">
-					<runAction arguments="-E -P -v -dD &quot;${plugin_state_location}/specs.c&quot;" command="xtensa-lx106-elf-gcc" useDefault="true"/>
-					<parser enabled="true"/>
-				</scannerInfoProvider>
-			</profile>
-		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/Common"/>
+	</storageModule>
 </cproject>

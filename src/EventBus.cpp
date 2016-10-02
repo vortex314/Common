@@ -3,7 +3,7 @@
 
 
 
-EventBus::EventBus(uint32_t size) : _queue(size)
+EventBus::EventBus(uint32_t size) : _queue(size),_debug(false)
 {
 }
 
@@ -79,7 +79,7 @@ void EventBus::eventLoop()
     uint32_t header=0;
     while ( _queue.getMap(cbor)==0 && cbor.getKeyValue(0,header))
     {
-        logCbor(cbor);
+        if ( _debug ) logCbor(cbor);
 
         for(uint32_t i=0; i<subscriberCount; i++)
         {

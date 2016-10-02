@@ -107,7 +107,7 @@ Cbor cbor(1024);
 				removeCrc();
 				cbor.addKey(H("data"));
 				cbor.add(*this);
-				eb.publish(H("SLIP_RXD"),cbor);
+				eb.publish(H("slip.rxd"),cbor);
 			}
 			else
 				_error_bad_crc++;

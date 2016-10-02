@@ -38,6 +38,7 @@ private:
     CborQueue _queue;
     HandlerEntry2 subscribers[100];
     uint32_t subscriberCount;
+    bool _debug;
 public:
     EventBus(uint32_t size) ;
     void publish(uint32_t header,Cbor& cbor);
@@ -45,6 +46,7 @@ public:
     void subscribe(uint32_t header,Actor* instance,MethodHandler handler);
     void subscribe(uint32_t header,StaticHandler handler);
     void eventLoop();
+    void debug(bool on) { _debug=on;}
 };
 
 extern EventBus eb;
