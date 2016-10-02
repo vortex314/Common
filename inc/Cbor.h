@@ -102,14 +102,14 @@ public:
 		return *this;
 	}
 		bool skipToken();
-
+	PackType tokenToString(Str& str);
 protected:
 private:
 	void addToken(PackType type, uint64_t data);
 
 	void addHeader(uint8_t major, uint8_t minor);
 	uint64_t getUint64(int length);
-	PackType tokenToString(Str& str);
+
 };
 
 #endif // CBOR_H

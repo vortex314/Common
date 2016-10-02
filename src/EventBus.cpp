@@ -27,11 +27,34 @@ extern const char* hash2string(uint32_t hash);
 void logCbor(Cbor& cbor)
 {
     Str str(1024);
-    str.clear();
-    cbor.toString(str);
-    LOGF("--message : %s ",str.c_str());
+    /*    str.clear();
+        cbor.toString(str);
+        LOGF("--message : %s ",str.c_str());*/
     cbor.offset(0);
     uint32_t key;
+    str.clear();
+    Cbor::PackType ct;
+    cbor.offset(0);
+    while (cbor.hasData())
+    {
+        cbor.get(key);
+        str.append('"').append(hash2string(key)).append("\":");
+        if ( key==0)
+        {
+            cbor.get(key);
+            str.append('"').append(hash2string(key)).append("\"");
+        }
+        else
+        {
+            ct = cbor.tokenToString(str);
+            if (ct == Cbor::P_BREAK || ct == Cbor::P_ERROR)
+                break;
+        }
+        if (cbor.hasData())
+            str << ",";
+    };
+    LOGF("--- %s",str.c_str());
+    /*
     while ( cbor.hasData())
     {
         if ( cbor.get(key))
@@ -44,8 +67,9 @@ void logCbor(Cbor& cbor)
         {
             LOGF("----value : %d:%s ",key,hash2string(key));
         }
-        cbor.skipToken();
-    }
+        else
+            cbor.skipToken();
+    }*/
 }
 
 void EventBus::eventLoop()
@@ -59,7 +83,7 @@ void EventBus::eventLoop()
 
         for(uint32_t i=0; i<subscriberCount; i++)
         {
-            LOGF("%d %d == %d",i,subscribers[i].header , header);
+ //           LOGF("%d %d == %d",i,subscribers[i].header , header);
             if ( subscribers[i].header == header)
             {
                 if ( subscribers[i].actor == 0)
