@@ -20,33 +20,32 @@ typedef void (Actor::*MethodHandler)(Cbor&);
 typedef void (*StaticHandler)(Cbor&);
 #define CALL_MEMBER_FUNC(object,ptrToMember)  ((*object).*(ptrToMember))
 
-typedef struct
-{
-    uint32_t header;
-    Actor* actor;
-    union
-    {
-        StaticHandler staticHandler;
-        MethodHandler methodHandler;
-    };
+typedef struct {
+	uint32_t header;
+	Actor* actor;
+	union {
+		StaticHandler staticHandler;
+		MethodHandler methodHandler;
+	};
 } HandlerEntry2;
 
-
-class EventBus
-{
+class EventBus {
 private:
-    CborQueue _queue;
-    HandlerEntry2 subscribers[100];
-    uint32_t subscriberCount;
-    bool _debug;
+	CborQueue _queue;
+	HandlerEntry2 subscribers[100];
+	uint32_t subscriberCount;
+	bool _debug;
 public:
-    EventBus(uint32_t size) ;
-    void publish(uint32_t header,Cbor& cbor);
-    void publish(uint32_t header);
-    void subscribe(uint32_t header,Actor* instance,MethodHandler handler);
-    void subscribe(uint32_t header,StaticHandler handler);
-    void eventLoop();
-    void debug(bool on) { _debug=on;}
+	EventBus(uint32_t size);
+	Erc initAll();
+	void publish(uint16_t header, Cbor& cbor);
+	void publish(uint16_t header);
+	void subscribe(uint16_t header, Actor* instance, MethodHandler handler);
+	void subscribe(uint16_t header, StaticHandler handler);
+	void eventLoop();
+	void debug(bool on) {
+		_debug = on;
+	}
 };
 
 extern EventBus eb;
