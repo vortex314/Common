@@ -25,7 +25,13 @@ void EventBus::publish(uint16_t header) {
 	msg.addKey(0).add(header);
 	_queue.putRelease(msg);
 }
+#ifdef __linux__
 extern const char* hash2string(uint32_t hash);
+#else
+const char* hash2string(uint32_t hash){
+	return "unknown";
+}
+#endif
 void logCbor(Cbor& cbor) {
 	Str str(1024);
 	/*    str.clear();
