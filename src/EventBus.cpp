@@ -1,7 +1,11 @@
 #include "EventBus.h"
 
+Cbor timeoutEvent(6);
+
 EventBus::EventBus(uint32_t size) :
 		_queue(size), _debug(false) {
+	subscriberCount=0;
+	timeoutEvent.addKeyValue(0,H("timeout"));
 }
 
 Erc EventBus::initAll() {
@@ -10,11 +14,19 @@ Erc EventBus::initAll() {
 			subscribers[i].actor->init();
 		}
 	}
+	return E_OK;
 }
 void EventBus::publish(uint16_t header, Cbor& cbor) {
 	Cbor msg(0);
 	_queue.putMap(msg);
 	msg.addKey(0).add(header);
+	msg.append(cbor);
+	_queue.putRelease(msg);
+}
+
+void EventBus::publish( Cbor& cbor) {
+	Cbor msg(0);
+	_queue.putMap(msg);
 	msg.append(cbor);
 	_queue.putRelease(msg);
 }
@@ -27,13 +39,8 @@ void EventBus::publish(uint16_t header) {
 }
 #ifdef __linux__
 extern const char* hash2string(uint32_t hash);
-#else
-const char* hash2string(uint32_t hash){
-	return "unknown";
-}
-#endif
 void logCbor(Cbor& cbor) {
-	Str str(1024);
+	Str str(2048);
 	/*    str.clear();
 	 cbor.toString(str);
 	 LOGF("--message : %s ",str.c_str());*/
@@ -74,14 +81,19 @@ void logCbor(Cbor& cbor) {
 	 cbor.skipToken();
 	 }*/
 }
+#endif
+
+
 
 void EventBus::eventLoop() {
 	Cbor cbor(0);
 
 	uint32_t header = 0;
-	while (_queue.getMap(cbor) == 0 && cbor.getKeyValue(0, header)) {
+	while (_queue.getMap(cbor) == 0 && cbor.getKeyValue((uint16_t)0, header)) {
+#ifdef __linux__
 		if (_debug)
 			logCbor(cbor);
+#endif
 
 		for (uint32_t i = 0; i < subscriberCount; i++) {
 			//           LOGF("%d %d == %d",i,subscribers[i].header , header);
@@ -99,9 +111,7 @@ void EventBus::eventLoop() {
 
 	for (uint32_t i = 0; i < subscriberCount; i++) {
 		if (subscribers[i].actor && subscribers[i].actor->timeout()) {
-			subscribers[i].actor->onTimeout();
-			if (subscribers[i].actor->ticker())
-				subscribers[i].actor->timeout(subscribers[i].actor->ticker());
+			subscribers[i].actor->onEvent(timeoutEvent);
 		}
 	}
 }

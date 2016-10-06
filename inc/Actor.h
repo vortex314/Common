@@ -10,69 +10,7 @@
 
 #include <stdint.h>
 #include <Sys.h>
-#include <QueueTemplate.h>
-
-typedef enum {
-	INIT = 0, TIMEOUT, STOP, RESTART, CONFIG, // detail =0, initial params in payload, =1 , load config from flash again
-	TXD,
-	RXD,
-	CONNECT,
-	DISCONNECT,
-	ADD_LISTENER,
-	PUBLISH,
-	SUBSCRIBE,
-	NONE,
-	MAX_EVENTS,
-	RESPONSE = 0x80,
-	ANY = 0xFF
-} Event;
-
-#define REPLY(xxx) (Event)(xxx + Event::RESPONSE)
-#define MAX_ACTORS 20
-
-typedef uint8_t ActorRef;
-class Header {
-public:
-	union {
-		struct {
-			uint8_t _dst;
-			uint8_t _src;
-			uint8_t _event;
-			uint8_t _detail;
-		};
-		uint32_t _word;
-	};
-	Header() {
-		_word = 0;
-	}
-	Header(ActorRef dst, ActorRef src, Event event, uint8_t detail) {
-		_dst = dst;
-		_src = src;
-		_event = event;
-		_detail = detail;
-	}
-	Header(int dst, int src, Event event, uint8_t detail); //
-	Header(ActorRef src, Event event) :
-			Header((ActorRef)ANY, src, event, 0) {
-	}
-	Header(Event event) :
-			Header((ActorRef) ANY, (ActorRef) ANY, event, 0) {
-	}
-	bool is(ActorRef dst, ActorRef src, Event event, uint8_t detail); //
-	bool is(Event event, uint8_t detail);bool is(int dst, int src, Event event,
-			uint8_t detail); //
-	bool is(ActorRef dst, ActorRef src, uint8_t event, uint8_t detail); //
-	inline bool is(uint8_t event) {
-		return _event == event;
-	}
-	bool is(ActorRef src, Event event);
-	Header& src(ActorRef);
-	Header& dst(ActorRef);
-	ActorRef src();
-	ActorRef dst();
-	Event event();
-
-};
+#include <Cbor.h>
 
 //#define LOGF(fmt,...) PrintHeader(__FILE__,__LINE__,__FUNCTION__);Serial.printf(fmt,##__VA_ARGS__);Serial.println();
 //extern void PrintHeader(const char* file, uint32_t line, const char *function);
@@ -114,17 +52,10 @@ static const LineNumber LineNumberInvalid = (LineNumber) (-1);
 // the last PT_WAIT, which is then switched on at the next Run).
 
 class Actor;
-#include <functional>
+// #include <functional>
 // typedef std::function<void(Header)> EventHandler;
-typedef void (Actor::*EventHandler)(Header);
+
 #define CALL_MEMBER_FN(object,ptrToMember)  ((object).*(ptrToMember))
-#include <functional>
-typedef struct {
-	Header _filter;
-	Actor* _actor;
-	EventHandler _method;
-//	std::function<void(Header)> _m;
-} HandlerEntry;
 
 class Actor {
 private:
@@ -133,12 +64,7 @@ private:
 	uint8_t _id;
 	uint32_t _state;
 
-	static Actor* _actors[];
-	static uint32_t _actorCount;
-	static HandlerEntry _handlers[];
-	static uint32_t _handlerCount;
-	static uint8_t _gId;
-	static QueueTemplate<Header> _queue;
+
 
 protected:
 	LineNumber _ptLine;
@@ -146,20 +72,9 @@ protected:
 public:
 	Actor(const char* name);
 	virtual ~Actor();
-	uint8_t id() {
-		return _id;
-	}
 	virtual void init(){};
-	static void initAll();
-	void on(Header, EventHandler);
-	void on(Event, Actor&, EventHandler);
-	void publish(uint8_t event);
-	static void publishSync(Header);
-	void publish(uint8_t src, uint8_t event);
-	virtual void loop() {};
-	static void publish(Header);
-	static void eventLoop();
-	static bool match(Header src, Header filter);
+	void onEvent(Cbor& cbor);
+	void onTimeout();
 
 	void timeout(uint32_t time) {
 		_timeout = Sys::millis() + time;
@@ -177,18 +92,9 @@ public:
 	inline int state() {
 		return _state;
 	}
-
-	static void logHeader(const char* prefix, Header hdr);
-	virtual void onTimeout(){};
-	virtual uint32_t ticker() { return 1000000000;};
 };
 
-class SystemClass: public Actor {
-public:
-	SystemClass() :Actor("System") {
 
-	}
-};
-extern SystemClass System;
 
 #endif /* ACTOR_H_ */
+

@@ -38,8 +38,9 @@ private:
 public:
 	EventBus(uint32_t size);
 	Erc initAll();
-	void publish(uint16_t header, Cbor& cbor);
+	void publish( uint16_t header, Cbor& cbor);
 	void publish(uint16_t header);
+	void publish(Cbor& cbor);
 	void subscribe(uint16_t header, Actor* instance, MethodHandler handler);
 	void subscribe(uint16_t header, StaticHandler handler);
 	void eventLoop();
