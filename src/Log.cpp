@@ -119,6 +119,7 @@ void LogManager::time()
 #ifndef __linux__
 void LogManager::time() {
 	Str str((uint8_t*) (_record + _offset), LINE_LENGTH - _offset);
+	str.append(Sys::hostname()).append(' ');
 	str.append(Sys::millis());
 	_offset += str.length();
 }

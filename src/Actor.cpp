@@ -15,8 +15,12 @@ Actor::Actor(const char* name) {
 //	LOGF(" Actor ctor : %s [%d]", _name, _id);
 }
 
-
 Actor::~Actor() {
 }
 
-void Actor::onEvent(Cbor& cbor){};
+void Actor::onEvent(Cbor& cbor) {
+}
+
+void Actor::setup(){
+}
+

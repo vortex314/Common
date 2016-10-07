@@ -64,16 +64,15 @@ private:
 	uint8_t _id;
 	uint32_t _state;
 
-
-
 protected:
 	LineNumber _ptLine;
 	static const char* eventToString(uint8_t event);
 public:
+
 	Actor(const char* name);
 	virtual ~Actor();
-	virtual void init(){};
-	void onEvent(Cbor& cbor);
+	virtual void setup();
+	virtual void onEvent(Cbor& cbor);
 	void onTimeout();
 
 	void timeout(uint32_t time) {
