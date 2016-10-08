@@ -63,7 +63,9 @@ private:
 	uint64_t _timeout;
 	uint8_t _id;
 	uint32_t _state;
-
+	static Actor* _first;
+	Actor* _next;
+	static Actor* findLast();
 
 
 protected:
@@ -73,7 +75,7 @@ public:
 	Actor(const char* name);
 	virtual ~Actor();
 	virtual void init(){};
-	void onEvent(Cbor& cbor);
+	virtual void onEvent(Cbor& cbor);
 	void onTimeout();
 
 	void timeout(uint32_t time) {
@@ -92,6 +94,8 @@ public:
 	inline int state() {
 		return _state;
 	}
+	static Actor* first();
+	Actor* next();
 };
 
 

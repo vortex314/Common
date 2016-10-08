@@ -4,8 +4,8 @@ Cbor timeoutEvent(6);
 
 EventBus::EventBus(uint32_t size) :
 		_queue(size), _debug(false) {
-	subscriberCount=0;
-	timeoutEvent.addKeyValue(0,H("timeout"));
+	subscriberCount = 0;
+	timeoutEvent.addKeyValue(0, H("timeout"));
 }
 
 Erc EventBus::initAll() {
@@ -24,7 +24,7 @@ void EventBus::publish(uint16_t header, Cbor& cbor) {
 	_queue.putRelease(msg);
 }
 
-void EventBus::publish( Cbor& cbor) {
+void EventBus::publish(Cbor& cbor) {
 	Cbor msg(0);
 	_queue.putMap(msg);
 	msg.append(cbor);
@@ -83,13 +83,11 @@ void logCbor(Cbor& cbor) {
 }
 #endif
 
-
-
 void EventBus::eventLoop() {
 	Cbor cbor(0);
 
 	uint32_t header = 0;
-	while (_queue.getMap(cbor) == 0 && cbor.getKeyValue((uint16_t)0, header)) {
+	while ((_queue.getMap(cbor) == 0) && cbor.getKeyValue((uint16_t) 0, header)) {
 #ifdef __linux__
 		if (_debug)
 			logCbor(cbor);
@@ -109,10 +107,9 @@ void EventBus::eventLoop() {
 		_queue.getRelease(cbor);
 	}
 
-	for (uint32_t i = 0; i < subscriberCount; i++) {
-		if (subscribers[i].actor && subscribers[i].actor->timeout()) {
-			subscribers[i].actor->onEvent(timeoutEvent);
-		}
+	for (Actor* actor = Actor::first(); actor; actor = actor->next()) {
+		if (actor->timeout())
+			actor->onEvent(timeoutEvent);
 	}
 }
 
