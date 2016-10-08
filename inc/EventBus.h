@@ -43,6 +43,7 @@ public:
 	void publish(Cbor& cbor);
 	void subscribe(uint16_t header, Actor* instance, MethodHandler handler);
 	void subscribe(uint16_t header, StaticHandler handler);
+	void subscribe(Actor* actor);
 	void eventLoop();
 	void debug(bool on) {
 		_debug = on;

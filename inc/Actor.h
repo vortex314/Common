@@ -63,6 +63,7 @@ private:
 	uint64_t _timeout;
 	uint8_t _id;
 	uint32_t _state;
+
 	static Actor* _first;
 	Actor* _next;
 	static Actor* findLast();
@@ -72,9 +73,13 @@ protected:
 	LineNumber _ptLine;
 	static const char* eventToString(uint8_t event);
 public:
+
 	Actor(const char* name);
 	virtual ~Actor();
-	virtual void init(){};
+
+	virtual void setup();
+	static void setupAll();
+
 	virtual void onEvent(Cbor& cbor);
 	void onTimeout();
 

@@ -22,6 +22,7 @@ Actor::Actor(const char* name) {
 	}
 }
 
+
 Actor* Actor::findLast() {
 	Actor* cursor = first();
 	while (cursor->_next) {
@@ -37,9 +38,20 @@ Actor* Actor::next() {
 	return _next;
 }
 
+
 Actor::~Actor() {
 }
 
 void Actor::onEvent(Cbor& cbor) {
 }
+
+void Actor::setupAll(){
+	for (Actor* actor = Actor::first(); actor; actor = actor->next()) {
+			actor->setup();
+		}
+}
+
+void Actor::setup(){
+}
+
 

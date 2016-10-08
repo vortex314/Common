@@ -6,16 +6,9 @@ EventBus::EventBus(uint32_t size) :
 		_queue(size), _debug(false) {
 	subscriberCount = 0;
 	timeoutEvent.addKeyValue(0, H("timeout"));
+	publish(H("setup"));
 }
 
-Erc EventBus::initAll() {
-	for (uint32_t i = 0; i < subscriberCount; i++) {
-		if (subscribers[i].actor != 0) {
-			subscribers[i].actor->init();
-		}
-	}
-	return E_OK;
-}
 void EventBus::publish(uint16_t header, Cbor& cbor) {
 	Cbor msg(0);
 	_queue.putMap(msg);
@@ -83,6 +76,8 @@ void logCbor(Cbor& cbor) {
 }
 #endif
 
+extern void usart_send_string(const char *s);
+
 void EventBus::eventLoop() {
 	Cbor cbor(0);
 
@@ -92,15 +87,17 @@ void EventBus::eventLoop() {
 		if (_debug)
 			logCbor(cbor);
 #endif
-
 		for (uint32_t i = 0; i < subscriberCount; i++) {
 			//           LOGF("%d %d == %d",i,subscribers[i].header , header);
 			if (subscribers[i].header == header || subscribers[i].header == 0) {
 				if (subscribers[i].actor == 0) {
 					subscribers[i].staticHandler(cbor);
 				} else {
-					CALL_MEMBER_FUNC(subscribers[i].actor,subscribers[i].methodHandler)(
-							cbor);
+					if (subscribers[i].methodHandler == 0)
+						subscribers[i].actor->onEvent(cbor);
+					else
+						CALL_MEMBER_FUNC(subscribers[i].actor,subscribers[i].methodHandler)(
+								cbor);
 				}
 			}
 		}
@@ -125,6 +122,9 @@ void EventBus::subscribe(uint16_t header, StaticHandler handler) {
 	subscribers[subscriberCount].staticHandler = handler;
 	subscribers[subscriberCount].actor = 0;
 	subscriberCount++;
+}
+void EventBus::subscribe(Actor* instance) {
+	subscribe(0, instance, 0);
 }
 
 EventBus eb(10240);
