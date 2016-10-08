@@ -44,10 +44,10 @@ void logCbor(Cbor& cbor) {
 	cbor.offset(0);
 	while (cbor.hasData()) {
 		cbor.get(key);
-		str.append('"').append(hash2string(key)).append("\":");
+		str.append('"').append(hash2string(key)).append("\"[").append(key).append("]:");
 		if (key == 0) {
 			cbor.get(key);
-			str.append('"').append(hash2string(key)).append("\"");
+			str.append('"').append(hash2string(key)).append("\"[").append(key).append("]:");
 		} else {
 			ct = cbor.tokenToString(str);
 			if (ct == Cbor::P_BREAK || ct == Cbor::P_ERROR)
