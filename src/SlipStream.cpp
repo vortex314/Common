@@ -100,14 +100,14 @@ extern EventBus eb;
 
 
 void SlipStream::onRecv(uint8_t b) {
-Cbor cbor(1024);
+
 	if (b == END) {
 		if (offset() > 2){
 			if ( isGoodCrc()) {
 				removeCrc();
-				cbor.addKey(H("data"));
-				cbor.add(*this);
-				eb.publish(H("slip.rxd"),cbor);
+				Cbor cbor(1024);
+				cbor.append(*this);
+				eb.publish(cbor);
 			}
 			else
 				_error_bad_crc++;
