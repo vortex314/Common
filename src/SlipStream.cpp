@@ -93,6 +93,7 @@ void SlipStream::send(Bytes& bytes){
 		}
 	streamWriteCrc(bytes);
 	_stream.write(END);
+	_stream.flush();
 	}
 
 #include <EventBus.h>
