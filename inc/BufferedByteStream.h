@@ -18,9 +18,9 @@ public:
 	// user interface
 	BufferedByteStream(uint32_t sizeBuffer);
 	~BufferedByteStream();
-	virtual Erc open()=0;
-	virtual Erc close()=0;
-	virtual void flush()=0;
+	virtual Erc open() =0 ;
+	virtual Erc close()=0 ;
+	virtual void flush() =0;
 	Erc write(Bytes& data);
 	Erc write(uint8_t data);
 	uint8_t read();
