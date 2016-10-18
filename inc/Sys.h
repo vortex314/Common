@@ -6,6 +6,25 @@
 //#include <string.h>
 #include <Erc.h>
 
+//#ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
+  #if defined   (__GNUC__)        /* GNU Compiler */
+    #define __ALIGN_END    __attribute__ ((aligned (4)))
+    #define __ALIGN_BEGIN
+  #else
+    #define __ALIGN_END
+    #if defined   (__CC_ARM)      /* ARM Compiler */
+      #define __ALIGN_BEGIN    __align(4)
+    #elif defined (__ICCARM__)    /* IAR Compiler */
+      #define __ALIGN_BEGIN
+    #elif defined  (__TASKING__)  /* TASKING Compiler */
+      #define __ALIGN_BEGIN    __align(4)
+    #endif /* __CC_ARM */
+  #endif /* __GNUC__ */
+//#else
+//  #define __ALIGN_BEGIN
+//  #define __ALIGN_END
+//#endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
+
 #ifdef __cplusplus
 
 
