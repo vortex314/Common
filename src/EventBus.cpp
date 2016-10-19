@@ -127,4 +127,4 @@ void EventBus::subscribe(Actor* instance) {
 	subscribe(0, instance, 0);
 }
 
-EventBus eb(10240);
+
