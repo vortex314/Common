@@ -105,8 +105,11 @@ void EventBus::eventLoop() {
 	}
 
 	for (Actor* actor = Actor::first(); actor; actor = actor->next()) {
-		if (actor->timeout())
+		if (actor->timeout()) {
+			timeoutEvent.clear();
+			timeoutEvent.addKeyValue(0,H("timeout"));
 			actor->onEvent(timeoutEvent);
+		}
 	}
 }
 
