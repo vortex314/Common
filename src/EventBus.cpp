@@ -78,11 +78,14 @@ void logCbor(Cbor& cbor) {
 
 extern void usart_send_string(const char *s);
 
+Cbor cbor(1024);
+
 void EventBus::eventLoop() {
-	Cbor cbor(0);
+//	Cbor cbor(0);
 
 	uint32_t header = 0;
-	while ((_queue.getMap(cbor) == 0) && cbor.getKeyValue((uint16_t) 0, header)) {
+//	while ((_queue.getMap(cbor) == 0) && cbor.getKeyValue((uint16_t) 0, header)) {
+		while ((_queue.get(cbor) == 0) && cbor.getKeyValue((uint16_t) 0, header)) {
 #ifdef __linux__
 		if (_debug)
 			logCbor(cbor);
@@ -101,7 +104,7 @@ void EventBus::eventLoop() {
 				}
 			}
 		}
-		_queue.getRelease(cbor);
+//		_queue.getRelease(cbor);
 	}
 
 	for (Actor* actor = Actor::first(); actor; actor = actor->next()) {

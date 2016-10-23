@@ -12,7 +12,11 @@ constexpr uint64_t fnv1(uint64_t h, const char* s) {
 constexpr uint16_t H(const char* s) {
 	return fnv1(14695981039346656037ull, s) & 0xFFFF;
 }
-
+/*
+ * **
+ * ----- not good method -- makes compiler slow or run out of memory
+ */
+/*
 #define H1(s,i,x)   (x*65599u+(uint8_t)s[(i)<sizeof(s)?sizeof(s)-1-(i):sizeof(s)])
 #define H4(s,i,x)   H1(s,i,H1(s,i+1,H1(s,i+2,H1(s,i+3,x))))
 #define H16(s,i,x)  H4(s,i,H4(s,i+4,H4(s,i+8,H4(s,i+12,x))))
@@ -22,11 +26,14 @@ constexpr uint16_t H(const char* s) {
 #define H_OLD(s)    (uint16_t)((uint32_t)(H256(s,0,0)^(H256(s,0,0)>>16)))
 
 //#define H(__s__) HASH(__s__)
+*/
 
+/** doesn't always precompile **/
+/*
 uint16_t constexpr HH(char const *input) {
 	return *input ? static_cast<uint16_t>(*input) + 33 * HH(input + 1) : 5381;
 }
-
+*/
 typedef void (Actor::*MethodHandler)(Cbor&);
 typedef void (*StaticHandler)(Cbor&);
 #define CALL_MEMBER_FUNC(object,ptrToMember)  ((*object).*(ptrToMember))

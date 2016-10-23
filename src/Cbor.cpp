@@ -295,6 +295,7 @@ Cbor::PackType Cbor::tokenToString(Str& str) {
 		for (i = 0; i < v._uint64; i++)
 			if (hasData())
 				str.append((char) read());
+			else break;
 		str << "\"";
 		return P_STRING;
 	}
