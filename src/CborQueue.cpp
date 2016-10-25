@@ -22,6 +22,10 @@ unsigned int value = 0;
 sem_t put_mutex;
 #endif
 
+#ifdef OPENCM3
+#include <libopencm3/cm3/cortex.h>
+#endif
+
 void sema_create() {
 #ifdef __linux__
 //	sem = sem_open("pSem", O_CREAT | O_EXCL); //, 0644, value);
@@ -32,7 +36,8 @@ void sema_create() {
 	}
 	sem_unlink("pSem");
 #endif
-
+#ifdef STM32F1
+#endif
 }
 
 void sema_wait() {
@@ -42,7 +47,9 @@ void sema_wait() {
 				"pSem", errno, strerror(errno));
 	}
 #endif
-
+#ifdef STM32F1
+	cm_disable_interrupts();
+#endif
 }
 
 void sema_release() {
@@ -51,6 +58,9 @@ void sema_release() {
 		LOGF("connect: Unable to post semaphore  %s errno : %d : %s ",
 				"pSem", errno, strerror(errno));
 	}
+#endif
+#ifdef STM32F1
+	cm_enable_interrupts();
 #endif
 }
 
