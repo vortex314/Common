@@ -122,6 +122,12 @@ Bytes& Bytes::operator=(const char* s) {
 	return append(s);
 }
 
+Bytes& Bytes::append(uint8_t* data,uint32_t length) {
+	for(int i=0;i<length;i++)
+		write(data[i]);
+	return *this;
+}
+
 Bytes& Bytes::move(int32_t dist) {
 	if ((_offset + dist) > _limit)
 		_offset = _limit;

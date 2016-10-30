@@ -36,6 +36,7 @@ public:
 	Bytes& operator=(const char* s);
 	Bytes& append(Bytes& src);
 	Bytes& append(const char s[]);
+	Bytes& append(uint8_t* data,uint32_t length);
 
 	int capacity();
 	uint32_t length() const;
