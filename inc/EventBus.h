@@ -4,13 +4,15 @@
 #include <Actor.h>
 #include <CborQueue.h>
 
-constexpr uint64_t fnv1(uint64_t h, const char* s) {
-	return (*s == 0) ?
-			h : fnv1((h * 1099511628211ull) ^ static_cast<uint64_t>(*s), s + 1);
+constexpr uint64_t fnv1(uint64_t h, const char* s)
+{
+    return (*s == 0) ?
+           h : fnv1((h * 1099511628211ull) ^ static_cast<uint64_t>(*s), s + 1);
 }
 
-constexpr uint16_t H(const char* s) {
-	return fnv1(14695981039346656037ull, s) & 0xFFFF;
+constexpr uint16_t H(const char* s)
+{
+    return fnv1(14695981039346656037ull, s) & 0xFFFF;
 }
 /*
  * **
@@ -38,34 +40,55 @@ typedef void (Actor::*MethodHandler)(Cbor&);
 typedef void (*StaticHandler)(Cbor&);
 #define CALL_MEMBER_FUNC(object,ptrToMember)  ((*object).*(ptrToMember))
 
-typedef struct {
-	uint32_t header;
-	Actor* actor;
-	union {
-		StaticHandler staticHandler;
-		MethodHandler methodHandler;
-	};
-} HandlerEntry2;
-
-class EventBus {
-private:
-	CborQueue _queue;
-	HandlerEntry2 subscribers[100];
-	uint32_t subscriberCount;
-	bool _debug;
+class Subscriber
+{
 public:
-	EventBus(uint32_t size);
-	Erc initAll();
-	void publish(uint16_t header, Cbor& cbor);
-	void publish(uint16_t header);
-	void publish(Cbor& cbor);
-	void subscribe(uint16_t header, Actor* instance, MethodHandler handler);
-	void subscribe(uint16_t header, StaticHandler handler);
-	void subscribe(Actor* actor);
-	void eventLoop();
-	void debug(bool on) {
-		_debug = on;
-	}
+    Actor* actor;
+    union
+    {
+        StaticHandler staticHandler;
+        MethodHandler methodHandler;
+    };
+    Subscriber* nextSubscriber;
+    Subscriber();
+};
+
+class EventFilter
+{
+public:
+    uint32_t filter;
+    Subscriber* firstSubscriber;
+    EventFilter* nextFilter;
+    EventFilter(uint32_t header);
+} ;
+
+class EventBus
+{
+private:
+    CborQueue _queue;
+    EventFilter* _firstFilter;
+
+    EventFilter* firstFilter();
+    EventFilter* nextFilter(EventFilter* current);
+    EventFilter* findFilter(uint32_t header);
+    EventFilter* lastFilter();
+    void invokeAllSubscriber(Cbor& ,EventFilter* filter);
+
+    Subscriber* firstSubscriber(EventFilter* filter);
+    Subscriber* nextSubScriber(Subscriber* current);
+    Subscriber* lastSubscriber(EventFilter* filter);
+    Subscriber* addSubscriber(uint32_t header);
+
+public:
+    EventBus(uint32_t size);
+    Erc initAll();
+    void publish(uint16_t header, Cbor& cbor);
+    void publish(uint16_t header);
+    void publish(Cbor& cbor);
+    void subscribe(uint16_t header, Actor* instance, MethodHandler handler);
+    void subscribe(uint16_t header, StaticHandler handler);
+    void subscribe(Actor* actor);
+    void eventLoop();
 };
 
 extern EventBus eb;

@@ -40,6 +40,7 @@ public:
 	void streamWriteEscaped(uint8_t b);
 	void send(Bytes& bytes);
 	void onRecv(uint8_t b);
+	void setup();
 };
 
 #endif /* SLIPSTREAM_H_ */

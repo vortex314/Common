@@ -11,6 +11,40 @@
 #include <stdint.h>
 #include <Sys.h>
 #include <Cbor.h>
+/*
+template<class T> class LinkedList {
+	T* _next;
+	static T* _first;
+public:
+	LinkedList() {
+		_next = 0;
+	}
+	static T* next(T* t) {
+		return t->_next;
+	}
+	T* next() {
+		return _next;
+	}
+	void setNext(T* t) {
+		_next = t;
+	}
+	static T* first() {
+		return _first;
+	}
+	void setFirst(T* f) {
+		_first = f;
+	}
+	static T* last() {
+		for (T* t = first(); t != 0; t = next(t)) {
+			if (t->_next == 0)
+				return t;
+		}
+		return 0;
+	}
+
+};
+template<class T> T* LinkedList<T>::_first = 0;
+*/
 
 //#define LOGF(fmt,...) PrintHeader(__FILE__,__LINE__,__FUNCTION__);Serial.printf(fmt,##__VA_ARGS__);Serial.println();
 //extern void PrintHeader(const char* file, uint32_t line, const char *function);
@@ -61,27 +95,24 @@ class Actor {
 private:
 	const char* _name;
 	uint64_t _timeout;
-	uint8_t _id;
 	uint32_t _state;
 
 	static Actor* _first;
 	Actor* _next;
-	static Actor* findLast();
-
-
 protected:
 	LineNumber _ptLine;
-	static const char* eventToString(uint8_t event);
 public:
 
 	Actor(const char* name);
 	virtual ~Actor();
 
-	virtual void setup();
-	static void setupAll();
+	void setNext(Actor*);
+	Actor* next();
+	static Actor* last();
+	static Actor* first();
+	static void setFirst(Actor*);
 
 	virtual void onEvent(Cbor& cbor);
-	void onTimeout();
 
 	void timeout(uint32_t time) {
 		_timeout = Sys::millis() + time;
@@ -99,11 +130,7 @@ public:
 	inline int state() {
 		return _state;
 	}
-	static Actor* first();
-	Actor* next();
 };
-
-
 
 #endif /* ACTOR_H_ */
 

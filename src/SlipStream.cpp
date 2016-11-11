@@ -132,3 +132,7 @@ void SlipStream::loop(){
 		onRecv(_stream.read());
 	}
 }
+
+void SlipStream::setup(){
+
+}

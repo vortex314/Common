@@ -7,7 +7,10 @@
 
 #include "Actor.h"
 
-Actor* Actor::_first=0;
+Actor* Actor::_first = 0;
+#ifndef UINT_LEAST64_MAX
+#define UINT_LEAST64_MAX 0xFFFFFFFFFFFFFFFFL
+#endif // UINT_LEAST64_MAX
 
 Actor::Actor(const char* name) {
 	_timeout = UINT_LEAST64_MAX;
@@ -15,15 +18,14 @@ Actor::Actor(const char* name) {
 	_state = 0;
 	_ptLine = 0;
 	_next = 0;
-	if (_first == 0) {
-		_first = this;
+	if (first() == 0) {
+		setFirst(this);
 	} else {
-		findLast()->_next = this;
+		last()->setNext(this);
 	}
 }
 
-
-Actor* Actor::findLast() {
+Actor* Actor::last() {
 	Actor* cursor = first();
 	while (cursor->_next) {
 		cursor = cursor->next();
@@ -38,20 +40,18 @@ Actor* Actor::next() {
 	return _next;
 }
 
+void Actor::setNext(Actor* a) {
+	_next = a;
+}
+
+void Actor::setFirst(Actor* f) {
+	_first = f;
+}
 
 Actor::~Actor() {
 }
 
 void Actor::onEvent(Cbor& cbor) {
+	ASSERT(false); // empty actor ?
 }
-
-void Actor::setupAll(){
-	for (Actor* actor = Actor::first(); actor; actor = actor->next()) {
-			actor->setup();
-		}
-}
-
-void Actor::setup(){
-}
-
 
