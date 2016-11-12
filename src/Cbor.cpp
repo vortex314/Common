@@ -6,6 +6,10 @@ Cbor::Cbor() :
 		Bytes() {
 }
 
+Cbor::Cbor(uint8_t* data,uint32_t length) :
+		Bytes(data,length) {
+}
+
 Cbor::Cbor(uint32_t size) :
 		Bytes(size) {
 	//dtor

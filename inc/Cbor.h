@@ -36,6 +36,7 @@ public:
 	PackType;
 	Cbor();
 	Cbor(uint32_t size);
+	Cbor(uint8_t* data,uint32_t length);
 	~Cbor();
 
 	Cbor& operator<<(uint32_t i) {
