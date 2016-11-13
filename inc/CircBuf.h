@@ -15,7 +15,6 @@
 #define POW 4
 #define CIRCBUF_SIZE (1<<POW)
 #define CIRCBUF_MASK (CIRCBUF_SIZE-1)
-#define IRAM
 
 class CircBuf {
 private:
@@ -24,18 +23,18 @@ private:
 	uint16_t writePos;
 	uint16_t limit;
 public:
-	 IRAM CircBuf(int size);
-	 IRAM ~CircBuf();
-	int IRAM write(uint8_t b);
-	int  IRAM writeFromIsr(uint8_t b);
-	int IRAM read();
-	int IRAM readFromIsr();
-	bool IRAM  hasSpace();
-	bool IRAM hasSpace(uint32_t size);
-	bool  IRAM hasData();
-	void IRAM clear();
-	uint32_t IRAM  size();
-	uint32_t IRAM space();
+	CircBuf(int size);
+	~CircBuf();
+	int write(uint8_t b);
+	int writeFromIsr(uint8_t b);
+	int read();
+	int readFromIsr();
+	bool hasSpace();
+	bool hasSpace(uint32_t size);
+	bool hasData();
+	void clear();
+	uint32_t size();
+	uint32_t space();
 };
 
 #endif /* CIRCBUF_H_ */

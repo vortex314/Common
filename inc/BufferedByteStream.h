@@ -27,6 +27,7 @@ public:
 	Erc read(Bytes& data);
 	bool hasData();
 	bool hasSpace();
+	bool hasSpace(uint32_t sp);
 	// ISR
 	bool canReceive();
 	void receive(uint8_t data);

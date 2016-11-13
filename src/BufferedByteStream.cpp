@@ -38,6 +38,10 @@ bool BufferedByteStream::hasSpace() {
 	return _txd.hasSpace();
 }
 
+bool BufferedByteStream::hasSpace(uint32_t sp) {
+	return _txd.hasSpace(sp);
+}
+
 bool BufferedByteStream::hasData() {
 	return _rxd.hasData();
 }

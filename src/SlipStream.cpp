@@ -7,16 +7,16 @@
 
 #include <SlipStream.h>
 
-SlipStream::SlipStream(int size,ByteStream& stream) : Bytes(size),Actor("SlipStream"),_stream(stream) {
-_escaped=false;
-_error_bad_crc=0;
+SlipStream::SlipStream(int size, ByteStream& stream) :
+		Bytes(size), Actor("SlipStream"), _stream(stream) {
+	_escaped = false;
+	_error_bad_crc = 0;
 }
 
 SlipStream::~SlipStream() {
 	// TODO Auto-generated destructor stub
 }
 //_________________________________________________________________________
-
 
 void SlipStream::streamWriteCrc(Bytes& bytes) {
 	bytes.offset(-1); // position at end
@@ -36,7 +36,7 @@ Crc SlipStream::Fletcher16(uint8_t *begin, int length) {
 		sum2 = (sum2 + sum1) % 255;
 //		LOGF(" %X , %X ", sum1, sum2);
 	};
-	Crc crc={(uint8_t)sum2,(uint8_t)sum1};
+	Crc crc = { (uint8_t) sum2, (uint8_t) sum1 };
 	return crc;
 }
 //_________________________________________________________________________
@@ -58,8 +58,8 @@ bool SlipStream::isGoodCrc() //PUBLIC
 void SlipStream::removeCrc() //PUBLIC
 //_________________________________________________________________________
 {
-	if ( length() > 2)
-	length(length()-2);
+	if (length() > 2)
+		length(length() - 2);
 }
 //PUBLIC
 
@@ -71,46 +71,45 @@ void SlipStream::removeCrc() //PUBLIC
  #define ESC 0xDB
  */
 //_____________________________________
-
-void SlipStream::streamWriteEscaped(uint8_t b){
-if ( b==END ){
-			_stream.write(ESC);
-			_stream.write(ESC_END);
-		} else if ( b==ESC) {
-			_stream.write(ESC);
-			_stream.write(ESC_ESC);
-		} else
-			_stream.write(b);
+void SlipStream::streamWriteEscaped(uint8_t b) {
+	if (b == END) {
+		_stream.write(ESC);
+		_stream.write(ESC_END);
+	} else if (b == ESC) {
+		_stream.write(ESC);
+		_stream.write(ESC_ESC);
+	} else
+		_stream.write(b);
 }
 
-
-void SlipStream::send(Bytes& bytes){
+void SlipStream::send(Bytes& bytes) {
+	if (!_stream.hasSpace(bytes.length()+4)) {
+		return;
+	}
 	bytes.offset(0);
 	_stream.write(END);
-	while(bytes.hasData()){
-		byte b= bytes.read();
+	while (bytes.hasData()) {
+		byte b = bytes.read();
 		streamWriteEscaped(b);
-		}
+	}
 	streamWriteCrc(bytes);
 	_stream.write(END);
 	_stream.flush();
-	}
+}
 
 #include <EventBus.h>
 extern EventBus eb;
 
-
 void SlipStream::onRecv(uint8_t b) {
 
 	if (b == END) {
-		if (offset() > 2){
-			if ( isGoodCrc()) {
+		if (offset() > 2) {
+			if (isGoodCrc()) {
 				removeCrc();
 				Cbor cbor(1024);
 				cbor.append(*this);
 				eb.publish(cbor);
-			}
-			else
+			} else
 				_error_bad_crc++;
 		}
 		clear();
@@ -127,12 +126,12 @@ void SlipStream::onRecv(uint8_t b) {
 	}
 }
 
-void SlipStream::loop(){
-	if ( _stream.hasData()) {
+void SlipStream::loop() {
+	if (_stream.hasData()) {
 		onRecv(_stream.read());
 	}
 }
 
-void SlipStream::setup(){
+void SlipStream::setup() {
 
 }

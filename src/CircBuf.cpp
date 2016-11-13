@@ -41,7 +41,7 @@
 	return 0;
 }
 
-int  IRAM CircBuf::writeFromIsr(uint8_t b) {
+int   CircBuf::writeFromIsr(uint8_t b) {
 	uint16_t newPos = (writePos + 1) % limit;
 	if (newPos == readPos)
 		return -EAGAIN;
@@ -50,7 +50,7 @@ int  IRAM CircBuf::writeFromIsr(uint8_t b) {
 	return 0;
 }
 
-int  IRAM CircBuf::readFromIsr() {
+int   CircBuf::readFromIsr() {
 	uint16_t newPos = (readPos + 1) % limit;
 	int value;
 	if (newPos == writePos)

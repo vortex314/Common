@@ -20,6 +20,7 @@ public:
 	virtual Erc read(Bytes& data)=0;
 	virtual bool hasData()=0;
 	virtual bool hasSpace()=0;
+	virtual bool hasSpace(uint32_t sp)=0;
 	virtual void flush()=0;
 };
 
