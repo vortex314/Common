@@ -109,8 +109,10 @@ void SlipStream::onRecv(uint8_t b) {
 				Cbor cbor(1024);
 				cbor.append(*this);
 				eb.publish(cbor);
-			} else
+			} else  {
 				_error_bad_crc++;
+				LOGF(" bad CRC : %d ",_error_bad_crc);
+			}
 		}
 		clear();
 	} else if (b == ESC) {

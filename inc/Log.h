@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <Sys.h>
-#define LINE_LENGTH 256
+#define LINE_LENGTH 1024
 typedef void (*LogFunction)(char* start,uint32_t length);
 
 class LogManager

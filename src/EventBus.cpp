@@ -110,7 +110,7 @@ void EventBus::invokeAllSubscriber(Cbor& cbor,EventFilter* filter)
 //____________________________________________________________________
 //
 
-Cbor cbor(256);
+Cbor cbor(512);
 
 void EventBus::eventLoop()
 {
@@ -119,10 +119,6 @@ void EventBus::eventLoop()
 //	while ((_queue.getMap(cbor) == 0) && cbor.getKeyValue((uint16_t) 0, header)) {
     while ((_queue.get(cbor) == 0) && cbor.getKeyValue((uint16_t) 0, header)) // handle all events
     {
-#ifdef __linux__
-        if (_debug)
-            logCbor(cbor);
-#endif
         EventFilter* filter;
         if ( (filter=findFilter(header)) ) // handle all matching filters
         {

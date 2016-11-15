@@ -123,7 +123,7 @@ Bytes& Bytes::operator=(const char* s) {
 }
 
 Bytes& Bytes::append(uint8_t* data,uint32_t length) {
-	for(int i=0;i<length;i++)
+	for(uint32_t i=0;i<length;i++)
 		write(data[i]);
 	return *this;
 }
