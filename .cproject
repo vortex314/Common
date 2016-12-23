@@ -14,6 +14,8 @@
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -21,27 +23,27 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.lib.debug.688255153." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.lib.debug.564716970" name="Linux GCC" nonInternalBuilderId="cdt.managedbuild.target.gnu.builder.lib.debug" superClass="cdt.managedbuild.toolchain.gnu.lib.debug">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.lib.debug.1855204515" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.lib.debug"/>
-							<builder autoBuildTarget="all" buildPath="${workspace_loc:/Common/Debug}" cleanBuildTarget="clean" id="org.eclipse.cdt.build.core.internal.builder.21471686" incrementalBuildTarget="all" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="org.eclipse.cdt.build.core.internal.builder"/>
+							<builder buildPath="${workspace_loc:/Common}/Debug" id="cdt.managedbuild.target.gnu.builder.lib.debug.970509286" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.lib.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.lib.debug.726221839" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.lib.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug.921030435" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug">
-								<option id="gnu.cpp.compiler.lib.debug.option.optimization.level.923683387" name="Optimization Level" superClass="gnu.cpp.compiler.lib.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.lib.debug.option.debugging.level.661721907" name="Debug Level" superClass="gnu.cpp.compiler.lib.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.other.other.468944323" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++11" valueType="string"/>
-								<option id="gnu.cpp.compiler.option.include.paths.719670700" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.cpp.compiler.lib.debug.option.optimization.level.923683387" name="Optimization Level" superClass="gnu.cpp.compiler.lib.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.lib.debug.option.debugging.level.661721907" name="Debug Level" superClass="gnu.cpp.compiler.lib.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.option.other.other.468944323" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -std=c++11" valueType="string"/>
+								<option id="gnu.cpp.compiler.option.include.paths.719670700" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common/inc}&quot;"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.preprocessor.def.1362908535" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1362908535" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.65821980" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.lib.debug.2075242773" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.lib.debug">
-								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.lib.debug.option.optimization.level.827237940" name="Optimization Level" superClass="gnu.c.compiler.lib.debug.option.optimization.level" valueType="enumerated"/>
-								<option id="gnu.c.compiler.lib.debug.option.debugging.level.1016155012" name="Debug Level" superClass="gnu.c.compiler.lib.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.include.paths.755932959" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.lib.debug.option.optimization.level.827237940" name="Optimization Level" superClass="gnu.c.compiler.lib.debug.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
+								<option id="gnu.c.compiler.lib.debug.option.debugging.level.1016155012" name="Debug Level" superClass="gnu.c.compiler.lib.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.include.paths.755932959" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Common/inc}&quot;"/>
 								</option>
-								<option id="gnu.c.compiler.option.preprocessor.def.symbols.605316134" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.605316134" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.307095911" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
@@ -215,8 +217,13 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope" versionNumber="1">
-		<resource resourceType="PROJECT" workspacePath="/Common"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/Common"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/Common"/>
+		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>

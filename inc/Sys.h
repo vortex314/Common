@@ -40,7 +40,7 @@
 #define ASSERT(xxx) if ( !(xxx)) { Log.printf(" Assertion failed %s",#xxx); Log.flush();while(1){delay(1000);};}
 #else
 #include <Log.h>
-#define LOGF(fmt,...)  if ( Log.enabled()) {Log.time();Log.printf(" | %s:%d | ",__PRETTY_FUNCTION__,__LINE__);Log.printf(fmt,##__VA_ARGS__);Log.flush();}//delay(10);
+#define LOGF(fmt,...)  if ( Log.enabled()) {Log.time();Log.host(0);Log.application(0);Log.printf("| %s:%d -- ",__PRETTY_FUNCTION__,__LINE__);Log.printf(fmt,##__VA_ARGS__);Log.flush();}//delay(10);
 #define ASSERT_LOG(xxx) if ( !(xxx)) { Log.printf(" Assertion failed %s",#xxx); Log.flush();while(1){Sys::delay(1000);};}
 #define ASSERT(xxx) if ( !(xxx)) { Log.printf(" Assertion failed %s",#xxx); Log.flush();while(1){Sys::delay(1000);};}
 #endif

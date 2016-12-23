@@ -11,7 +11,11 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <Sys.h>
+#ifdef __linux__
 #define LINE_LENGTH 1024
+#else
+#define LINE_LENGTH 256
+#endif
 typedef void (*LogFunction)(char* start,uint32_t length);
 
 class LogManager
@@ -21,6 +25,8 @@ public:
 private:
     bool _enabled;
     LogFunction _logFunction;
+    char _hostname[20];
+    char _application[20];
     char _record[LINE_LENGTH];
     uint16_t _offset;
     LogLevel _level;
@@ -36,6 +42,8 @@ public:
     void printf(const char* fmt,...);
     void vprintf(const char* fmt,va_list args);
     void time();
+    void host(const char* hostname);
+    void application(const char* applicationName);
     void flush();
     void level(LogLevel l);
     LogLevel level();

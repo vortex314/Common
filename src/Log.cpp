@@ -37,14 +37,16 @@ void serialLog(char* start, uint32_t length) {
 	usart_send_string(start);
 #endif
 #ifdef __linux__
-	*(start+length)='\0';
-	fprintf(stdout,"%s\n",start);
+	*(start + length) = '\0';
+	fprintf(stdout, "%s\n", start);
 	fflush(stdout);
 #endif
 }
 
 LogManager::LogManager() :
 		_enabled(true), _logFunction(serialLog), _offset(0), _level(ERROR) {
+	_application[0] = 0;
+	_hostname[0] = 0;
 
 }
 
@@ -97,23 +99,42 @@ LogManager::LogLevel LogManager::level() {
 #include <time.h>
 #include <sys/time.h>
 #include <stdio.h>
-void LogManager::time()
-{
+void LogManager::time() {
 	struct timeval tv;
 	struct timezone tz;
 	struct tm *tm;
-	gettimeofday(&tv,&tz);
-	tm=::localtime(&tv.tv_sec);
-	_offset += sprintf(&_record[_offset],"%d/%02d/%02d %02d:%02d:%02d.%03ld"
-			,tm->tm_year+1900
-			,tm->tm_mon+1
-			,tm->tm_mday
-			, tm->tm_hour
-			, tm->tm_min
-			, tm->tm_sec
-			, tv.tv_usec/1000);
+	gettimeofday(&tv, &tz);
+	tm = ::localtime(&tv.tv_sec);
+	_offset += sprintf(&_record[_offset], "%d/%02d/%02d %02d:%02d:%02d.%03ld ",
+			tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour,
+			tm->tm_min, tm->tm_sec, tv.tv_usec / 1000);
 
 //   strftime (line, sizeof(line), "%Y-%m-%d %H:%M:%S.mmm", sTm);
+}
+#include <unistd.h>
+#include <string.h>
+void LogManager::host(const char* hostname) {
+	if (hostname == 0) {
+		if (strlen(_hostname) == 0) {
+			::gethostname(_hostname, sizeof(_hostname));
+		}
+		_offset += sprintf(&_record[_offset], "| %s ", _hostname);
+	} else {
+		_offset += sprintf(&_record[_offset], "| %s ", hostname);
+	}
+}
+extern const char *__progname;
+
+
+void LogManager::application(const char* application) {
+	if (application == 0) {
+		if (strlen(_application) == 0) {
+			strncpy(_application,__progname,sizeof(_application)-1);
+		}
+		_offset += sprintf(&_record[_offset], "| %s ", _application);
+	} else {
+		_offset += sprintf(&_record[_offset], "| %s ", application);
+	}
 }
 #endif
 #ifndef __linux__
@@ -122,5 +143,11 @@ void LogManager::time() {
 	str.append(Sys::hostname()).append(' ');
 	str.append(Sys::millis());
 	_offset += str.length();
+}
+void LogManager::host(const char* hostname) {
+
+}
+void LogManager::application(const char* application) {
+
 }
 #endif
