@@ -89,6 +89,12 @@ public:
     void subscribe(uint16_t header, StaticHandler handler);
     void subscribe(Actor* actor);
     void eventLoop();
+    Cbor& request(uint16_t dst,uint16_t src,uint16_t req);
+    Cbor& reply(uint16_t dst,uint16_t src,uint16_t repl);
+    Cbor& event(uint16_t ev,uint16_t src);
+    Cbor& data();                  //  eb.request(H("mqtt"),H("connect"),H("motor")).addKeyValue(H("host"),"test.mosquitto.org");eb.send();
+    EventBus& send();
+
 };
 
 extern EventBus eb;
