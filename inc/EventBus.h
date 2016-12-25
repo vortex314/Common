@@ -43,24 +43,52 @@ typedef void (*StaticHandler)(Cbor&);
 class Subscriber
 {
 public:
-    Actor* actor;
+    Actor* _actor;
     union
     {
-        StaticHandler staticHandler;
-        MethodHandler methodHandler;
+        StaticHandler _staticHandler;
+        MethodHandler _methodHandler;
     };
-    Subscriber* nextSubscriber;
+    Subscriber* _nextSubscriber;
     Subscriber();
+    Subscriber* next();
 };
 
 class EventFilter
 {
+
 public:
-    uint32_t filter;
-    Subscriber* firstSubscriber;
-    EventFilter* nextFilter;
-    EventFilter(uint32_t header);
+    typedef enum  { EF_ANY,EF_REQUEST,EF_EVENT,EF_REPLY,EF_KV } type;
+    type _type;
+    uint16_t _object;
+    uint16_t _value;
+
+    Subscriber* _firstSubscriber;
+    EventFilter* _nextFilter;
+    EventFilter(type t,uint16_t o,uint16_t v);
+    Subscriber* firstSubscriber();
+    Subscriber* lastSubscriber();
+    Subscriber* addSubscriber();
+    void subscribe( Actor* instance, MethodHandler handler);
+    void subscribe( StaticHandler handler);
+    void subscribe(Actor* actor);
+    void invokeAllSubscriber(Cbor& );
+
+    EventFilter* next();
+    bool match(Cbor& cbor);
+
+    static bool isEvent(Cbor& cbor,uint16_t src,uint16_t ev);
+    static bool isRequest(Cbor& cbor,uint16_t dst,uint16_t req);
+    static bool isReply(Cbor& cbor,uint16_t src,uint16_t req);
+
 } ;
+
+#define EB_DST H("dst")
+#define EB_SRC H("src")
+#define EB_REQUEST H("request")
+#define EB_REPLY H("reply")
+#define EB_EVENT H("event")
+#define EB_ERROR H("error")
 
 class EventBus
 {
@@ -69,32 +97,41 @@ private:
     EventFilter* _firstFilter;
 
     EventFilter* firstFilter();
-    EventFilter* nextFilter(EventFilter* current);
-    EventFilter* findFilter(uint32_t header);
+    EventFilter* findFilter(EventFilter::type ,uint16_t o,uint16_t v);
     EventFilter* lastFilter();
-    void invokeAllSubscriber(Cbor& ,EventFilter* filter);
+    EventFilter& addFilter(EventFilter::type ,uint16_t o,uint16_t v);
 
-    Subscriber* firstSubscriber(EventFilter* filter);
-    Subscriber* nextSubScriber(Subscriber* current);
-    Subscriber* lastSubscriber(EventFilter* filter);
-    Subscriber* addSubscriber(uint32_t header);
+
+
+    Cbor _txd;
+    Cbor _rxd;
 
 public:
-    EventBus(uint32_t size);
+    EventBus(uint32_t size,uint32_t msgSize);
     Erc initAll();
+    bool match(uint32_t header,uint16_t dst,uint16_t src,uint16_t op);
+
     void publish(uint16_t header, Cbor& cbor);
-    void publish(uint16_t header);
+    void publish(uint16_t src,uint16_t event);
     void publish(Cbor& cbor);
-    void subscribe(uint16_t header, Actor* instance, MethodHandler handler);
-    void subscribe(uint16_t header, StaticHandler handler);
-    void subscribe(Actor* actor);
+
+    EventFilter& filter(uint16_t key,uint16_t value);
+    EventFilter& onRequest(uint16_t dst);
+    EventFilter& onEvent(uint16_t src,uint16_t ev);
+    EventFilter& onAny();
+
     void eventLoop();
+ //   EventFilter* findFilter(EventFilter::type ,uint16_t o,uint16_t v);
+
     Cbor& request(uint16_t dst,uint16_t src,uint16_t req);
     Cbor& reply(uint16_t dst,uint16_t src,uint16_t repl);
-    Cbor& event(uint16_t ev,uint16_t src);
-    Cbor& data();                  //  eb.request(H("mqtt"),H("connect"),H("motor")).addKeyValue(H("host"),"test.mosquitto.org");eb.send();
-    EventBus& send();
-
+    Cbor& reply();
+    Cbor& event(uint16_t src,uint16_t ev);
+    // Cbor& data();                  //  eb.request(H("mqtt"),H("connect"),H("motor")).addKeyValue(H("host"),"test.mosquitto.org");eb.send(); eb.
+    bool isEvent(uint16_t ev,uint16_t src);
+    bool isRequest(uint16_t dst,uint16_t src,uint16_t req);
+    bool isReply(uint16_t src,uint16_t req);
+    void send();
 };
 
 extern EventBus eb;

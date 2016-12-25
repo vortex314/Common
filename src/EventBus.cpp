@@ -2,12 +2,13 @@
 
 Cbor* timeoutEvent;
 
-EventBus::EventBus(uint32_t size) :
-    _queue(size), _firstFilter(0)
+EventBus::EventBus(uint32_t size,uint32_t msgSize) :
+    _queue(size), _firstFilter(0),_txd(msgSize),_rxd(msgSize)
 {
-    timeoutEvent=new Cbor(6);
-    timeoutEvent->addKeyValue(0, H("timeout"));
-    publish(H("setup"));
+    timeoutEvent=new Cbor(12);
+    timeoutEvent->addKeyValue(EB_EVENT, H("timeout"));
+    timeoutEvent->addKeyValue(EB_SRC, H("sys"));
+    publish(H("sys"),H("setup"));
 }
 
 void EventBus::publish(uint16_t header, Cbor& cbor)
@@ -19,6 +20,55 @@ void EventBus::publish(uint16_t header, Cbor& cbor)
     _queue.putRelease(msg);
 }
 
+void EventBus::publish(uint16_t src, uint16_t ev)
+{
+    event(src,ev);
+    send();
+}
+
+Cbor& EventBus::event(uint16_t src, uint16_t event)
+{
+    _txd.clear();
+    _txd.addKeyValue(EB_SRC,src);
+    _txd.addKeyValue(EB_EVENT,event);
+    return _txd;
+}
+
+Cbor& EventBus::request(uint16_t dst,uint16_t req,uint16_t src)
+{
+    _txd.clear();
+    _txd.addKeyValue(EB_DST,dst);
+    _txd.addKeyValue(EB_REQUEST,req);
+    _txd.addKeyValue(EB_SRC,src);
+    return _txd;
+}
+Cbor& EventBus::reply(uint16_t dst,uint16_t repl,uint16_t src)
+{
+    _txd.clear();
+    _txd.addKeyValue(EB_DST,dst);
+    _txd.addKeyValue(EB_REPLY,repl);
+    _txd.addKeyValue(EB_SRC,src);
+    return _txd;
+}
+
+Cbor& EventBus::reply()
+{
+    _txd.clear();
+    uint16_t dst,src,repl;
+    if ( _rxd.getKeyValue(EB_SRC,dst))
+        _txd.addKeyValue(EB_DST,dst);
+    if ( _rxd.getKeyValue(EB_REQUEST,repl))
+        _txd.addKeyValue(EB_REPLY,repl);
+    if ( _rxd.getKeyValue(EB_DST,src))
+        _txd.addKeyValue(EB_SRC,src);
+    return _txd;
+}
+
+void EventBus::send()
+{
+    _queue.put(_txd);
+}
+
 void EventBus::publish(Cbor& cbor)
 {
     Cbor msg(0);
@@ -27,6 +77,44 @@ void EventBus::publish(Cbor& cbor)
     _queue.putRelease(msg);
 }
 
+EventFilter& EventBus::onAny()
+{
+    return addFilter(EventFilter::EF_ANY,0,0);
+}
+//_______________________________________________________________________________________________
+//
+EventFilter& EventBus::filter(uint16_t key,uint16_t value)
+{
+    return addFilter(EventFilter::EF_KV,key,value);
+}
+//_______________________________________________________________________________________________
+//
+EventFilter& EventBus::onRequest(uint16_t dst)
+{
+    return addFilter(EventFilter::EF_REQUEST,dst,0);
+
+}
+//_______________________________________________________________________________________________
+//
+EventFilter& EventBus::onEvent(uint16_t src,uint16_t ev)
+{
+    return addFilter(EventFilter::EF_EVENT,src,ev);
+
+}
+//_______________________________________________________________________________________________
+//
+bool EventBus::isEvent(uint16_t src,uint16_t ev)
+{
+    return EventFilter::isEvent(_rxd,src,ev);
+}
+//_______________________________________________________________________________________________
+//
+bool EventBus::isReply(uint16_t src,uint16_t req)
+{
+    return EventFilter::isReply(_rxd,src,req);
+}
+
+/*
 void EventBus::publish(uint16_t header)
 {
     Cbor msg(0);
@@ -34,6 +122,7 @@ void EventBus::publish(uint16_t header)
     msg.addKey(0).add(header);
     _queue.putRelease(msg);
 }
+*/
 #ifdef __linux__
 extern const char* hash2string(uint32_t hash);
 void logCbor(Cbor& cbor)
@@ -50,11 +139,11 @@ void logCbor(Cbor& cbor)
     while (cbor.hasData())
     {
         cbor.get(key);
-        str.append('"').append(hash2string(key)).append("\"[").append(key).append("]:");
-        if (key == 0)
+        str.append('"').append(hash2string(key)).append("\":");
+        if (key == EB_DST || key == EB_SRC || key == EB_REQUEST || key==EB_REPLY || key==EB_EVENT )
         {
             cbor.get(key);
-            str.append('"').append(hash2string(key)).append("\"[").append(key).append("]:");
+            str.append('"').append(hash2string(key)).append("\"");
         }
         else
         {
@@ -87,22 +176,29 @@ void logCbor(Cbor& cbor)
 
 extern void usart_send_string(const char *s);
 
-
-
-void EventBus::invokeAllSubscriber(Cbor& cbor,EventFilter* filter)
+//____________________________________________________________________
+//
+EventFilter* EventBus::firstFilter()
 {
-    for (Subscriber* sub=firstSubscriber(filter); sub != 0; sub=nextSubScriber(sub))
+    return _firstFilter;
+}
+//____________________________________________________________________
+//
+
+void EventFilter::invokeAllSubscriber(Cbor& cbor)
+{
+    for (Subscriber* sub=firstSubscriber(); sub != 0; sub=sub->next())
     {
-        if (sub->actor == 0)
+        if (sub->_actor == 0)
         {
-            sub->staticHandler(cbor);
+            sub->_staticHandler(cbor);
         }
         else
         {
-            if (sub->methodHandler == 0)
-                sub->actor->onEvent(cbor);
+            if (sub->_methodHandler == 0)
+                sub->_actor->onEvent(cbor);
             else
-                CALL_MEMBER_FUNC(sub->actor,sub->methodHandler)(
+                CALL_MEMBER_FUNC(sub->_actor,sub->_methodHandler)(
                     cbor);
         }
     }
@@ -110,23 +206,15 @@ void EventBus::invokeAllSubscriber(Cbor& cbor,EventFilter* filter)
 //____________________________________________________________________
 //
 
-Cbor cbor(512);
 
 void EventBus::eventLoop()
 {
-//	Cbor cbor(0);
-    uint32_t header = 0;
-//	while ((_queue.getMap(cbor) == 0) && cbor.getKeyValue((uint16_t) 0, header)) {
-    while ((_queue.get(cbor) == 0) && cbor.getKeyValue((uint16_t) 0, header)) // handle all events
+    while ((_queue.get(_rxd) == 0) ) // handle all events
     {
-        EventFilter* filter;
-        if ( (filter=findFilter(header)) ) // handle all matching filters
+        for ( EventFilter* filter=firstFilter(); filter ; filter=filter->next() ) // handle all matching filters
         {
-            invokeAllSubscriber(cbor,filter);
-        }
-        if ( (filter=findFilter(0)) )     // handle all total subscribers
-        {
-            invokeAllSubscriber(cbor,filter);
+            if ( filter->match(_rxd))
+                filter->invokeAllSubscriber(_rxd);
         }
     }
 
@@ -140,117 +228,193 @@ void EventBus::eventLoop()
 }
 //____________________________________________________________________
 //
-Subscriber* EventBus::addSubscriber(uint32_t header)
+EventFilter& EventBus::addFilter( EventFilter::type t,uint16_t object,uint16_t value)
 {
-    EventFilter* cursorFilter;
-    Subscriber* cursorSubscriber;
     if ( _firstFilter == 0 )
     {
-        _firstFilter=new EventFilter(header);
-        cursorFilter=_firstFilter;
+        _firstFilter=new EventFilter(t,object,value);
+        return *_firstFilter;
     }
     else
     {
-        cursorFilter = findFilter(header);
+        EventFilter* cursorFilter = findFilter(t,object,value);
         if ( cursorFilter==0)
         {
-            cursorFilter = lastFilter()->nextFilter = new EventFilter(header);
+            cursorFilter = lastFilter()->_nextFilter = new EventFilter(t,object,value);
         }
+        return *cursorFilter;
     }
-    if ( cursorFilter->firstSubscriber==0)
+
+}
+//____________________________________________________________________
+//
+EventFilter* EventBus::findFilter( EventFilter::type t,uint16_t object,uint16_t value)
+{
+    for( EventFilter* ef=firstFilter(); ef; ef=ef->next())
     {
-        cursorSubscriber = cursorFilter->firstSubscriber=new Subscriber();
-    }
-    else
-    {
-        cursorSubscriber = lastSubscriber(cursorFilter)->nextSubscriber = new Subscriber();
-    }
-    return cursorSubscriber;
-}
-//____________________________________________________________________
-//
-void EventBus::subscribe(uint16_t header, Actor* instance,
-                         MethodHandler handler)
-{
-    Subscriber* sub = addSubscriber(header);
-    sub->actor = instance;
-    sub->methodHandler = handler;
-}
-//____________________________________________________________________
-//
-void EventBus::subscribe(uint16_t header, StaticHandler handler)
-{
-    Subscriber* sub = addSubscriber(header);
-    sub->staticHandler = handler;
-    sub->actor = 0;
-}
-//____________________________________________________________________
-//
-void EventBus::subscribe(Actor* instance)
-{
-    subscribe(0, instance, 0);
-}
-//____________________________________________________________________
-//
-EventFilter* EventBus::firstFilter()
-{
-    return _firstFilter;
-}
-EventFilter* EventBus::nextFilter(EventFilter* current)
-{
-    return current->nextFilter;
-}
-//____________________________________________________________________
-//
-EventFilter* EventBus::findFilter(uint32_t header)
-{
-    for(EventFilter* ef=firstFilter(); ef!=0; ef=nextFilter(ef))
-    {
-        if ( ef->filter == header ) return ef;
+        if ( ef->_type == t && ef->_object==object && ef->_value == value) return ef;
     }
     return 0;
 }
+//_______________________________________________________________________E V E NT F I L T E R _______________________________________
+
+EventFilter::EventFilter(EventFilter::type type, uint16_t object,uint16_t value) : _firstSubscriber(0),_nextFilter(0)
+{
+    _type=type;
+    _object=object;
+    _value=value;
+}
+//_______________________________________________________________________________________________
+//
+bool EventFilter::match(Cbor& cbor)
+{
+    if ( _type == EF_ANY ) return true;
+    if ( _type == EF_EVENT )
+    {
+        return isEvent(cbor,_object,_value);
+    }
+    else if ( _type == EF_REPLY )
+    {
+        return isReply(cbor,_object,_value);
+    }
+    else if ( _type == EF_REQUEST )
+    {
+        return isRequest(cbor,_object,_value);
+    }
+    else if ( _type == EF_KV )
+    {
+        uint16_t v;
+        if ( cbor.getKeyValue(_object,v))
+        {
+            if ( (_value==v || _value==0 )   )  return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    return false;
+}
+//_______________________________________________________________________________________________
+//
+bool EventFilter::isEvent(Cbor& cbor ,uint16_t src,uint16_t ev)
+{
+    uint16_t _src,_event;
+    if (cbor.getKeyValue(EB_EVENT,_event) && cbor.getKeyValue(EB_SRC,_src))
+    {
+        if ( (_event==ev || _event==0 || ev==0)  && (_src==src || _src==0 || src==0) ) return true;
+    }
+    return false;
+}
+//_______________________________________________________________________________________________
+//
+bool EventFilter::isReply(Cbor& cbor ,uint16_t src,uint16_t req)
+{
+    uint16_t _src,_req;
+    if (cbor.getKeyValue(EB_REPLY,_req) && cbor.getKeyValue(EB_SRC,_src))
+    {
+        if ( (_req==req || _req==0 || req==0)  && (_src==src || _src==0 || src==0) )  return true;
+    }
+    return false;
+}
+//_______________________________________________________________________________________________
+//
+bool EventFilter::isRequest(Cbor& cbor ,uint16_t dst,uint16_t req)
+{
+    uint16_t _dst,_req;
+    if (cbor.getKeyValue(EB_REQUEST,_req) && cbor.getKeyValue(EB_DST,_dst))
+    {
+        if ( (_req==req || _req==0 || req==0)  && (_dst==dst || _dst==0 || dst==0) )  return true;
+    }
+    return false;
+}
+//________________________________________________________ S U B S C R I B E R _______________________________________
+//
+
+Subscriber* EventFilter::addSubscriber()
+{
+    Subscriber* cursorSubscriber;
+
+    if ( _firstSubscriber==0)
+    {
+        cursorSubscriber = _firstSubscriber=new Subscriber();
+    }
+    else
+    {
+        cursorSubscriber = lastSubscriber()->_nextSubscriber = new Subscriber();
+    }
+    return cursorSubscriber;
+}
+//_______________________________________________________________________________________________
+//
+
+//____________________________________________________________________
+//
+void EventFilter::subscribe(Actor* instance,
+                            MethodHandler handler)
+{
+    Subscriber* sub = addSubscriber();
+    sub->_actor = instance;
+    sub->_methodHandler = handler;
+}
+//____________________________________________________________________
+//
+void EventFilter::subscribe( StaticHandler handler)
+{
+    Subscriber* sub = addSubscriber();
+    sub->_staticHandler = handler;
+    sub->_actor = 0;
+}
+//____________________________________________________________________
+//
+void EventFilter::subscribe(Actor* instance)
+{
+    subscribe(instance, 0);
+}
+
+EventFilter* EventFilter::next()
+{
+    return _nextFilter;
+}
+
 //____________________________________________________________________
 //
 EventFilter* EventBus::lastFilter()
 {
-    for(EventFilter* ef=firstFilter(); ef!=0; ef=nextFilter(ef))
+    for(EventFilter* ef=firstFilter(); ef!=0; ef=ef->next())
     {
-        if ( ef->nextFilter==0 ) return ef;
+        if ( ef->_nextFilter==0 ) return ef;
     }
     ASSERT(false); // shouldn't arrive here
     return 0;
 }
 //____________________________________________________________________
 //
-Subscriber* EventBus::firstSubscriber(EventFilter* filter)
+Subscriber* EventFilter::firstSubscriber()
 {
-    return filter->firstSubscriber;
+    return _firstSubscriber;
 }
-Subscriber* EventBus::nextSubScriber(Subscriber* current)
+Subscriber* Subscriber::next()
 {
-    return current->nextSubscriber;
+    return _nextSubscriber;
 }
 //____________________________________________________________________
 //
-Subscriber* EventBus::lastSubscriber(EventFilter* filter)
+Subscriber* EventFilter::lastSubscriber()
 {
-    for(Subscriber* sub=firstSubscriber(filter); sub!=0; sub=nextSubScriber(sub))
+    for(Subscriber* sub=firstSubscriber(); sub; sub=sub->next())
     {
-        if ( sub->nextSubscriber ==0 ) return sub;
+        if ( sub->next() ==0 ) return sub;
     }
     ASSERT(false); // shouldn't come here
     return 0;
 }
 
-EventFilter::EventFilter(uint32_t header) : filter(header),firstSubscriber(0),nextFilter(0)
-{
 
-}
 //____________________________________________________________________
 //
 
 
-Subscriber::Subscriber() : nextSubscriber(0)
+Subscriber::Subscriber() : _nextSubscriber(0)
 {
 }
