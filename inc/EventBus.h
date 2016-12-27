@@ -121,6 +121,7 @@ public:
     EventFilter& onEvent(uint16_t src,uint16_t ev);
     EventFilter& onAny();
     EventFilter& onDst(uint16_t dst);
+    EventFilter& onSrc(uint16_t src);
 
     void eventLoop();
  //   EventFilter* findFilter(EventFilter::type ,uint16_t o,uint16_t v);

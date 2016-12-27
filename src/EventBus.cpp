@@ -118,6 +118,13 @@ EventFilter& EventBus::onDst(uint16_t dst)
 }
 //_______________________________________________________________________________________________
 //
+EventFilter& EventBus::onSrc(uint16_t src)
+{
+    return addFilter(EventFilter::EF_KV,EB_SRC,src);
+
+}
+//_______________________________________________________________________________________________
+//
 bool EventBus::isEvent(uint16_t src,uint16_t ev)
 {
     return EventFilter::isEvent(_rxd,src,ev);
