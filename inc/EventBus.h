@@ -117,6 +117,7 @@ public:
 
     EventFilter& filter(uint16_t key,uint16_t value);
     EventFilter& onRequest(uint16_t dst);
+    EventFilter& onReply(uint16_t dst,uint16_t repl);
     EventFilter& onEvent(uint16_t src,uint16_t ev);
     EventFilter& onAny();
 

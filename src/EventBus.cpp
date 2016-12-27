@@ -96,6 +96,13 @@ EventFilter& EventBus::onRequest(uint16_t dst)
 }
 //_______________________________________________________________________________________________
 //
+EventFilter& EventBus::onReply(uint16_t dst,uint16_t repl)
+{
+    return addFilter(EventFilter::EF_REPLY,dst,repl);
+
+}
+//_______________________________________________________________________________________________
+//
 EventFilter& EventBus::onEvent(uint16_t src,uint16_t ev)
 {
     return addFilter(EventFilter::EF_EVENT,src,ev);
@@ -117,7 +124,7 @@ bool EventBus::isReply(uint16_t src,uint16_t req)
 //
 bool EventBus::isRequest(uint16_t dst,uint16_t req)
 {
-    return EventFilter::isReply(_rxd,dst,req);
+    return EventFilter::isRequest(_rxd,dst,req);
 }
 
 
