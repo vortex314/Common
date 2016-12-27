@@ -14,6 +14,7 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
+					<Add option="-O2" />
 					<Add option="-std=c++11" />
 					<Add option="-g" />
 					<Add directory="inc" />

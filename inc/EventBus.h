@@ -129,7 +129,7 @@ public:
     Cbor& event(uint16_t src,uint16_t ev);
     // Cbor& data();                  //  eb.request(H("mqtt"),H("connect"),H("motor")).addKeyValue(H("host"),"test.mosquitto.org");eb.send(); eb.
     bool isEvent(uint16_t ev,uint16_t src);
-    bool isRequest(uint16_t dst,uint16_t src,uint16_t req);
+    bool isRequest(uint16_t dst,uint16_t req);
     bool isReply(uint16_t src,uint16_t req);
     void send();
 };

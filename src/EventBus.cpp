@@ -6,8 +6,8 @@ EventBus::EventBus(uint32_t size,uint32_t msgSize) :
     _queue(size), _firstFilter(0),_txd(msgSize),_rxd(msgSize)
 {
     timeoutEvent=new Cbor(12);
-    timeoutEvent->addKeyValue(EB_EVENT, H("timeout"));
-    timeoutEvent->addKeyValue(EB_SRC, H("sys"));
+     timeoutEvent->addKeyValue(EB_SRC, H("sys"));
+   timeoutEvent->addKeyValue(EB_EVENT, H("timeout"));
     publish(H("sys"),H("setup"));
 }
 
@@ -113,24 +113,19 @@ bool EventBus::isReply(uint16_t src,uint16_t req)
 {
     return EventFilter::isReply(_rxd,src,req);
 }
-
-/*
-void EventBus::publish(uint16_t header)
+//_______________________________________________________________________________________________
+//
+bool EventBus::isRequest(uint16_t dst,uint16_t req)
 {
-    Cbor msg(0);
-    _queue.putMap(msg);
-    msg.addKey(0).add(header);
-    _queue.putRelease(msg);
+    return EventFilter::isReply(_rxd,dst,req);
 }
-*/
+
+
 #ifdef __linux__
 extern const char* hash2string(uint32_t hash);
 void logCbor(Cbor& cbor)
 {
     Str str(2048);
-    /*    str.clear();
-     cbor.toString(str);
-     LOGF("--message : %s ",str.c_str());*/
     cbor.offset(0);
     uint32_t key;
     str.clear();
@@ -155,22 +150,6 @@ void logCbor(Cbor& cbor)
             str << ",";
     };
     LOGF("--- %s", str.c_str());
-    /*
-     while ( cbor.hasData())
-     {
-     if ( cbor.get(key))
-     {
-     LOGF("---key : %d:%s ",key,hash2string(key));
-
-     }
-     else break;
-     if ( key==0 && cbor.get(key))
-     {
-     LOGF("----value : %d:%s ",key,hash2string(key));
-     }
-     else
-     cbor.skipToken();
-     }*/
 }
 #endif
 
@@ -220,9 +199,11 @@ void EventBus::eventLoop()
 
     for (Actor* actor = Actor::first(); actor; actor = actor->next()) // handle all actor timeouts
     {
+
         if (actor->timeout())
         {
-            actor->onEvent(*timeoutEvent);
+            _rxd=*timeoutEvent;
+            actor->onEvent(_rxd);
         }
     }
 }
