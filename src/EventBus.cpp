@@ -108,6 +108,14 @@ EventFilter& EventBus::onEvent(uint16_t src,uint16_t ev)
     return addFilter(EventFilter::EF_EVENT,src,ev);
 
 }
+
+//_______________________________________________________________________________________________
+//
+EventFilter& EventBus::onDst(uint16_t dst)
+{
+    return addFilter(EventFilter::EF_KV,EB_DST,dst);
+
+}
 //_______________________________________________________________________________________________
 //
 bool EventBus::isEvent(uint16_t src,uint16_t ev)
