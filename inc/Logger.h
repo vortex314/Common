@@ -23,11 +23,7 @@ void SysLogger(int level, const char* file, const char* function,
 #include <string.h>
 #include <stdarg.h>
 extern "C" void uart0WriteWait(uint8_t TxChar);
-#define LOGNOW(ch) uart0WriteWait(ch)
-#define LOG Logger::logger->header(__FILE__,__FUNCTION__)
-#define INFO(fmt,...)  Logger::logger->header(__FILE__,__FUNCTION__).log(fmt,##__VA_ARGS__)
-#define ERROR(fmt,...)  Logger::logger->header(__FILE__,__FUNCTION__).log(fmt,##__VA_ARGS__)
-#define WARN(fmt,...)  Logger::logger->header(__FILE__,__FUNCTION__).log(fmt,##__VA_ARGS__)
+
 
 #define PERROR()  Logger::logger->header(__FILE__,__FUNCTION__).log("line : %d - System failure : %d : %s ",__LINE__,errno,strerror(errno))
 #undef ASSERT

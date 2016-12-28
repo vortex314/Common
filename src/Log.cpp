@@ -43,8 +43,7 @@ void serialLog(char* start, uint32_t length) {
 #endif
 }
 
-LogManager::LogManager() :
-		_enabled(true), _logFunction(serialLog), _offset(0), _level(ERROR) {
+LogManager::LogManager() :		_enabled(true), _logFunction(serialLog), _offset(0), _level(LOG_ERROR) {
 	_application[0] = 0;
 	_hostname[0] = 0;
 
@@ -54,8 +53,8 @@ LogManager::~LogManager() {
 
 }
 
-bool LogManager::enabled() {
-	return _enabled;
+bool LogManager::enabled(LogLevel level) {
+	return level >= _level;
 }
 void LogManager::disable() {
 	_enabled = false;

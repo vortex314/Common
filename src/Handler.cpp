@@ -7,7 +7,7 @@
 #define __STDC_LIMIT_MACROS
 #include "Handler.h"
 #include "Sys.h"
-#include <Logger.h>
+#include <Log.h>
 #include "Msg.h"
 Handler* Handler::_firstChild = 0;
 /* Handler::Handler() {

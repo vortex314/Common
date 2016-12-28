@@ -120,6 +120,7 @@ public:
 	bool timeout() {
 		return Sys::millis() > _timeout;
 	}
+	static uint64_t lowestTimeout();
 	const char* name() {
 		return _name;
 	}

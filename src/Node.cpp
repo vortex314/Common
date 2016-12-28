@@ -6,7 +6,7 @@
  */
 
 #include "Node.h"
-#include <Logger.h>
+#include <Log.h>
 
 Node::Node() {
     _next = _prev = _child = _parent = (Node*) 0;

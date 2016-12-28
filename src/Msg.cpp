@@ -127,7 +127,7 @@ extern "C" bool system_os_post(uint8_t prio, uint32_t p1, uint32_t par);
 	wakeup();
 	return erc;
 }
-
+/*
  bool Msg::receive() {
 	if (_queue->hasData()) {
 		if (_queue->get(*this) == E_OK) {
@@ -139,7 +139,7 @@ extern "C" bool system_os_post(uint8_t prio, uint32_t p1, uint32_t par);
 	}
 	return false;
 }
-
+*/
  Msg& Msg::rewind() {
 	offset(_offset);
 	return *this;
