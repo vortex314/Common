@@ -6,8 +6,8 @@ EventBus::EventBus(uint32_t size,uint32_t msgSize) :
     _queue(size), _firstFilter(0),_txd(msgSize),_rxd(msgSize)
 {
     timeoutEvent=new Cbor(12);
-     timeoutEvent->addKeyValue(EB_SRC, H("sys"));
-   timeoutEvent->addKeyValue(EB_EVENT, H("timeout"));
+    timeoutEvent->addKeyValue(EB_SRC, H("sys"));
+    timeoutEvent->addKeyValue(EB_EVENT, H("timeout"));
     publish(H("sys"),H("setup"));
 }
 
@@ -28,6 +28,7 @@ void EventBus::publish(uint16_t src, uint16_t ev)
 
 Cbor& EventBus::event(uint16_t src, uint16_t event)
 {
+    if(_txd.length() != 0 ) WARN (" EB.txd not cleared ");
     _txd.clear();
     _txd.addKeyValue(EB_SRC,src);
     _txd.addKeyValue(EB_EVENT,event);
@@ -36,6 +37,7 @@ Cbor& EventBus::event(uint16_t src, uint16_t event)
 
 Cbor& EventBus::request(uint16_t dst,uint16_t req,uint16_t src)
 {
+    if(_txd.length() != 0 ) WARN (" EB.txd not cleared ");
     _txd.clear();
     _txd.addKeyValue(EB_DST,dst);
     _txd.addKeyValue(EB_REQUEST,req);
@@ -44,6 +46,7 @@ Cbor& EventBus::request(uint16_t dst,uint16_t req,uint16_t src)
 }
 Cbor& EventBus::reply(uint16_t dst,uint16_t repl,uint16_t src)
 {
+    if(_txd.length() != 0 ) WARN (" EB.txd not cleared ");
     _txd.clear();
     _txd.addKeyValue(EB_DST,dst);
     _txd.addKeyValue(EB_REPLY,repl);
@@ -53,6 +56,7 @@ Cbor& EventBus::reply(uint16_t dst,uint16_t repl,uint16_t src)
 
 Cbor& EventBus::reply()
 {
+    if(_txd.length() != 0 ) WARN (" EB.txd not cleared ");
     _txd.clear();
     uint16_t dst,src,repl;
     if ( _rxd.getKeyValue(EB_SRC,dst))
@@ -67,6 +71,7 @@ Cbor& EventBus::reply()
 void EventBus::send()
 {
     _queue.put(_txd);
+    _txd.clear();
 }
 
 void EventBus::publish(Cbor& cbor)
