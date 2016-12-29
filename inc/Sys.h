@@ -75,8 +75,8 @@ extern const char* WIFI_ID;
 #ifdef __cplusplus
 class Sys {
 	static char _hostname[30];
-	static  uint64_t _upTime;
 public:
+	static  uint64_t _upTime;
 	Sys();
 	virtual ~Sys();
 	static void init();

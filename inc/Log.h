@@ -33,6 +33,7 @@ typedef void (*LogFunction)(char* start,uint32_t length);
 #define LOGF(fmt,...)  {Log.time();Log.host(0);Log.application(0);Log.printf("| %s:%d  ",__PRETTY_FUNCTION__,__LINE__);Log.printf(fmt,##__VA_ARGS__);Log.flush();}//delay(10);
 #define INFO(fmt,...)  if ( Log.enabled(LogManager::LOG_INFO)) LOGF(fmt,##__VA_ARGS__)
 #define ERROR(fmt,...)  if ( Log.enabled(LogManager::LOG_ERROR)) LOGF(fmt,##__VA_ARGS__)
+#define WARN(fmt,...)  if ( Log.enabled(LogManager::LOG_WARN)) LOGF(fmt,##__VA_ARGS__)
 #define FATAL(fmt,...)  if ( Log.enabled(LogManager::LOG_FATAL)) LOGF(fmt,##__VA_ARGS__)
 #define DEBUG(fmt,...)  if ( Log.enabled(LogManager::LOG_DEBUG)) LOGF(fmt,##__VA_ARGS__)
 #define TRACE(fmt,...)  if ( Log.enabled(LogManager::LOG_TRACE)) LOGF(fmt,##__VA_ARGS__)
