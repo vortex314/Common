@@ -200,7 +200,7 @@ Erc Cbor::readToken(PackType& type, CborVariant& v) {
 	uint64_t value;
 
 	if (!hasData()) {
-		LOGF("no data");
+		WARN("no data");
 		return ENODATA;
 	}
 	uint8_t hdr = read();
@@ -212,7 +212,7 @@ Erc Cbor::readToken(PackType& type, CborVariant& v) {
 		length = tokenSize[minor - 24];
 		value = getUint64(length);
 	} else if (minor < 31) {
-		LOGF("invalid minor type CBOR");
+		WARN("invalid minor type CBOR");
 		return E_INVAL;
 	} else {
 		value = 65535; // suppose very big length will be stopped by BREAK, side effect limited arrays and maps can also be breaked
@@ -262,7 +262,7 @@ uint64_t Cbor::getUint64(int length) {
 	while (length) {
 		l <<= 8;
 		if (!hasData()) {
-			LOGF(" no data ");
+			WARN(" no data ");
 			return l;
 		}
 		l += read();
@@ -670,7 +670,7 @@ bool Cbor::vscanf(const char *fmt, va_list args) {
 			if (get(*s) == false)
 				return false;
 		} else {
-			LOGF("invalid format");
+			WARN("invalid format");
 			return false;
 		}
 		++fmt;
