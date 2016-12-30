@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <Bytes.h>
 #include <ByteStream.h>
-#include <Actor.h>
+#include <EventBus.h>
 
 typedef uint8_t byte;
 typedef struct {
@@ -22,6 +22,7 @@ class SlipStream: public Bytes, public Actor {
 	bool _escaped;
 	uint32_t _error_bad_crc;
 	ByteStream& _stream;
+	uint16_t _src;
 public:
 	SlipStream(int size, ByteStream& stream);
 	virtual ~SlipStream();
@@ -40,7 +41,9 @@ public:
 	void streamWriteEscaped(uint8_t b);
 	void send(Bytes& bytes);
 	void onRecv(uint8_t b);
+	void src(uint16_t src) {_src=src;};
 	void setup();
+	void onEvent(Cbor& cbor);
 };
 
 #endif /* SLIPSTREAM_H_ */

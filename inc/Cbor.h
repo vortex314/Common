@@ -96,6 +96,11 @@ public:
 			return true;
 		return false;
 	}
+	bool mapKeyValue(uint32_t key,Bytes& value) {
+        if (gotoKey(key) && getMapped(value))
+			return true;
+		return false;
+	}
 
 	Erc readToken(PackType& type, CborVariant& variant);
 	Erc toString(Str& str);

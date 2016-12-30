@@ -86,6 +86,7 @@ static const LineNumber LineNumberInvalid = (LineNumber) (-1);
 // the last PT_WAIT, which is then switched on at the next Run).
 
 class Actor;
+
 // #include <functional>
 // typedef std::function<void(Header)> EventHandler;
 
@@ -93,7 +94,8 @@ class Actor;
 
 class Actor {
 private:
-	const char* _name;
+const char* _name;
+	uint16_t _id;
 	uint64_t _timeout;
 	uint32_t _state;
 
@@ -104,6 +106,7 @@ protected:
 public:
 
 	Actor(const char* name);
+	Actor(uint16_t id);
 	virtual ~Actor();
 
 	void setNext(Actor*);
@@ -121,15 +124,19 @@ public:
 		return Sys::millis() > _timeout;
 	}
 	static uint64_t lowestTimeout();
-	const char* name() {
-		return _name;
-	}
+
 	inline void state(int st) {
-		LOGF(" %s state change %d => %d", name(), _state, st);
+		DEBUG(" state change %d => %d", _state, st);
 		_state = st;
 	}
 	inline int state() {
 		return _state;
+	}
+	inline uint16_t id() {
+		return _id;
+	}
+	inline void id(uint16_t id) {
+	_id=id;
 	}
 };
 
