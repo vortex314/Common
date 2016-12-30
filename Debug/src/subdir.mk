@@ -3,6 +3,10 @@
 ################################################################################
 
 # Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../src/jsmn.c \
+../src/printf.c 
+
 CPP_SRCS += \
 ../src/Actor.cpp \
 ../src/Base64.cpp \
@@ -29,10 +33,6 @@ CPP_SRCS += \
 ../src/Str.cpp \
 ../src/Strpack.cpp \
 ../src/Sys.cpp 
-
-C_SRCS += \
-../src/jsmn.c \
-../src/printf.c 
 
 OBJS += \
 ./src/Actor.o \
@@ -63,6 +63,10 @@ OBJS += \
 ./src/jsmn.o \
 ./src/printf.o 
 
+C_DEPS += \
+./src/jsmn.d \
+./src/printf.d 
+
 CPP_DEPS += \
 ./src/Actor.d \
 ./src/Base64.d \
@@ -90,23 +94,19 @@ CPP_DEPS += \
 ./src/Strpack.d \
 ./src/Sys.d 
 
-C_DEPS += \
-./src/jsmn.d \
-./src/printf.d 
-
 
 # Each subdirectory must supply rules for building sources it contributes
 src/%.o: ../src/%.cpp
 	@echo 'Building file: $<'
-	@echo 'Invoking: GCC C++ Compiler'
-	g++ -D__GXX_EXPERIMENTAL_CXX0X__ -I"/home/lieven/linux/Common/inc" -O0 -g3 -Wall -c -fmessage-length=0 -std=c++11 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Invoking: Cross ARM C++ Compiler'
+	arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -O2  -g -D__GXX_EXPERIMENTAL_CXX0X__ -I"C:\home\micro\workspace_2016\Common\inc" -std=gnu++11 -fabi-version=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
-	@echo 'Invoking: GCC C Compiler'
-	gcc -D__GXX_EXPERIMENTAL_CXX0X__ -I"/home/lieven/linux/Common/inc" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Invoking: Cross ARM C Compiler'
+	arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -O2  -g -D__GXX_EXPERIMENTAL_CXX0X__ -I"C:\home\micro\workspace_2016\Common\inc" -std=gnu11 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

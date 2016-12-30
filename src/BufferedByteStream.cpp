@@ -24,13 +24,18 @@ Erc BufferedByteStream::write(uint8_t b) {
 Erc BufferedByteStream::write(Bytes& bytes) {
 	Erc erc;
 	bytes.offset(0);
-	if (!_txd.hasSpace(bytes.length()))
+	if (!_txd.hasSpace(bytes.length())) {
+		flush();
 		return ENOBUFS;
+	}
 	while (bytes.hasData()) {
 		erc = write(bytes.read());
-		if (erc)
+		if (erc) {
+			flush();
 			return erc;
+		}
 	}
+	flush();
 	return E_OK;
 }
 

@@ -25,11 +25,17 @@ endif
 ifneq ($(strip $(CXX_DEPS)),)
 -include $(CXX_DEPS)
 endif
-ifneq ($(strip $(CPP_DEPS)),)
--include $(CPP_DEPS)
+ifneq ($(strip $(ASM_DEPS)),)
+-include $(ASM_DEPS)
+endif
+ifneq ($(strip $(S_UPPER_DEPS)),)
+-include $(S_UPPER_DEPS)
 endif
 ifneq ($(strip $(C_DEPS)),)
 -include $(C_DEPS)
+endif
+ifneq ($(strip $(CPP_DEPS)),)
+-include $(CPP_DEPS)
 endif
 endif
 
@@ -43,14 +49,14 @@ all: libCommon.a
 # Tool invocations
 libCommon.a: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: GCC Archiver'
-	ar -r  "libCommon.a" $(OBJS) $(USER_OBJS) $(LIBS)
+	@echo 'Invoking: Cross ARM GNU Archiver'
+	arm-none-eabi-ar -r  "libCommon.a" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(CC_DEPS)$(C++_DEPS)$(ARCHIVES)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) libCommon.a
+	-$(RM) $(CC_DEPS)$(C++_DEPS)$(OBJS)$(C_UPPER_DEPS)$(CXX_DEPS)$(ARCHIVES)$(ASM_DEPS)$(S_UPPER_DEPS)$(C_DEPS)$(CPP_DEPS) libCommon.a
 	-@echo ' '
 
 .PHONY: all clean dependents

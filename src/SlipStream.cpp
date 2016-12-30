@@ -96,6 +96,7 @@ void SlipStream::send(Bytes& bytes)
 {
     if (!_stream.hasSpace(bytes.length()+4))
     {
+    	_stream.flush();
         return;
     }
     bytes.offset(0);
@@ -156,10 +157,7 @@ void SlipStream::onRecv(uint8_t b)
 
 void SlipStream::loop()
 {
-    if (_stream.hasData())
-    {
-        onRecv(_stream.read());
-    }
+
 }
 
 void SlipStream::setup()

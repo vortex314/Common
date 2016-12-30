@@ -6,6 +6,7 @@
  */
 
 #include "Actor.h"
+#include <EventBus.h>
 
 Actor* Actor::_first = 0;
 #ifndef UINT_LEAST64_MAX
