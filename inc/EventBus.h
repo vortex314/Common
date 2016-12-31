@@ -89,6 +89,7 @@ public:
 #define EB_REPLY H("reply")
 #define EB_EVENT H("event")
 #define EB_ERROR H("error")
+#define EB_REGISTER H("register")
 
 class EventBus
 {
@@ -126,8 +127,8 @@ public:
     void eventLoop();
  //   EventFilter* findFilter(EventFilter::type ,uint16_t o,uint16_t v);
 
-    Cbor& request(uint16_t dst,uint16_t src,uint16_t req);
-    Cbor& reply(uint16_t dst,uint16_t src,uint16_t repl);
+    Cbor& request(uint16_t dst,uint16_t req,uint16_t src);
+    Cbor& reply(uint16_t dst,uint16_t repl,uint16_t src);
     Cbor& reply();
     Cbor& event(uint16_t src,uint16_t ev);
     // Cbor& data();                  //  eb.request(H("mqtt"),H("connect"),H("motor")).addKeyValue(H("host"),"test.mosquitto.org");eb.send(); eb.
