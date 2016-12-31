@@ -19,8 +19,7 @@ Actor::Actor(const char* name) {
 	_state = 0;
 	_ptLine = 0;
 	_next = 0;
-	_id = H(name);
-	_name = name;
+	setName(name);
 	if (first() == 0) {
 		setFirst(this);
 	} else {
@@ -28,18 +27,23 @@ Actor::Actor(const char* name) {
 	}
 }
 
+void Actor::setName(const char* name) {
+	_id = H(name);
+	_name = name;
+}
+
 /*Actor::Actor(uint16_t id) {
-	_timeout = UINT_LEAST64_MAX;
-	_state = 0;
-	_ptLine = 0;
-	_next = 0;
-	_id = id;
-	if (first() == 0) {
-		setFirst(this);
-	} else {
-		last()->setNext(this);
-	}
-}*/
+ _timeout = UINT_LEAST64_MAX;
+ _state = 0;
+ _ptLine = 0;
+ _next = 0;
+ _id = id;
+ if (first() == 0) {
+ setFirst(this);
+ } else {
+ last()->setNext(this);
+ }
+ }*/
 
 Actor* Actor::last() {
 	Actor* cursor = first();

@@ -141,6 +141,7 @@ public:
 	inline const char* name(){
 		return _name;
 	}
+	void setName(const char* name);
 	static Actor* findById(uint16_t id);
 };
 
