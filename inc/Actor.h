@@ -138,6 +138,10 @@ public:
 	inline void id(uint16_t id) {
 	_id=id;
 	}
+	inline const char* name(){
+		return _name;
+	}
+	static Actor* findById(uint16_t id);
 };
 
 #endif /* ACTOR_H_ */

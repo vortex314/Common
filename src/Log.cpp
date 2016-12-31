@@ -139,12 +139,13 @@ void LogManager::application(const char* application) {
 #ifndef __linux__
 void LogManager::time() {
 	Str str((uint8_t*) (_record + _offset), LINE_LENGTH - _offset);
-	str.append(Sys::hostname()).append(' ');
-	str.append(Sys::millis());
+	str.append(Sys::millis()).append(' ');
 	_offset += str.length();
 }
 void LogManager::host(const char* hostname) {
-
+	Str str((uint8_t*) (_record + _offset), LINE_LENGTH - _offset);
+	str.append(Sys::hostname()).append(' ');
+	_offset += str.length();
 }
 void LogManager::application(const char* application) {
 
