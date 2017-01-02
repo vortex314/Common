@@ -101,6 +101,13 @@ EventFilter& EventBus::onRequest(uint16_t dst)
 }
 //_______________________________________________________________________________________________
 //
+EventFilter& EventBus::onRequest(uint16_t dst,uint16_t req)
+{
+    return addFilter(EventFilter::EF_REQUEST,dst,req);
+
+}
+//_______________________________________________________________________________________________
+//
 EventFilter& EventBus::onReply(uint16_t dst,uint16_t repl)
 {
     return addFilter(EventFilter::EF_REPLY,dst,repl);
@@ -139,6 +146,12 @@ bool EventBus::isEvent(uint16_t src,uint16_t ev)
 bool EventBus::isReply(uint16_t src,uint16_t req)
 {
     return EventFilter::isReply(_rxd,src,req);
+}
+//_______________________________________________________________________________________________
+//
+bool EventBus::isReplyCorrect(uint16_t src,uint16_t req)
+{
+    return EventFilter::isReplyCorrect(_rxd,src,req);
 }
 //_______________________________________________________________________________________________
 //
@@ -322,6 +335,18 @@ bool EventFilter::isReply(Cbor& cbor ,uint16_t src,uint16_t req)
     if (cbor.getKeyValue(EB_REPLY,_req) && cbor.getKeyValue(EB_SRC,_src))
     {
         if ( (_req==req || _req==0 || req==0)  && (_src==src || _src==0 || src==0) )  return true;
+    }
+    return false;
+}
+//_______________________________________________________________________________________________
+//
+bool EventFilter::isReplyCorrect(Cbor& cbor ,uint16_t src,uint16_t req)
+{
+    uint16_t _src,_req;
+    uint32_t error;
+    if (cbor.getKeyValue(EB_REPLY,_req) && cbor.getKeyValue(EB_SRC,_src) && cbor.getKeyValue(EB_ERROR,error))
+    {
+        if ( (_req==req || _req==0 || req==0)  && (_src==src || _src==0 || src==0) && (error==0))  return true;
     }
     return false;
 }

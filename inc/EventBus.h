@@ -4,16 +4,24 @@
 #include <Actor.h>
 #include <CborQueue.h>
 
-constexpr uint64_t fnv1(uint64_t h, const char* s)
-{
+#define FNV_PRIME  16777619
+#define FNV_PRIME_64 1099511628211ull
+#define FNV_OFFSET_64 14695981039346656037ull
+#define FNV_OFFSET 2166136261
+
+constexpr uint32_t fnv1(uint32_t h, const char* s) {
     return (*s == 0) ?
-           h : fnv1((h * 1099511628211ull) ^ static_cast<uint64_t>(*s), s + 1);
+           h : fnv1((h * FNV_PRIME) ^ static_cast<uint32_t>(*s), s + 1);
 }
 
-constexpr uint16_t H(const char* s)
-{
-    return fnv1(14695981039346656037ull, s) & 0xFFFF;
+constexpr uint16_t H(const char* s) {
+//    uint32_t  h = fnv1(FNV_OFFSET, s) ;
+    return (fnv1(FNV_OFFSET, s) & 0xFFFF);
 }
+
+
+
+
 /*
  * **
  * ----- not good method -- makes compiler slow or run out of memory
@@ -40,12 +48,10 @@ typedef void (Actor::*MethodHandler)(Cbor&);
 typedef void (*StaticHandler)(Cbor&);
 #define CALL_MEMBER_FUNC(object,ptrToMember)  ((*object).*(ptrToMember))
 
-class Subscriber
-{
+class Subscriber {
 public:
     Actor* _actor;
-    union
-    {
+    union {
         StaticHandler _staticHandler;
         MethodHandler _methodHandler;
     };
@@ -54,8 +60,7 @@ public:
     Subscriber* next();
 };
 
-class EventFilter
-{
+class EventFilter {
 
 public:
     typedef enum  { EF_ANY,EF_REQUEST,EF_EVENT,EF_REPLY,EF_KV } type;
@@ -80,6 +85,7 @@ public:
     static bool isEvent(Cbor& cbor,uint16_t src,uint16_t ev);
     static bool isRequest(Cbor& cbor,uint16_t dst,uint16_t req);
     static bool isReply(Cbor& cbor,uint16_t src,uint16_t req);
+    static bool isReplyCorrect(Cbor& cbor,uint16_t src,uint16_t req);
 
 } ;
 
@@ -91,8 +97,7 @@ public:
 #define EB_ERROR H("error")
 #define EB_REGISTER H("register")
 
-class EventBus
-{
+class EventBus {
 private:
     CborQueue _queue;
     EventFilter* _firstFilter;
@@ -118,6 +123,7 @@ public:
 
     EventFilter& filter(uint16_t key,uint16_t value);
     EventFilter& onRequest(uint16_t dst);
+    EventFilter& onRequest(uint16_t dst,uint16_t req);
     EventFilter& onReply(uint16_t dst,uint16_t repl);
     EventFilter& onEvent(uint16_t src,uint16_t ev);
     EventFilter& onAny();
@@ -125,7 +131,7 @@ public:
     EventFilter& onSrc(uint16_t src);
 
     void eventLoop();
- //   EventFilter* findFilter(EventFilter::type ,uint16_t o,uint16_t v);
+//   EventFilter* findFilter(EventFilter::type ,uint16_t o,uint16_t v);
 
     Cbor& request(uint16_t dst,uint16_t req,uint16_t src);
     Cbor& reply(uint16_t dst,uint16_t repl,uint16_t src);
@@ -135,6 +141,7 @@ public:
     bool isEvent(uint16_t ev,uint16_t src);
     bool isRequest(uint16_t dst,uint16_t req);
     bool isReply(uint16_t src,uint16_t req);
+    bool isReplyCorrect(uint16_t src,uint16_t req);
     void send();
 };
 

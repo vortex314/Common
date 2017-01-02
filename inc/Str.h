@@ -24,6 +24,7 @@ public:
     Str& set(const char* const s);
     Str& operator<<(const char* s);
     Str& operator+(const char* s) { return append(s);};
+    Str& operator+=(const char* s) ;
     Str& operator<<(char ch);
     Str& operator<<(int i);
     Str& operator<<(Str& s);
@@ -39,7 +40,7 @@ public:
     {
         return append(val);
     };
-    Str& operator+(Str& s);
+    Str& operator+=(Str& s);
     Str& operator=(const char* const s);
     Str& operator=(Str& s);
     Str& append(const char* s);
@@ -63,10 +64,14 @@ public:
     bool startsWith(Str& str);
     bool startsWith(const char* s);
     bool equals(const char* str);
+    bool isNumber();
+    bool isHex();
 
     Erc parse(uint64_t* pval);
     Erc parse(uint32_t* pval);
     Erc parse(int32_t* pval);
+    Erc parse(double& d);
+    Erc parse(int64_t& ll);
     Erc parseHex(uint8_t* pb);
     static bool ishex(uint8_t ch);
     static bool isdigit(uint8_t ch);

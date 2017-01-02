@@ -17,6 +17,15 @@
 
 class Json: public Str {
 public:
+    typedef enum {
+        JSON_UNKNOWN,
+        JSON_BOOL,
+        JSON_NUMBER,
+        JSON_STRING,
+        JSON_NULL,
+        JSON_ARRAY,
+        JSON_OBJECT
+    } Type;
 //	Json(Str& str);
 //	Json(Bytes& bytes);
 	Json(uint32_t size);
@@ -58,6 +67,7 @@ public:
 	bool getArray();
 	bool getMap();
 	bool findKey(const char* key);
+	Type getType();
 	bool isObject() {
 		return (_tokens[_tokenIndex].type == JSMN_OBJECT);
 	}
