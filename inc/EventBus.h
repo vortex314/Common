@@ -63,7 +63,7 @@ public:
 class EventFilter {
 
 public:
-    typedef enum  { EF_ANY,EF_REQUEST,EF_EVENT,EF_REPLY,EF_KV } type;
+    typedef enum  { EF_ANY,EF_REQUEST,EF_EVENT,EF_REPLY,EF_KV,EF_REMOTE } type;
     type _type;
     uint16_t _object;
     uint16_t _value;
@@ -129,6 +129,7 @@ public:
     EventFilter& onAny();
     EventFilter& onDst(uint16_t dst);
     EventFilter& onSrc(uint16_t src);
+    EventFilter& onRemote();
 
     void eventLoop();
 //   EventFilter* findFilter(EventFilter::type ,uint16_t o,uint16_t v);
@@ -137,6 +138,7 @@ public:
     Cbor& reply(uint16_t dst,uint16_t repl,uint16_t src);
     Cbor& reply();
     Cbor& event(uint16_t src,uint16_t ev);
+    void defaultHandler(Actor* actor);
     // Cbor& data();                  //  eb.request(H("mqtt"),H("connect"),H("motor")).addKeyValue(H("host"),"test.mosquitto.org");eb.send(); eb.
     bool isEvent(uint16_t ev,uint16_t src);
     bool isRequest(uint16_t dst,uint16_t req);

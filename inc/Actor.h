@@ -92,8 +92,10 @@ class Actor;
 
 #define CALL_MEMBER_FN(object,ptrToMember)  ((object).*(ptrToMember))
 
-class Actor {
+class Actor  {
 private:
+    friend class EventBus; // A is a friend of B
+
 const char* _name;
 	uint16_t _id;
 	uint64_t _timeout;

@@ -72,7 +72,7 @@ Actor::~Actor() {
 }
 
 void Actor::onEvent(Cbor& cbor) {
-	ASSERT(false); // empty actor ?
+    ASSERT(false);
 }
 
 uint64_t Actor::lowestTimeout() {
@@ -98,4 +98,3 @@ Actor* Actor::findById(uint16_t id) {
 	}
 	return 0;
 }
-
