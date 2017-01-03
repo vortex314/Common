@@ -118,6 +118,8 @@ public:
 	static void setFirst(Actor*);
 
 	virtual void onEvent(Cbor& cbor);
+	virtual void setup()=0;
+	virtual void init(){};
 
 	void timeout(uint32_t time) {
 		_timeout = Sys::millis() + time;
