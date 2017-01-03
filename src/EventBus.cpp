@@ -213,6 +213,9 @@ void EventBus::defaultHandler(Actor* actor) {
         .addKeyValue(H("id"),actor->_id)
         .addKeyValue(H("line"),actor->_ptLine);
         eb.send();
+    } else {
+    	eb.reply().addKeyValue(H("error"),EBADMSG).addKeyValue(H("error_msg"),"no handler found,defaulthandler ");
+    	eb.send();
     }
 }
 //____________________________________________________________________
