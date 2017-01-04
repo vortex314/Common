@@ -213,8 +213,8 @@ void EventBus::defaultHandler(Actor* actor,Cbor& msg) {
         .addKeyValue(H("id"),actor->_id)
         .addKeyValue(H("line"),actor->_ptLine);
         eb.send();
-    } else if ( isRequest(actor->id(),H("setup"))) {
-    	actor->setup();
+    } else if ( isRequest(actor->id(),H("init"))) {
+    	actor->init();
         eb.reply()
         .addKeyValue(H("state"),actor->_state)
         .addKeyValue(H("timeout"),actor->_timeout)

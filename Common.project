@@ -1,43 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="Common" InternalType="Library">
-  <Plugins>
-    <Plugin Name="qmake">
-      <![CDATA[00010001N0005Debug000000000000]]>
-    </Plugin>
-  </Plugins>
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
-    <File Name="src/Actor.cpp"/>
-    <File Name="src/Base64.cpp"/>
-    <File Name="src/BipBuffer.cpp"/>
-    <File Name="src/BufferedByteStream.cpp"/>
-    <File Name="src/Bytes.cpp"/>
-    <File Name="src/Cbor.cpp"/>
-    <File Name="src/CborQueue.cpp"/>
-    <File Name="src/CircBuf.cpp"/>
     <File Name="src/EventBus.cpp"/>
-    <File Name="src/EventSource.cpp"/>
-    <File Name="src/Handler.cpp"/>
-    <File Name="src/jsmn.c"/>
-    <File Name="src/Json.cpp"/>
-    <File Name="src/Link.cpp"/>
-    <File Name="src/Log.cpp"/>
     <File Name="src/Logger.cpp"/>
-    <File Name="src/Msg.cpp"/>
-    <File Name="src/Msgpack.cpp"/>
-    <File Name="src/Node.cpp"/>
-    <File Name="src/PIC32_stubs.cpp"/>
-    <File Name="src/printf.c"/>
     <File Name="src/Slip.cpp"/>
-    <File Name="src/SlipStream.cpp"/>
-    <File Name="src/SlipStream.h"/>
-    <File Name="src/STM32_stubs.cpp"/>
-    <File Name="src/Str.cpp"/>
     <File Name="src/Strpack.cpp"/>
+    <File Name="src/printf.c"/>
+    <File Name="src/PIC32_stubs.cpp"/>
+    <File Name="src/Msgpack.cpp"/>
+    <File Name="src/CircBuf.cpp"/>
+    <File Name="src/Base64.cpp"/>
+    <File Name="src/Cbor.cpp"/>
+    <File Name="src/SlipStream.cpp"/>
+    <File Name="src/BipBuffer.cpp"/>
+    <File Name="src/jsmn.c"/>
+    <File Name="src/Handler.cpp"/>
+    <File Name="src/CborQueue.cpp"/>
+    <File Name="src/BufferedByteStream.cpp"/>
+    <File Name="src/Log.cpp"/>
+    <File Name="src/Link.cpp"/>
+    <File Name="src/Bytes.cpp"/>
+    <File Name="src/Json.cpp"/>
+    <File Name="src/Actor.cpp"/>
+    <File Name="src/Str.cpp"/>
+    <File Name="src/STM32_stubs.cpp"/>
+    <File Name="src/Msg.cpp"/>
     <File Name="src/Sys.cpp"/>
+    <File Name="src/EventSource.cpp"/>
+    <File Name="src/Node.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include"/>
+  <VirtualDirectory Name="inc">
+    <File Name="inc/pt.h"/>
+    <File Name="inc/Pool.h"/>
+    <File Name="inc/Board.h"/>
+    <File Name="inc/Bits.h"/>
+    <File Name="inc/Str.h"/>
+    <File Name="inc/printf.h"/>
+    <File Name="inc/Cbor.h"/>
+    <File Name="inc/Erc.h"/>
+    <File Name="inc/Node.h"/>
+    <File Name="inc/Signal.h"/>
+    <File Name="inc/platform.h"/>
+    <File Name="inc/Base64.h"/>
+    <File Name="inc/Uart.h"/>
+    <File Name="inc/Sys.h"/>
+    <File Name="inc/Mutex.h"/>
+    <File Name="inc/BipBuffer.h"/>
+    <File Name="inc/CborQueue.h"/>
+    <File Name="inc/ProtoThread.h"/>
+    <File Name="inc/lc.h"/>
+    <File Name="inc/LinkedList.cpp"/>
+    <File Name="inc/jsmn.h"/>
+    <File Name="inc/ByteStream.h"/>
+    <File Name="inc/Slip.h"/>
+    <File Name="inc/pt-sem.h"/>
+    <File Name="inc/EventBus.h"/>
+    <File Name="inc/lc-addrlabels.h"/>
+    <File Name="inc/lc-switch.h"/>
+    <File Name="inc/Property.h"/>
+    <File Name="inc/Json.h"/>
+    <File Name="inc/Strpack.h"/>
+    <File Name="inc/BufferedByteStream.h"/>
+    <File Name="inc/Interface.h"/>
+    <File Name="inc/LinkedList.h"/>
+    <File Name="inc/Msgpack.h"/>
+    <File Name="inc/Link.h"/>
+    <File Name="inc/Msg.h"/>
+    <File Name="inc/QueueTemplate.h"/>
+    <File Name="inc/Log.h"/>
+    <File Name="inc/Bytes.h"/>
+    <File Name="inc/SlipStream.h"/>
+    <File Name="inc/CircBuf.h"/>
+    <File Name="inc/Packer.h"/>
+    <File Name="inc/Thread.h"/>
+    <File Name="inc/Prop.h"/>
+    <File Name="inc/Handler.h"/>
+    <File Name="inc/EventSource.h"/>
+    <File Name="inc/Actor.h"/>
+    <File Name="inc/Flags.h"/>
+    <File Name="inc/Logger.h"/>
+    <File Name="inc/Timer.h"/>
+  </VirtualDirectory>
   <Settings Type="Static Library">
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
@@ -48,14 +94,14 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="Debug" CompilerType="Cross GCC ( x86_64-linux-gnu )" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+    <Configuration Name="Debug" CompilerType="Cross GCC ( arm-linux-gnueabihf )" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g;-O2;-std=c++11" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
+        <IncludePath Value="inc"/>
       </Compiler>
       <Linker Options="" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/lib$(ProjectName).a" IntermediateDirectory="./Debug" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
-      <BuildSystem Name="CMake"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
@@ -87,14 +133,13 @@
         <SearchPaths/>
       </Completion>
     </Configuration>
-    <Configuration Name="Release" CompilerType="Cross GCC ( x86_64-linux-gnu )" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Release" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/lib$(ProjectName).a" IntermediateDirectory="./Release" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
-      <BuildSystem Name="GNU makefile onestep build"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
