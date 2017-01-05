@@ -443,9 +443,9 @@ Erc Str::parseHex(uint8_t *pb) {
     *pb = b;
     return E_OK;
 }
-
+#include <cstdlib>
 Erc Str::parse(int64_t& ll){
-    ll=atoll(c_str());
+ //  ll=atoll(c_str());
     return E_OK;
 }
 

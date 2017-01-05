@@ -5,6 +5,7 @@
  *      Author: lieven
  */
 #include "Log.h"
+#include <stdio.h>
 
 LogManager Log;
 
@@ -74,9 +75,9 @@ void LogManager::setOutput(LogFunction function) {
 void LogManager::printf(const char* fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
-	if (_offset < LINE_LENGTH)
-		_offset += vsnprintf((char*) (_record + _offset), LINE_LENGTH - _offset,
-				fmt, args);
+//TODO	if (_offset < LINE_LENGTH)
+//TODO		_offset += ::vsnprintf((char*) (_record + _offset), LINE_LENGTH - _offset,
+//TODO				fmt, args);
 	va_end(args);
 }
 
