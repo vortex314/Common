@@ -51,7 +51,7 @@ AR       := /home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/bin
 CXX      := /home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/bin/xtensa-lx106-elf-g++
 CC       := /home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/bin/xtensa-lx106-elf-gcc
 CXXFLAGS :=  -Os -std=c++11 -mlongcalls  -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DARDUINO $(Preprocessors)
-CFLAGS   :=  -g $(Preprocessors)
+CFLAGS   :=  -Os -std=c++11 -mlongcalls  -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DARDUINO $(Preprocessors)
 ASFLAGS  := 
 AS       := /home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/bin/xtensa-lx106-elf-as
 
@@ -62,7 +62,8 @@ AS       := /home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/bin
 CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/src_Logger.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Bytes.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_BufferedByteStream.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Node.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Msg.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_PIC32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Log.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_STM32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_CborQueue.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Str.cpp$(ObjectSuffix) \
 	$(IntermediateDirectory)/src_Msgpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_jsmn.c$(ObjectSuffix) $(IntermediateDirectory)/src_EventSource.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Link.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Json.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_SlipStream.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Strpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Slip.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Actor.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_CircBuf.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/src_BipBuffer.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Handler.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_EventBus.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_printf.c$(ObjectSuffix) $(IntermediateDirectory)/src_Base64.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Cbor.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Sys.cpp$(ObjectSuffix) 
+	$(IntermediateDirectory)/src_BipBuffer.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Handler.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_EventBus.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_printf.c$(ObjectSuffix) $(IntermediateDirectory)/src_Base64.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Cbor.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Sys.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_EventSource.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Node.cpp$(ObjectSuffix) $(IntermediateDirectory)/inc_LinkedList.cpp$(ObjectSuffix) \
+	
 
 
 
@@ -72,13 +73,13 @@ Objects=$(Objects0)
 ## Main Build Targets 
 ##
 .PHONY: all clean PreBuild PrePreBuild PostBuild MakeIntermediateDirs
-all: $(IntermediateDirectory) $(OutputFile)
+all: $(OutputFile)
 
-$(OutputFile): $(Objects)
+$(OutputFile): $(IntermediateDirectory)/.d $(Objects) 
 	@$(MakeDirCommand) $(@D)
 	@echo "" > $(IntermediateDirectory)/.d
 	@echo $(Objects0)  > $(ObjectsFileList)
-	$(AR) $(ArchiveOutputSwitch)$(OutputFile) @$(ObjectsFileList) $(ArLibs)
+	$(SharedObjectLinkerName) $(OutputSwitch)$(OutputFile) @$(ObjectsFileList) $(LibPath) $(Libs) $(LinkOptions)
 	@$(MakeDirCommand) "/home/lieven/workspace/.build-debug"
 	@echo rebuilt > "/home/lieven/workspace/.build-debug/Common"
 
@@ -86,7 +87,7 @@ MakeIntermediateDirs:
 	@test -d ./Debug || $(MakeDirCommand) ./Debug
 
 
-./Debug:
+$(IntermediateDirectory)/.d:
 	@test -d ./Debug || $(MakeDirCommand) ./Debug
 
 PreBuild:
@@ -310,6 +311,30 @@ $(IntermediateDirectory)/src_Sys.cpp$(DependSuffix): src/Sys.cpp
 
 $(IntermediateDirectory)/src_Sys.cpp$(PreprocessSuffix): src/Sys.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_Sys.cpp$(PreprocessSuffix)src/Sys.cpp
+
+$(IntermediateDirectory)/src_EventSource.cpp$(ObjectSuffix): src/EventSource.cpp $(IntermediateDirectory)/src_EventSource.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/src/EventSource.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_EventSource.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/src_EventSource.cpp$(DependSuffix): src/EventSource.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_EventSource.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/src_EventSource.cpp$(DependSuffix) -MM src/EventSource.cpp
+
+$(IntermediateDirectory)/src_EventSource.cpp$(PreprocessSuffix): src/EventSource.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_EventSource.cpp$(PreprocessSuffix)src/EventSource.cpp
+
+$(IntermediateDirectory)/src_Node.cpp$(ObjectSuffix): src/Node.cpp $(IntermediateDirectory)/src_Node.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/src/Node.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_Node.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/src_Node.cpp$(DependSuffix): src/Node.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_Node.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/src_Node.cpp$(DependSuffix) -MM src/Node.cpp
+
+$(IntermediateDirectory)/src_Node.cpp$(PreprocessSuffix): src/Node.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_Node.cpp$(PreprocessSuffix)src/Node.cpp
+
+$(IntermediateDirectory)/inc_LinkedList.cpp$(ObjectSuffix): inc/LinkedList.cpp $(IntermediateDirectory)/inc_LinkedList.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/inc/LinkedList.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/inc_LinkedList.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/inc_LinkedList.cpp$(DependSuffix): inc/LinkedList.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/inc_LinkedList.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/inc_LinkedList.cpp$(DependSuffix) -MM inc/LinkedList.cpp
+
+$(IntermediateDirectory)/inc_LinkedList.cpp$(PreprocessSuffix): inc/LinkedList.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/inc_LinkedList.cpp$(PreprocessSuffix)inc/LinkedList.cpp
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

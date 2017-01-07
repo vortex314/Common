@@ -71,6 +71,7 @@ void Actor::setFirst(Actor* f) {
 Actor::~Actor() {
 }
 
+
 void Actor::onEvent(Cbor& cbor) {
     ASSERT(false);
 }

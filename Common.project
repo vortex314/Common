@@ -36,6 +36,8 @@
     <File Name="src/Cbor.cpp"/>
     <File Name="src/SlipStream.h"/>
     <File Name="src/Sys.cpp"/>
+    <File Name="src/EventSource.cpp"/>
+    <File Name="src/Node.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include"/>
   <VirtualDirectory Name="inc">
@@ -87,8 +89,12 @@
     <File Name="inc/platform.h"/>
     <File Name="inc/lc-addrlabels.h"/>
     <File Name="inc/SlipStream.h"/>
+    <File Name="inc/LinkedList.cpp"/>
+    <File Name="inc/LinkedList.h"/>
   </VirtualDirectory>
-  <Settings Type="Static Library">
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Release"/>
+  <Settings Type="Dynamic Library">
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
         <IncludePath Value="."/>
@@ -98,8 +104,8 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="Debug" CompilerType="Cross GCC ( xtensa-lx106-elf )" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-Os;-std=c++11;-mlongcalls  -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DARDUINO" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+    <Configuration Name="Debug" CompilerType="Cross GCC ( xtensa-lx106-elf )" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-Os;-std=c++11;-mlongcalls  -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DARDUINO" C_Options="-Os;-std=c++11;-mlongcalls  -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DARDUINO" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
         <IncludePath Value="inc"/>
         <IncludePath Value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/xtensa-lx106-elf/include"/>
@@ -182,6 +188,4 @@
       </Completion>
     </Configuration>
   </Settings>
-  <Dependencies Name="Debug"/>
-  <Dependencies Name="Release"/>
 </CodeLite_Project>

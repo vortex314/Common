@@ -92,59 +92,74 @@ class Actor;
 
 #define CALL_MEMBER_FN(object,ptrToMember)  ((object).*(ptrToMember))
 
-class Actor  {
+class Actor
+{
 private:
     friend class EventBus; // A is a friend of B
 
-const char* _name;
-	uint16_t _id;
-	uint64_t _timeout;
-	uint32_t _state;
+    const char* _name;
+    uint16_t _id;
+    uint64_t _timeout;
+    uint32_t _state;
 
-	static Actor* _first;
-	Actor* _next;
+    static Actor* _first;
+    Actor* _next;
 protected:
-	LineNumber _ptLine;
+    LineNumber _ptLine;
 public:
 
-	Actor(const char* name);
-	Actor(uint16_t id);
-	virtual ~Actor();
+    Actor(const char* name);
+    Actor(uint16_t id);
+    virtual ~Actor();
 
-	void setNext(Actor*);
-	Actor* next();
-	static Actor* last();
-	static Actor* first();
-	static void setFirst(Actor*);
+    void setNext(Actor*);
+    Actor* next();
+    static Actor* last();
+    static Actor* first();
+    static void setFirst(Actor*);
 
-	virtual void onEvent(Cbor& cbor);
+    virtual void onEvent(Cbor& cbor);
+    virtual void setup()=0;
+    virtual void init() {};
+    uint64_t nextTimeout()
+    {
+        return _timeout;
+    };
 
-	void timeout(uint32_t time) {
-		_timeout = Sys::millis() + time;
-	}
-	bool timeout() {
-		return Sys::millis() > _timeout;
-	}
-	static uint64_t lowestTimeout();
 
-	inline void state(int st) {
-		DEBUG(" state change %d => %d", _state, st);
-		_state = st;
-	}
-	inline int state() {
-		return _state;
-	}
-	inline uint16_t id() {
-		return _id;
-	}
-	inline void id(uint16_t id) {
-	_id=id;
-	}
-	inline const char* name(){
-		return _name;
-	}
-	void setName(const char* name);
-	static Actor* findById(uint16_t id);
+    void timeout(uint32_t time)
+    {
+        _timeout = Sys::millis() + time;
+    }
+    bool timeout()
+    {
+        return Sys::millis() > _timeout;
+    }
+    static uint64_t lowestTimeout();
+
+    inline void state(int st)
+    {
+        DEBUG(" state change %d => %d", _state, st);
+        _state = st;
+    }
+    inline int state()
+    {
+        return _state;
+    }
+    inline uint16_t id()
+    {
+        return _id;
+    }
+    inline void id(uint16_t id)
+    {
+        _id=id;
+    }
+    inline const char* name()
+    {
+        return _name;
+    }
+    void setName(const char* name);
+    static Actor* findById(uint16_t id);
 };
 
 #endif /* ACTOR_H_ */

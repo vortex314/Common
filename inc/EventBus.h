@@ -138,7 +138,7 @@ public:
     Cbor& reply(uint16_t dst,uint16_t repl,uint16_t src);
     Cbor& reply();
     Cbor& event(uint16_t src,uint16_t ev);
-    void defaultHandler(Actor* actor);
+    void defaultHandler(Actor* actor,Cbor& msg);
     // Cbor& data();                  //  eb.request(H("mqtt"),H("connect"),H("motor")).addKeyValue(H("host"),"test.mosquitto.org");eb.send(); eb.
     bool isEvent(uint16_t ev,uint16_t src);
     bool isRequest(uint16_t dst,uint16_t req);

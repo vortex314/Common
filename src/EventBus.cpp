@@ -5,9 +5,9 @@ Cbor* timeoutEvent;
 EventBus::EventBus(uint32_t size,uint32_t msgSize) :
     _queue(size), _firstFilter(0),_txd(msgSize),_rxd(msgSize) {
     timeoutEvent=new Cbor(12);
-    timeoutEvent->addKeyValue(EB_SRC, H("sys"));
+    timeoutEvent->addKeyValue(EB_SRC, H("system"));
     timeoutEvent->addKeyValue(EB_EVENT, H("timeout"));
-    publish(H("sys"),H("setup"));
+    publish(H("system"),H("setup"));
 }
 
 void EventBus::publish(uint16_t header, Cbor& cbor) {
@@ -205,7 +205,7 @@ void EventFilter::invokeAllSubscriber(Cbor& cbor) {
 }
 //____________________________________________________________________
 //
-void EventBus::defaultHandler(Actor* actor) {
+void EventBus::defaultHandler(Actor* actor,Cbor& msg) {
     if ( isRequest(actor->id(),H("status"))) {
         eb.reply()
         .addKeyValue(H("state"),actor->_state)
@@ -213,8 +213,21 @@ void EventBus::defaultHandler(Actor* actor) {
         .addKeyValue(H("id"),actor->_id)
         .addKeyValue(H("line"),actor->_ptLine);
         eb.send();
+    } else if ( isRequest(actor->id(),H("init"))) {
+    	actor->init();
+        eb.reply()
+        .addKeyValue(H("state"),actor->_state)
+        .addKeyValue(H("timeout"),actor->_timeout)
+        .addKeyValue(H("id"),actor->_id)
+        .addKeyValue(H("line"),actor->_ptLine);
+        eb.send();
     } else {
-    	eb.reply().addKeyValue(H("error"),EBADMSG).addKeyValue(H("error_msg"),"no handler found,defaulthandler ");
+    	uint16_t src=0;
+    	msg.getKeyValue(EB_SRC,src);
+    	eb.reply().addKeyValue(H("error"),EBADMSG)
+    			.addKeyValue(H("error_msg"),"unknown event")
+    			.addKeyValue(H("Actor"),actor->name())
+				.addKeyValue(H("from"),src);
     	eb.send();
     }
 }
