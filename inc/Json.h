@@ -86,13 +86,14 @@ public:
 //	Erc readToken(PackType& type,Variant& variant);
 	Erc toString(Str& str);
 	void mapToken(Str& str);
+		void addComma();
 
 protected:
 private:
 //	void addToken(PackType type, uint64_t data);
 	void addHeader(uint8_t major, uint8_t minor);
 	uint64_t getUint64(int length);
-	void addComma();
+
 
 //	PackType tokenToString(Str& str);
 	uint8_t _break[JSON_MAX_TOKENS]; // nested objects within object index, highest bit==on -> array, else map

@@ -16,7 +16,7 @@
 #ifdef __linux__
 #define LINE_LENGTH 1024
 #else
-#define LINE_LENGTH 256
+#define LINE_LENGTH 300
 #endif
 typedef void (*LogFunction)(char* start,uint32_t length);
 #ifdef ARDUINO

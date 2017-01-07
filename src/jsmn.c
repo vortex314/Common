@@ -17,7 +17,7 @@
 #ifdef JSMN_PARENT_LINKS
 	tok->parent = -1;
 #endif
-	return tok;
+	return tok; 
 }
 
 /**

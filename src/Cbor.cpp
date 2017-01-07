@@ -3,19 +3,23 @@
 #include <string.h>
 
 Cbor::Cbor() :
-		Bytes() {
+	Bytes()
+{
 }
 
 Cbor::Cbor(uint8_t* data,uint32_t length) :
-		Bytes(data,length) {
+	Bytes(data,length)
+{
 }
 
 Cbor::Cbor(uint32_t size) :
-		Bytes(size) {
+	Bytes(size)
+{
 	//dtor
 }
 
-Cbor::~Cbor() {
+Cbor::~Cbor()
+{
 	//dtor
 }
 
@@ -23,7 +27,8 @@ Cbor::~Cbor() {
 // if minor<24 => length=0
 int tokenSize[] = { 1, 2, 4, 8 };
 
-bool Cbor::get(bool& bl) {
+bool Cbor::get(bool& bl)
+{
 	CborVariant v;
 	PackType type;
 	if (readToken(type, v) != E_OK)
@@ -38,7 +43,8 @@ bool Cbor::get(bool& bl) {
 	return false;
 }
 
-bool Cbor::get(int32_t& i) {
+bool Cbor::get(int32_t& i)
+{
 	CborVariant v;
 	PackType type;
 	if (readToken(type, v) != E_OK)
@@ -56,7 +62,8 @@ bool Cbor::get(int32_t& i) {
 	return false;
 }
 
-bool Cbor::get(uint16_t& i) {
+bool Cbor::get(uint16_t& i)
+{
 	CborVariant v;
 	PackType type;
 	if ((readToken(type, v) == E_OK) && (type == P_PINT)) {
@@ -69,7 +76,8 @@ bool Cbor::get(uint16_t& i) {
 	return false;
 }
 
-bool Cbor::get(uint32_t& i) {
+bool Cbor::get(uint32_t& i)
+{
 	CborVariant v;
 	PackType type;
 	if ((readToken(type, v) == E_OK) && (type == P_PINT)) {
@@ -81,7 +89,8 @@ bool Cbor::get(uint32_t& i) {
 //	LOGF("get uint32_t failed");
 	return false;
 }
-bool Cbor::get(uint64_t& l) {
+bool Cbor::get(uint64_t& l)
+{
 	CborVariant v;
 	PackType type;
 	if ((readToken(type, v) == E_OK) && (type == P_PINT)) {
@@ -94,7 +103,8 @@ bool Cbor::get(uint64_t& l) {
 	return false;
 }
 
-bool Cbor::get(float& fl) {
+bool Cbor::get(float& fl)
+{
 	CborVariant v;
 	PackType type;
 	union {
@@ -112,7 +122,8 @@ bool Cbor::get(float& fl) {
 //	LOGF("get float failed");
 	return false;
 }
-bool Cbor::get(double& d) {
+bool Cbor::get(double& d)
+{
 	CborVariant v;
 	PackType type;
 	union {
@@ -131,7 +142,8 @@ bool Cbor::get(double& d) {
 	return false;
 }
 
-bool Cbor::get(Bytes& bytes) {
+bool Cbor::get(Bytes& bytes)
+{
 	CborVariant v;
 	PackType type;
 	if (readToken(type, v) == E_OK && (type == P_BYTES || type==P_STRING)) {
@@ -145,7 +157,8 @@ bool Cbor::get(Bytes& bytes) {
 	return false;
 }
 
-bool Cbor::getMapped(Bytes& bytes) {
+bool Cbor::getMapped(Bytes& bytes)
+{
 	CborVariant v;
 	PackType type;
 	bytes.clear();
@@ -158,7 +171,8 @@ bool Cbor::getMapped(Bytes& bytes) {
 	return false;
 }
 
-bool Cbor::get(Str& str) {
+bool Cbor::get(Str& str)
+{
 	CborVariant v;
 	PackType type;
 	if (readToken(type, v) == E_OK && type == P_STRING) {
@@ -175,7 +189,8 @@ bool Cbor::get(Str& str) {
 
 }
 
-bool Cbor::get(char* s, uint32_t length) {
+bool Cbor::get(char* s, uint32_t length)
+{
 	CborVariant v;
 	PackType type;
 	if (readToken(type, v) == E_OK && type == P_STRING) {
@@ -194,7 +209,8 @@ bool Cbor::get(char* s, uint32_t length) {
 
 }
 
-Erc Cbor::readToken(PackType& type, CborVariant& v) {
+Erc Cbor::readToken(PackType& type, CborVariant& v)
+{
 	int minor;
 	int length;
 	uint64_t value;
@@ -219,36 +235,30 @@ Erc Cbor::readToken(PackType& type, CborVariant& v) {
 	}
 	if (type == P_SPECIAL)
 		switch (minor) {
-		case 21: //TRUE
-		{
+		case 21: { //TRUE
 			type = P_BOOL;
 			value = 1;
 			break;
 		}
-		case 20: //FALSE
-		{
+		case 20: { //FALSE
 			type = P_BOOL;
 			value = 0;
 			break;
 		}
-		case 22: //NILL
-		{
+		case 22: { //NILL
 			type = P_NILL;
 			break;
 		}
-		case 26: //FLOAT32
-		{
+		case 26: { //FLOAT32
 			type = P_FLOAT;
 			break;
 		}
-		case 27: //FLOAT64
-		{
+		case 27: { //FLOAT64
 			type = P_DOUBLE;
 			break;
 		}
 
-		case 31: //BREAK
-		{
+		case 31: { //BREAK
 			type = P_BREAK;
 			break;
 		}
@@ -257,7 +267,8 @@ Erc Cbor::readToken(PackType& type, CborVariant& v) {
 	return E_OK;
 }
 
-uint64_t Cbor::getUint64(int length) {
+uint64_t Cbor::getUint64(int length)
+{
 	uint64_t l = 0;
 	while (length) {
 		l <<= 8;
@@ -271,7 +282,8 @@ uint64_t Cbor::getUint64(int length) {
 	return l;
 }
 
-Cbor::PackType Cbor::tokenToString(Str& str) {
+Cbor::PackType Cbor::tokenToString(Str& str)
+{
 	CborVariant v;
 	PackType type;
 	if (readToken(type, v) != E_OK)
@@ -286,11 +298,12 @@ Cbor::PackType Cbor::tokenToString(Str& str) {
 		return P_NINT;
 	}
 	case P_BYTES: {
-		str << "0x";
+		str << "\"";
 		uint32_t i;
 		for (i = 0; i < v._uint64; i++)
 			if (hasData())
 				str.appendHex(read());
+		str << "\"";
 		return P_BYTES;
 	}
 	case P_STRING: {
@@ -375,14 +388,14 @@ Cbor::PackType Cbor::tokenToString(Str& str) {
 	case P_SPECIAL: {
 		return P_ERROR;
 	}
-	default: // avoid warnings about additional types > 7
-	{
+	default: { // avoid warnings about additional types > 7
 		return P_ERROR;
 	}
 	}
 
 }
-Erc Cbor::toString(Str& str) {
+Erc Cbor::toString(Str& str)
+{
 	PackType ct;
 	offset(0);
 	while (hasData()) {
@@ -395,11 +408,13 @@ Erc Cbor::toString(Str& str) {
 	return E_OK;
 }
 
-Cbor& Cbor::operator<<(int i) {
+Cbor& Cbor::operator<<(int i)
+{
 	return add(i);
 }
 
-Cbor& Cbor::add(int i) {
+Cbor& Cbor::add(int i)
+{
 	if (i >= 0)
 		addToken(P_PINT, (uint64_t) i);
 	else
@@ -408,17 +423,20 @@ Cbor& Cbor::add(int i) {
 	return *this;
 }
 
-Cbor& Cbor::add(uint16_t i) {
+Cbor& Cbor::add(uint16_t i)
+{
 	addToken(P_PINT, (uint64_t) i);
 	return *this;
 }
 
-Cbor& Cbor::add(uint32_t i) {
+Cbor& Cbor::add(uint32_t i)
+{
 	addToken(P_PINT, (uint64_t) i);
 	return *this;
 }
 
-Cbor& Cbor::add(float fl) {
+Cbor& Cbor::add(float fl)
+{
 	union {
 		float f;
 		uint8_t b[4];
@@ -429,7 +447,8 @@ Cbor& Cbor::add(float fl) {
 		write(b[i]);
 	return *this;
 }
-Cbor& Cbor::add(double d) {
+Cbor& Cbor::add(double d)
+{
 	union {
 		double dd;
 		uint8_t b[8];
@@ -440,7 +459,8 @@ Cbor& Cbor::add(double d) {
 		write(b[i]);
 	return *this;
 }
-Cbor& Cbor::add(Bytes& b) {
+Cbor& Cbor::add(Bytes& b)
+{
 //	INFO(" BYTES  %x : %d %d ",&b,b.length(),b.capacity());
 
 	addToken(P_BYTES, b.length());
@@ -452,17 +472,19 @@ Cbor& Cbor::add(Bytes& b) {
 }
 
 
-Cbor& Cbor::add(uint8_t * data,int length) {
+Cbor& Cbor::add(uint8_t * data,int length)
+{
 //	INFO(" BYTES  %x : %d %d ",&b,b.length(),b.capacity());
 
 	addToken(P_BYTES,length);
-	for(int i=0;i<length;i++){
+	for(int i=0; i<length; i++) {
 		write(*(data+i));
 	}
 	return *this;
 }
 
-Cbor& Cbor::add(Str& str) {
+Cbor& Cbor::add(Str& str)
+{
 	addToken(P_STRING, str.length());
 	str.offset(0);
 	while (str.hasData())
@@ -471,7 +493,8 @@ Cbor& Cbor::add(Str& str) {
 	return *this;
 }
 
-Cbor& Cbor::add(const char* s) {
+Cbor& Cbor::add(const char* s)
+{
 	uint32_t size = strlen(s);
 	addToken(P_STRING, size);
 	for (uint32_t i = 0; i < size; i++)
@@ -479,20 +502,24 @@ Cbor& Cbor::add(const char* s) {
 	return *this;
 }
 
-Cbor& Cbor::operator<<(const char* s) {
+Cbor& Cbor::operator<<(const char* s)
+{
 	return add(s);
 }
 
-Cbor& Cbor::add(uint64_t i64) {
+Cbor& Cbor::add(uint64_t i64)
+{
 	addToken(P_PINT, i64);
 	return *this;
 }
 
-Cbor& Cbor::operator<<(uint64_t ull) {
+Cbor& Cbor::operator<<(uint64_t ull)
+{
 	return add(ull);
 }
 
-Cbor& Cbor::add(int64_t i64) {
+Cbor& Cbor::add(int64_t i64)
+{
 	if (i64 >= 0)
 		addToken(P_PINT, (uint64_t) i64);
 	else
@@ -500,7 +527,8 @@ Cbor& Cbor::add(int64_t i64) {
 	return *this;
 }
 
-Cbor& Cbor::add(bool b) {
+Cbor& Cbor::add(bool b)
+{
 	if (b)
 		addHeader(P_SPECIAL, 21);
 	else
@@ -508,7 +536,8 @@ Cbor& Cbor::add(bool b) {
 	return *this;
 }
 
-Cbor& Cbor::addMap(int size) {
+Cbor& Cbor::addMap(int size)
+{
 	if (size < 0)
 		addHeader(P_MAP, 31);
 	else
@@ -516,7 +545,8 @@ Cbor& Cbor::addMap(int size) {
 	return *this;
 }
 
-Cbor& Cbor::addArray(int size) {
+Cbor& Cbor::addArray(int size)
+{
 	if (size < 0)
 		addHeader(P_ARRAY, 31);
 	else
@@ -524,22 +554,26 @@ Cbor& Cbor::addArray(int size) {
 	return *this;
 }
 
-Cbor& Cbor::addTag(int nr) {
+Cbor& Cbor::addTag(int nr)
+{
 	addToken(P_TAG, nr);
 	return *this;
 }
 
-Cbor& Cbor::addBreak() {
+Cbor& Cbor::addBreak()
+{
 	addHeader(P_SPECIAL, 31);
 	return *this;
 }
 
-Cbor& Cbor::addNull() {
+Cbor& Cbor::addNull()
+{
 	addHeader(P_SPECIAL, 22);
 	return *this;
 }
 
-void Cbor::addToken(PackType ctype, uint64_t value) {
+void Cbor::addToken(PackType ctype, uint64_t value)
+{
 	uint8_t majorType = (uint8_t) (ctype << 5);
 	if (value < 24ULL) {
 		write(majorType | value);
@@ -569,12 +603,14 @@ void Cbor::addToken(PackType ctype, uint64_t value) {
 	}
 }
 
-void Cbor::addHeader(uint8_t major, uint8_t minor) {
+void Cbor::addHeader(uint8_t major, uint8_t minor)
+{
 	write((major << 5) | minor);
 }
 
 #include <cstdarg>
-bool Cbor::vaddf(const char *fmt, va_list args) {
+bool Cbor::vaddf(const char *fmt, va_list args)
+{
 //	LOGF(" fmt : '%s'",fmt );
 
 	while (*fmt != '\0') {
@@ -616,7 +652,8 @@ bool Cbor::vaddf(const char *fmt, va_list args) {
 	return true;
 }
 
-bool Cbor::addf(const char *fmt, ...) {
+bool Cbor::addf(const char *fmt, ...)
+{
 	va_list args;
 	va_start(args, fmt);
 	vaddf(fmt, args);
@@ -624,7 +661,8 @@ bool Cbor::addf(const char *fmt, ...) {
 	return true;
 }
 
-Cbor& Cbor::putf(const char *fmt, ...) {
+Cbor& Cbor::putf(const char *fmt, ...)
+{
 	clear();
 	va_list args;
 	va_start(args, fmt);
@@ -633,7 +671,8 @@ Cbor& Cbor::putf(const char *fmt, ...) {
 	return *this;
 }
 
-bool Cbor::vscanf(const char *fmt, va_list args) {
+bool Cbor::vscanf(const char *fmt, va_list args)
+{
 
 	while (*fmt != '\0') {
 		if (*fmt == 'i') {
@@ -679,7 +718,8 @@ bool Cbor::vscanf(const char *fmt, va_list args) {
 	return true;
 }
 
-bool Cbor::scanf(const char *fmt, ...) {
+bool Cbor::scanf(const char *fmt, ...)
+{
 	va_list args;
 	va_start(args, fmt);
 	bool b = vscanf(fmt, args);
@@ -687,7 +727,8 @@ bool Cbor::scanf(const char *fmt, ...) {
 	return b;
 }
 
-bool Cbor::skipToken() {
+bool Cbor::skipToken()
+{
 	PackType pt;
 	CborVariant cv;
 	if (readToken(pt, cv) == E_OK) {
@@ -701,11 +742,13 @@ bool Cbor::skipToken() {
 	return false;
 }
 
-Cbor& Cbor::addKey(uint32_t key) {
+Cbor& Cbor::addKey(uint32_t key)
+{
 	return add(key);
 }
 
-bool Cbor::gotoKey(uint32_t key) {
+bool Cbor::gotoKey(uint32_t key)
+{
 	uint32_t _key;
 	offset(0);
 	while (available()) {
@@ -720,4 +763,3 @@ bool Cbor::gotoKey(uint32_t key) {
 	}
 	return false;
 }
-
