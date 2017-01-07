@@ -1,4 +1,7 @@
 #include "Uid.h"
+#include <malloc.h>
+#include <stdio.h>
+#include <string.h>
 
 extern char* static_labels[];
 extern uint32_t static_labels_count;
