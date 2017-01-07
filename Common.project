@@ -30,12 +30,12 @@
     <File Name="src/CircBuf.cpp"/>
     <File Name="src/BipBuffer.cpp"/>
     <File Name="src/Handler.cpp"/>
-    <File Name="src/Sys.cpp"/>
     <File Name="src/EventBus.cpp"/>
     <File Name="src/printf.c"/>
     <File Name="src/Base64.cpp"/>
     <File Name="src/Cbor.cpp"/>
     <File Name="src/SlipStream.h"/>
+    <File Name="src/Sys.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include"/>
   <VirtualDirectory Name="inc">
@@ -99,12 +99,15 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="Cross GCC ( xtensa-lx106-elf )" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-std=c++11" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="-Os;-std=c++11;-mlongcalls  -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DARDUINO" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
         <IncludePath Value="inc"/>
         <IncludePath Value="/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/xtensa-lx106-elf/include"/>
+        <IncludePath Value="/home/lieven/workspace/Esp8266-Arduino-Makefile/esp8266/cores/esp8266"/>
+        <IncludePath Value="/home/lieven/workspace/Esp8266-Arduino-Makefile/esp8266-2.3.0/tools/sdk/include"/>
+        <IncludePath Value="/home/lieven/workspace/Esp8266-Arduino-Makefile/esp8266-2.3.0/variants/generic"/>
       </Compiler>
-      <Linker Options="" Required="yes"/>
+      <Linker Options="-mlongcalls" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/lib$(ProjectName).a" IntermediateDirectory="./Debug" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <BuildSystem Name="Default"/>

@@ -146,7 +146,7 @@ bool EventBus::isRequest(uint16_t dst,uint16_t req) {
 }
 
 
-#ifdef __linux__
+
 extern const char* hash2string(uint32_t hash);
 void logCbor(Cbor& cbor) {
     Str str(2048);
@@ -176,9 +176,9 @@ void logCbor(Cbor& cbor) {
         if (cbor.hasData())
             str << ",";
     };
-    LOGF("--- %s", str.c_str());
+    LOGF("%s", str.c_str());
 }
-#endif
+
 
 extern void usart_send_string(const char *s);
 

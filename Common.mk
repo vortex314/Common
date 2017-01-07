@@ -13,10 +13,10 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Lieven
-Date                   :=05/01/17
+Date                   :=07/01/17
 CodeLitePath           :=/home/lieven/.codelite
-LinkerName             :=/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/bin/xtensa-lx106-elf-g++
-SharedObjectLinkerName :=/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/bin/xtensa-lx106-elf-g++ -shared -fPIC
+LinkerName             :=/home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/bin/xtensa-lx106-elf-g++
+SharedObjectLinkerName :=/home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/bin/xtensa-lx106-elf-g++ -shared -fPIC
 ObjectSuffix           :=.o
 DependSuffix           :=.o.d
 PreprocessSuffix       :=.i
@@ -35,25 +35,25 @@ PreprocessOnlySwitch   :=-E
 ObjectsFileList        :="Common.txt"
 PCHCompileFlags        :=
 MakeDirCommand         :=mkdir -p
-LinkOptions            :=  
-IncludePath            := $(IncludeSwitch)/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/xtensa-lx106-elf/include  $(IncludeSwitch). $(IncludeSwitch). $(IncludeSwitch)inc $(IncludeSwitch)/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/xtensa-lx106-elf/include 
+LinkOptions            :=  -mlongcalls
+IncludePath            := $(IncludeSwitch)/home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/include  $(IncludeSwitch). $(IncludeSwitch). $(IncludeSwitch)inc $(IncludeSwitch)/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/xtensa-lx106-elf/include $(IncludeSwitch)/home/lieven/workspace/Esp8266-Arduino-Makefile/esp8266/cores/esp8266 $(IncludeSwitch)/home/lieven/workspace/Esp8266-Arduino-Makefile/esp8266-2.3.0/tools/sdk/include $(IncludeSwitch)/home/lieven/workspace/Esp8266-Arduino-Makefile/esp8266-2.3.0/variants/generic 
 IncludePCH             := 
 RcIncludePath          := 
 Libs                   := 
 ArLibs                 :=  
-LibPath                :=$(LibraryPathSwitch)/home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/lib  $(LibraryPathSwitch). 
+LibPath                :=$(LibraryPathSwitch)/home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/lib  $(LibraryPathSwitch). 
 
 ##
 ## Common variables
 ## AR, CXX, CC, AS, CXXFLAGS and CFLAGS can be overriden using an environment variables
 ##
-AR       := /home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/bin/xtensa-lx106-elf-ar rcu
-CXX      := /home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/bin/xtensa-lx106-elf-g++
-CC       := /home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/bin/xtensa-lx106-elf-gcc
-CXXFLAGS :=  -g -std=c++11 $(Preprocessors)
+AR       := /home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/bin/xtensa-lx106-elf-ar rcu
+CXX      := /home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/bin/xtensa-lx106-elf-g++
+CC       := /home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/bin/xtensa-lx106-elf-gcc
+CXXFLAGS :=  -Os -std=c++11 -mlongcalls  -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DARDUINO $(Preprocessors)
 CFLAGS   :=  -g $(Preprocessors)
 ASFLAGS  := 
-AS       := /home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/bin/xtensa-lx106-elf-as
+AS       := /home/lieven/workspace/Esp8266-Arduino-Makefile/xtensa-lx106-elf/bin/xtensa-lx106-elf-as
 
 
 ##
@@ -62,7 +62,7 @@ AS       := /home/lieven/workspace/Arduino/tools/xtensa-lx106-elf/bin/xtensa-lx1
 CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/src_Logger.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Bytes.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_BufferedByteStream.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Node.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Msg.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_PIC32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Log.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_STM32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_CborQueue.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Str.cpp$(ObjectSuffix) \
 	$(IntermediateDirectory)/src_Msgpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_jsmn.c$(ObjectSuffix) $(IntermediateDirectory)/src_EventSource.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Link.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Json.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_SlipStream.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Strpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Slip.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Actor.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_CircBuf.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/src_BipBuffer.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Handler.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Sys.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_EventBus.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_printf.c$(ObjectSuffix) $(IntermediateDirectory)/src_Base64.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Cbor.cpp$(ObjectSuffix) 
+	$(IntermediateDirectory)/src_BipBuffer.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Handler.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_EventBus.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_printf.c$(ObjectSuffix) $(IntermediateDirectory)/src_Base64.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Cbor.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_Sys.cpp$(ObjectSuffix) 
 
 
 
@@ -271,14 +271,6 @@ $(IntermediateDirectory)/src_Handler.cpp$(DependSuffix): src/Handler.cpp
 $(IntermediateDirectory)/src_Handler.cpp$(PreprocessSuffix): src/Handler.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_Handler.cpp$(PreprocessSuffix)src/Handler.cpp
 
-$(IntermediateDirectory)/src_Sys.cpp$(ObjectSuffix): src/Sys.cpp $(IntermediateDirectory)/src_Sys.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/src/Sys.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_Sys.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/src_Sys.cpp$(DependSuffix): src/Sys.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_Sys.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/src_Sys.cpp$(DependSuffix) -MM src/Sys.cpp
-
-$(IntermediateDirectory)/src_Sys.cpp$(PreprocessSuffix): src/Sys.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_Sys.cpp$(PreprocessSuffix)src/Sys.cpp
-
 $(IntermediateDirectory)/src_EventBus.cpp$(ObjectSuffix): src/EventBus.cpp $(IntermediateDirectory)/src_EventBus.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/src/EventBus.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_EventBus.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_EventBus.cpp$(DependSuffix): src/EventBus.cpp
@@ -310,6 +302,14 @@ $(IntermediateDirectory)/src_Cbor.cpp$(DependSuffix): src/Cbor.cpp
 
 $(IntermediateDirectory)/src_Cbor.cpp$(PreprocessSuffix): src/Cbor.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_Cbor.cpp$(PreprocessSuffix)src/Cbor.cpp
+
+$(IntermediateDirectory)/src_Sys.cpp$(ObjectSuffix): src/Sys.cpp $(IntermediateDirectory)/src_Sys.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/src/Sys.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_Sys.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/src_Sys.cpp$(DependSuffix): src/Sys.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_Sys.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/src_Sys.cpp$(DependSuffix) -MM src/Sys.cpp
+
+$(IntermediateDirectory)/src_Sys.cpp$(PreprocessSuffix): src/Sys.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_Sys.cpp$(PreprocessSuffix)src/Sys.cpp
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)
