@@ -5,6 +5,15 @@
       <![CDATA[00010001N0005Debug000000000000]]>
     </Plugin>
   </Plugins>
+  <Reconciliation>
+    <Regexes/>
+    <Excludepaths/>
+    <Ignorefiles/>
+    <Extensions>
+      <![CDATA[cpp;c;h;hpp;xrc;wxcp;fbp]]>
+    </Extensions>
+    <Topleveldir>../Common</Topleveldir>
+  </Reconciliation>
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
@@ -23,28 +32,21 @@
     <File Name="src/EventSource.cpp"/>
     <File Name="src/Link.cpp"/>
     <File Name="src/Json.cpp"/>
-    <File Name="src/SlipStream.cpp"/>
     <File Name="src/Strpack.cpp"/>
-    <File Name="src/Slip.cpp"/>
-    <File Name="src/Actor.cpp"/>
     <File Name="src/CircBuf.cpp"/>
     <File Name="src/BipBuffer.cpp"/>
     <File Name="src/Handler.cpp"/>
-    <File Name="src/EventBus.cpp"/>
     <File Name="src/printf.c"/>
     <File Name="src/Base64.cpp"/>
     <File Name="src/Cbor.cpp"/>
-    <File Name="src/SlipStream.h"/>
     <File Name="src/Sys.cpp"/>
     <File Name="src/EventSource.cpp"/>
     <File Name="src/Node.cpp"/>
-    <File Name="src/Uid.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include"/>
   <VirtualDirectory Name="inc">
     <File Name="inc/Sys.h"/>
     <File Name="inc/CborQueue.h"/>
-    <File Name="inc/EventBus.h"/>
     <File Name="inc/Msg.h"/>
     <File Name="inc/Signal.h"/>
     <File Name="inc/Uart.h"/>
@@ -72,9 +74,7 @@
     <File Name="inc/Bytes.h"/>
     <File Name="inc/Strpack.h"/>
     <File Name="inc/Base64.h"/>
-    <File Name="inc/Slip.h"/>
     <File Name="inc/Bits.h"/>
-    <File Name="inc/Actor.h"/>
     <File Name="inc/ByteStream.h"/>
     <File Name="inc/pt.h"/>
     <File Name="inc/CircBuf.h"/>
@@ -89,10 +89,8 @@
     <File Name="inc/EventSource.h"/>
     <File Name="inc/platform.h"/>
     <File Name="inc/lc-addrlabels.h"/>
-    <File Name="inc/SlipStream.h"/>
     <File Name="inc/LinkedList.cpp"/>
     <File Name="inc/LinkedList.h"/>
-    <File Name="inc/Uid.h"/>
   </VirtualDirectory>
   <Settings Type="Static Library">
     <GlobalSettings>
