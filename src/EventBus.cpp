@@ -184,15 +184,15 @@ void EventFilter::invokeAllSubscriber(Cbor& cbor) {
 void EventBus::defaultHandler(Actor* actor,Cbor& msg) {
     if ( isRequest(actor->id(),H("status"))) {
         eb.reply()
-        .addKeyValue(H("state"),actor->_state)
+        .addKeyValue(H("state"),uid.label(actor->_state))
         .addKeyValue(H("timeout"),actor->_timeout)
         .addKeyValue(H("id"),actor->_id)
         .addKeyValue(H("line"),actor->_ptLine);
         eb.send();
     } else if ( isRequest(actor->id(),H("init"))) {
-    	actor->init();
+//		actor->init();
         eb.reply()
-        .addKeyValue(H("state"),actor->_state)
+        .addKeyValue(H("state"),uid.label(actor->_state))
         .addKeyValue(H("timeout"),actor->_timeout)
         .addKeyValue(H("id"),actor->_id)
         .addKeyValue(H("line"),actor->_ptLine);
