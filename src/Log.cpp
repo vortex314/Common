@@ -175,15 +175,11 @@ void Log::application(const char* application)
 #ifndef __linux__
 void Log::time()
 {
-	Str str((uint8_t*) (_record + _offset), LINE_LENGTH - _offset);
-	str.append(Sys::millis()).append(' ');
-	_offset += str.length();
+	append(Sys::millis()).append(' ');
 }
 void Log::host(const char* hostname)
 {
-	Str str((uint8_t*) (_record + _offset), LINE_LENGTH - _offset);
-	str.append(Sys::hostname()).append(' ');
-	_offset += str.length();
+	append(Sys::hostname()).append(' ');
 }
 void Log::application(const char* application)
 {

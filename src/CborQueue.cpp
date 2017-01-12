@@ -6,6 +6,7 @@
  */
 
 #include <CborQueue.h>
+#include <Log.h>
 
 #ifdef __linux__
 #include <stdio.h>          /* printf()                 */
@@ -18,7 +19,7 @@
 #include <sys/types.h>
 #include <semaphore.h>
 
-#include <Log.h>
+
 sem_t* sem;
 unsigned int value = 0;
 sem_t put_mutex;
