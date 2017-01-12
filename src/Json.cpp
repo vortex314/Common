@@ -129,6 +129,7 @@ Json& Json::add(int64_t i64) {
     return *this;
 }
 
+
 Json& Json::addHex(uint64_t ui64) {
     append("\"0x");
     appendHex((uint32_t)ui64);
@@ -145,7 +146,7 @@ bool Json::getHex(uint64_t& ui64) {
         for (uint16_t i = 2; i < str.length(); i++) {
             ui64 <<= 4;
             char ch = str.peek();
-            if (!ishex(ch))
+            if (!Str::ishex(ch))
                 return false;
             ui64 += hexToNibble(ch);
         }

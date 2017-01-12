@@ -9,6 +9,7 @@
 #include "errno.h"
 #include "platform.h"
 #include "Sys.h"
+#include <Log.h>
 
 
 #include "malloc.h"

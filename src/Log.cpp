@@ -7,12 +7,14 @@
 #include "Log.h"
 #include <stdio.h>
 
-LogManager Log;
+
 
 #include <Log.h>
 #include <Str.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+
 #ifdef ARDUINO
 #include <WString.h>
 #include <Arduino.h>
@@ -46,37 +48,37 @@ void serialLog(char* start, uint32_t length)
 #endif
 }
 
-LogManager::LogManager() :		_enabled(true), _logFunction(serialLog), _offset(0), _level(LOG_ERROR)
+Log::Log(uint32_t size) :	Str(size),	_enabled(true), _logFunction(serialLog), _level(LOG_ERROR)
 {
 	_application[0] = 0;
 	_hostname[0] = 0;
 
 }
 
-LogManager::~LogManager()
+Log::~Log()
 {
 
 }
 
-bool LogManager::enabled(LogLevel level)
+bool Log::enabled(LogLevel level)
 {
 	return level >= _level;
 }
-void LogManager::disable()
+void Log::disable()
 {
 	_enabled = false;
 }
-void LogManager::enable()
+void Log::enable()
 {
 	_enabled = true;
 }
 
-void LogManager::defaultOutput()
+void Log::defaultOutput()
 {
 	_logFunction = serialLog;
 }
 
-void LogManager::setOutput(LogFunction function)
+void Log::setOutput(LogFunction function)
 {
 	_logFunction = function;
 }
@@ -87,11 +89,13 @@ extern "C" {
 
 #endif
 
-void LogManager::printf(const char* fmt, ...)
+void Log::printf(const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
-	if (_offset < LINE_LENGTH) {
+	format(fmt,args);
+/*	if (_offset < LINE_LENGTH) {
+		
 #ifdef ARDUINO
 //		ets_vsnprintf((char*) (_record + _offset), fmt, args);
 //		_offset = strlen(_record);
@@ -102,23 +106,23 @@ void LogManager::printf(const char* fmt, ...)
 		                    fmt, args);
 #endif
 
-	}
+	}*/
 	va_end(args);
 }
 
-void LogManager::flush()
+void Log::flush()
 {
 	if (_logFunction)
-		_logFunction(_record, _offset);
-	_offset = 0;
+		_logFunction((char*)data(), length());
+	clear();
 }
 
-void LogManager::level(LogLevel l)
+void Log::level(LogLevel l)
 {
 	_level = l;
 }
 
-LogManager::LogLevel LogManager::level()
+Log::LogLevel Log::level()
 {
 	return _level;
 }
@@ -127,14 +131,14 @@ LogManager::LogLevel LogManager::level()
 #include <time.h>
 #include <sys/time.h>
 #include <stdio.h>
-void LogManager::time()
+void Log::time()
 {
 	struct timeval tv;
 	struct timezone tz;
 	struct tm *tm;
 	gettimeofday(&tv, &tz);
 	tm = ::localtime(&tv.tv_sec);
-	_offset += sprintf(&_record[_offset], "%d/%02d/%02d %02d:%02d:%02d.%03ld ",
+	printf("%d/%02d/%02d %02d:%02d:%02d.%03ld ",
 	                   tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour,
 	                   tm->tm_min, tm->tm_sec, tv.tv_usec / 1000);
 
@@ -142,46 +146,46 @@ void LogManager::time()
 }
 #include <unistd.h>
 #include <string.h>
-void LogManager::host(const char* hostname)
+void Log::host(const char* hostname)
 {
 	if (hostname == 0) {
 		if (strlen(_hostname) == 0) {
 			::gethostname(_hostname, sizeof(_hostname));
 		}
-		_offset += sprintf(&_record[_offset], "| %s ", _hostname);
+		printf( "| %s ", _hostname);
 	} else {
-		_offset += sprintf(&_record[_offset], "| %s ", hostname);
+		printf( "| %s ", hostname);
 	}
 }
 extern const char *__progname;
 
 
-void LogManager::application(const char* application)
+void Log::application(const char* application)
 {
 	if (application == 0) {
 		if (strlen(_application) == 0) {
 			strncpy(_application,__progname,sizeof(_application)-1);
 		}
-		_offset += sprintf(&_record[_offset], "| %s ", _application);
+		printf( "| %s ", _application);
 	} else {
-		_offset += sprintf(&_record[_offset], "| %s ", application);
+		printf( "| %s ", application);
 	}
 }
 #endif
 #ifndef __linux__
-void LogManager::time()
+void Log::time()
 {
 	Str str((uint8_t*) (_record + _offset), LINE_LENGTH - _offset);
 	str.append(Sys::millis()).append(' ');
 	_offset += str.length();
 }
-void LogManager::host(const char* hostname)
+void Log::host(const char* hostname)
 {
 	Str str((uint8_t*) (_record + _offset), LINE_LENGTH - _offset);
 	str.append(Sys::hostname()).append(' ');
 	_offset += str.length();
 }
-void LogManager::application(const char* application)
+void Log::application(const char* application)
 {
 
 }

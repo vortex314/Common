@@ -16,6 +16,7 @@
 #define DOUBLE
 
 class Json: public Str {
+
 public:
     typedef enum {
         JSON_UNKNOWN,

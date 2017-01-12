@@ -13,7 +13,7 @@ Node::Node() {
 }
 
 Node::~Node() {
-	ASSERT(true);
+//	ASSERT(true);
     while (1);
 }
 

@@ -17,6 +17,8 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <semaphore.h>
+
+#include <Log.h>
 sem_t* sem;
 unsigned int value = 0;
 sem_t put_mutex;

@@ -1,5 +1,6 @@
 #include "Cbor.h"
 #include <Sys.h>
+#include <Log.h>
 #include <string.h>
 
 Cbor::Cbor() :

@@ -7,8 +7,12 @@
 
 #ifndef STRING_H_
 #define STRING_H_
-#include "Bytes.h"
+
 #include "Erc.h"
+#include "Bytes.h"
+#include <stdarg.h>
+
+class Log;
 
 class Str : public Bytes
 {
@@ -56,6 +60,7 @@ public:
     Str& appendHex(uint8_t byte);
     Str& appendHex(uint32_t word);
     Str& appendHex(uint64_t word);
+	Str& format(const char* fmt,va_list va);
     Str& substr(Str& master,uint32_t offset);
 
     bool operator==(Str& str);
