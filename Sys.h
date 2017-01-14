@@ -33,8 +33,6 @@ class Sys {
 	static uint64_t _boot_time;
 public:
 	static  uint64_t _upTime;
-	Sys();
-	virtual ~Sys();
 	static void init();
 	static uint64_t millis();
 	static uint64_t now();
@@ -46,6 +44,7 @@ public:
 	static void delay(uint32_t msec);
 	static void tick();
 	static void hostname(const char*hn);
+	static void setHostname(const char*hn);
 	static const char* hostname();
 protected:
 private:

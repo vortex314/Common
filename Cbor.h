@@ -89,13 +89,14 @@ public:
 		add(value);
 		return *this;
 	}
-
+    
 	template<typename T>
 	bool getKeyValue(uint32_t key, T& value) {
 		if (gotoKey(key) && get(value))
 			return true;
 		return false;
 	}
+
 	bool mapKeyValue(uint32_t key,Bytes& value) {
         if (gotoKey(key) && getMapped(value))
 			return true;

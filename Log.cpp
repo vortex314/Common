@@ -4,11 +4,6 @@
  *  Created on: Jul 3, 2016
  *      Author: lieven
  */
-#include "Log.h"
-#include <stdio.h>
-
-
-
 #include <Log.h>
 #include <Str.h>
 #include <stdlib.h>
@@ -183,6 +178,6 @@ void Log::host(const char* hostname)
 }
 void Log::application(const char* application)
 {
-
+    append("-");
 }
 #endif
