@@ -933,15 +933,6 @@ Erc Str::parse(uint32_t* pval) {
 	return E_OK;
 }
 
-uint8_t hexToNibble(uint8_t ch) {
-	if (ch >= '0' || ch <= '9')
-		return ch - '0';
-	if (ch >= 'A' || ch <= 'F')
-		return ch - 'A' + 10;
-	if (ch >= 'a' || ch <= 'f')
-		return ch - 'a' + 10;
-	return 0;
-}
 
 Erc Str::parseHex(uint8_t *pb) {
 	uint8_t b = 0;

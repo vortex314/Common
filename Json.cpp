@@ -8,7 +8,8 @@
 #include "Json.h"
 
 Json::Json(uint32_t size) :
-    Str(size) {
+    Str(size)
+{
     _breakIndex = 0;
     _break[_breakIndex]=0;
     _tokenIndex = 0;
@@ -26,7 +27,8 @@ Json::Json(uint32_t size) :
 
  */
 
-Json::~Json() {
+Json::~Json()
+{
     //dtor
 }
 /*
@@ -42,39 +44,45 @@ Json::~Json() {
  }
  */
 
-void Json::addComma() {
+void Json::addComma()
+{
     if (_break[_breakIndex] & 0x7F) { // not the first element then prefix with comma
         append(',');
     }
     _break[_breakIndex]++;
 }
 
-Json& Json::add(int i) {
+Json& Json::add(int i)
+{
     bool get(int64_t& ul);
     addComma();
     append((int64_t)i);
     return *this;
 }
 
-Json& Json::add(uint32_t i) {
+Json& Json::add(uint32_t i)
+{
 //	LOGF(" add %d ",i);
     addComma();
     append((uint64_t) i);
     return *this;
 }
 #ifdef DOUBLE
-Json& Json::add(float fl) {
+Json& Json::add(float fl)
+{
     addComma();
     append(fl);
     return *this;
 }
-Json& Json::add(double d) {
+Json& Json::add(double d)
+{
     addComma();
     append(d);
     return *this;
 }
 #endif
-Json& Json::add(Bytes& b) {
+Json& Json::add(Bytes& b)
+{
     addComma();
     append('"');
     b.offset(0);
@@ -83,7 +91,8 @@ Json& Json::add(Bytes& b) {
     append('"');
     return *this;
 }
-Json& Json::add(Str& str) {
+Json& Json::add(Str& str)
+{
     addComma();
     append('"');
     str.offset(0);
@@ -93,7 +102,8 @@ Json& Json::add(Str& str) {
     return *this;
 }
 #include <cstring>
-Json& Json::add(const char* s) {
+Json& Json::add(const char* s)
+{
     uint32_t size = strlen(s);
     addComma();
     append('"');
@@ -103,7 +113,8 @@ Json& Json::add(const char* s) {
     return *this;
 }
 
-Json& Json::addKey(const char* s) {
+Json& Json::addKey(const char* s)
+{
 //	addComma();
     add(s);
     _break[_breakIndex] = 0; // first key is not a comple value yet for comma reasons
@@ -111,26 +122,30 @@ Json& Json::addKey(const char* s) {
     return *this;
 }
 
-Json& Json::add(uint64_t i64) {
+Json& Json::add(uint64_t i64)
+{
     addComma();
     append(i64);
     return *this;
 }
 
-Json& Json::clear() {
+Json& Json::clear()
+{
     Str::clear();
     _breakIndex = 0;
     _break[_breakIndex] = 0;
     return *this;
 }
 bool get(int64_t& ul);
-Json& Json::add(int64_t i64) {
+Json& Json::add(int64_t i64)
+{
     append(i64);
     return *this;
 }
 
 
-Json& Json::addHex(uint64_t ui64) {
+Json& Json::addHex(uint64_t ui64)
+{
     append("\"0x");
     appendHex((uint32_t)ui64);
     append('"');
@@ -138,7 +153,8 @@ Json& Json::addHex(uint64_t ui64) {
 }
 
 
-bool Json::getHex(uint64_t& ui64) {
+bool Json::getHex(uint64_t& ui64)
+{
     Str str(0);
     mapToken(str);
     if (str.startsWith("0x")) {
@@ -155,7 +171,8 @@ bool Json::getHex(uint64_t& ui64) {
     return false;
 }
 
-Json& Json::add(bool b) {
+Json& Json::add(bool b)
+{
     addComma();
     if (b)
         append("true");
@@ -164,13 +181,15 @@ Json& Json::add(bool b) {
     return *this;
 }
 
-Json& Json::addMap(int size) {
+Json& Json::addMap(int size)
+{
     addComma();
     append('{');
     _break[++_breakIndex] = 0;
     return *this;
 }
-Json& Json::addMap() {
+Json& Json::addMap()
+{
 #include <stdarg.h>
     addComma();
     append('{');
@@ -178,20 +197,23 @@ Json& Json::addMap() {
     return *this;
 }
 
-Json& Json::addArray() {
+Json& Json::addArray()
+{
     addComma();
     append('[');
     _break[++_breakIndex] = 0x80;
     return *this;
 }
 
-Json& Json::addArray(int size) {
+Json& Json::addArray(int size)
+{
     append('[');
     _break[++_breakIndex] = 0x80;
     return *this;
 }
 
-Json& Json::addBreak() {
+Json& Json::addBreak()
+{
     if (_break[_breakIndex] < 0x80)
         append('}');
     else
@@ -202,7 +224,8 @@ Json& Json::addBreak() {
     return *this;
 }
 
-Json& Json::addNull() {
+Json& Json::addNull()
+{
     addComma();
     append("null");
     return *this;
@@ -210,7 +233,8 @@ Json& Json::addNull() {
 #include "jsmn.h"
 #include <stdlib.h>
 
-bool Json::vscanf(const char *fmt, va_list args) {
+bool Json::vscanf(const char *fmt, va_list args)
+{
     int64_t ll;
 
     while (*fmt != '\0') {
@@ -272,7 +296,8 @@ bool Json::vscanf(const char *fmt, va_list args) {
     return true;
 }
 
-bool Json::scanf(const char *fmt, ...) {
+bool Json::scanf(const char *fmt, ...)
+{
     va_list args;
     va_start(args, fmt);
     vscanf(fmt, args);
@@ -280,7 +305,8 @@ bool Json::scanf(const char *fmt, ...) {
     return true;
 }
 
-Erc Json::parse() {
+Erc Json::parse()
+{
     jsmn_init(&_parser);
     _tokenIndex = 0;
 //	INFO(" str : %s , length : %d , tokens : %x , max_tokens :  %d ", c_str(),
@@ -304,11 +330,13 @@ Erc Json::parse() {
     return E_OK;
 }
 
-void Json::mapToken(Str& str) {
+void Json::mapToken(Str& str)
+{
     str.map(data() + _tokens[_tokenIndex].start, _tokens[_tokenIndex].end-_tokens[_tokenIndex].start);
 }
 #include <stdlib.h>
-bool Json::get(int64_t& ll) {
+bool Json::get(int64_t& ll)
+{
     double d;
     if ( get(d)) {
         ll=d;
@@ -317,7 +345,8 @@ bool Json::get(int64_t& ll) {
     return false;
 }
 
-bool Json::get(double & d) {
+bool Json::get(double & d)
+{
     if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_PRIMITIVE)
@@ -330,7 +359,8 @@ bool Json::get(double & d) {
     return true;
 }
 
-bool Json::get(bool & bl) {
+bool Json::get(bool & bl)
+{
     if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_PRIMITIVE)
@@ -350,7 +380,8 @@ bool Json::get(bool & bl) {
     return false;
 }
 
-bool Json::get(Str& str) {
+bool Json::get(Str& str)
+{
     ;
     if (_tokenIndex >= _tokenCount)
         return false;
@@ -361,7 +392,7 @@ bool Json::get(Str& str) {
      && s[_tokens[_tokenIndex].end] == '"')*/{
         str.clear();
         for (int i = _tokens[_tokenIndex].start; i < _tokens[_tokenIndex].end;
-                i++) {
+             i++) {
             str.write(peek(i));
         }
     }
@@ -370,36 +401,38 @@ bool Json::get(Str& str) {
     return true;
 }
 
-bool Json::get(Bytes& bytes) {
+bool Json::get(Bytes& bytes)
+{
     if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_STRING)
         return false;
-    const char* s = c_str() + _tokens[_tokenIndex].start;
-    if (s[_tokens[_tokenIndex].start] == '"'
-            && s[_tokens[_tokenIndex].end] == '"') {
+//   const char* s = c_str() + _tokens[_tokenIndex].start;
+//   if (s[_tokens[_tokenIndex].start] == '"'
+//           && s[_tokens[_tokenIndex].end] == '"')
+    {
         bytes.clear();
         for (int i = _tokens[_tokenIndex].start; i < _tokens[_tokenIndex].end;
-                i++) {
-            uint8_t by;
-            if (parseHex(&by) == 0)
-                bytes.write(by);
+             i+=2) {
+            uint8_t byt = (Str::hexToNibble(peek(i))<<4) + Str::hexToNibble(peek(i+1));
+            bytes.write(byt);
         }
     }
     _tokenIndex++;
     return true;
 }
 
-bool Json::get(char* sDst, int length) {
+bool Json::get(char* sDst, int length)
+{
     if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_STRING)
         return false;
     const char* s = c_str() + _tokens[_tokenIndex].start;
     if (s[_tokens[_tokenIndex].start] == '"'
-            && s[_tokens[_tokenIndex].end] == '"') {
+        && s[_tokens[_tokenIndex].end] == '"') {
         for (int i = _tokens[_tokenIndex].start;
-                (i < _tokens[_tokenIndex].end) && (i < length); i++) {
+             (i < _tokens[_tokenIndex].end) && (i < length); i++) {
             sDst[i] = peek(i);
         }
     }
@@ -407,7 +440,8 @@ bool Json::get(char* sDst, int length) {
     return true;
 }
 
-bool Json::getArray() {
+bool Json::getArray()
+{
     if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_ARRAY)
@@ -416,7 +450,8 @@ bool Json::getArray() {
     return true;
 }
 
-bool Json::getMap() {
+bool Json::getMap()
+{
     if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_OBJECT)
@@ -426,7 +461,8 @@ bool Json::getMap() {
 }
 //________________________________________________________________________________
 //
-Json::Type Json::getType() {
+Json::Type Json::getType()
+{
 
     if (_tokens[_tokenIndex].type == JSMN_OBJECT) {
         return JSON_OBJECT;
@@ -445,16 +481,18 @@ Json::Type Json::getType() {
             return JSON_NUMBER;
         }
     } ;
-     return JSON_UNKNOWN;
+    return JSON_UNKNOWN;
 }
 
 
 
-void Json::rewind() {
+void Json::rewind()
+{
     _tokenIndex = 0;
 }
 
-bool Json::findKey(const char* key) {
+bool Json::findKey(const char* key)
+{
     if (_tokens[_tokenIndex].type != JSMN_OBJECT)
         return false;
     uint32_t strLength = strlen(key);
@@ -462,8 +500,8 @@ bool Json::findKey(const char* key) {
         uint32_t tokenLength = _tokens[i].end - _tokens[i].start;
 //		INFO(" %d %d -> %d : %d %s ",_tokenIndex,i,strLength,tokenLength,data() + _tokens[i].start);
         if ((_tokens[i].parent == _tokenIndex) && (strLength == tokenLength)
-                && (strncmp(key, (const char*) (data() + _tokens[i].start),
-                            tokenLength) == 0)) {
+            && (strncmp(key, (const char*) (data() + _tokens[i].start),
+                        tokenLength) == 0)) {
 //			int idx = i;
             if ((i + 1) < _tokenCount && _tokens[i + 1].parent == i) {
                 _tokenIndex = i + 1;
@@ -473,4 +511,3 @@ bool Json::findKey(const char* key) {
     }
     return false;
 }
-
