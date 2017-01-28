@@ -138,7 +138,7 @@ BipBuffer::~BipBuffer() {
  uint8_t* BipBuffer::reserve(int size, int& reserved) {
 	if (szResrv) {
 		reserved = 0;
-		LOGF("BipBuffer multithread issue  ");
+		WARN("BipBuffer multithread issue  ");
 		return 0;
 	}
 // We always allocate on B if B exists; this means we have two blocks and our buffer is filling.
@@ -149,7 +149,7 @@ BipBuffer::~BipBuffer() {
 			freespace = size;
 
 		if (freespace == 0) {
-			LOGF("BipBuffer overflow A=%d:%d B=%d:%d Req=%d", ixa, sza, ixb, szb,size);
+			WARN("BipBuffer overflow A=%d:%d B=%d:%d Req=%d", ixa, sza, ixb, szb,size);
 			return NULL;
 		}
 

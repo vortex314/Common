@@ -34,7 +34,7 @@ void sema_create() {
 //	sem = sem_open("pSem", O_CREAT | O_EXCL); //, 0644, value);
 //	if (sem < 0) {
 	if (sem_init(&put_mutex, 1, 1) < 0) {
-		LOGF("connect: Unable to create semaphore  %s errno : %d : %s ",
+		WARN("connect: Unable to create semaphore  %s errno : %d : %s ",
 				"pSem", errno, strerror(errno));
 	}
 	sem_unlink("pSem");
@@ -46,7 +46,7 @@ void sema_create() {
 void sema_wait() {
 #ifdef __linux__
 	if (::sem_wait(&put_mutex) < 0) { /* P operation */
-		LOGF("connect: Unable to wait semaphore  %s errno : %d : %s ",
+		WARN("connect: Unable to wait semaphore  %s errno : %d : %s ",
 				"pSem", errno, strerror(errno));
 	}
 #endif
@@ -58,7 +58,7 @@ void sema_wait() {
 void sema_release() {
 #ifdef __linux__
 	if (::sem_post(&put_mutex) < 0) { /* V operation */
-		LOGF("connect: Unable to post semaphore  %s errno : %d : %s ",
+		WARN("connect: Unable to post semaphore  %s errno : %d : %s ",
 				"pSem", errno, strerror(errno));
 	}
 #endif
@@ -73,7 +73,7 @@ CborQueue::CborQueue(uint32_t size) {
 	_start = 0;
 	_buffer.allocateBuffer(size);
 	sema_create();
-//	LOGF(" CborQueue %X:%d ",this,_size);
+//	WARN(" CborQueue %X:%d ",this,_size);
 }
 
 CborQueue::~CborQueue() {
@@ -164,7 +164,7 @@ Erc CborQueue::vputf(const char* fmt, va_list args) {
 	Cbor cbor(0);
 	erc = putMap(cbor);
 	if (erc) {
-		LOGF(" putMap failed : %d ", erc)
+		WARN(" putMap failed : %d ", erc)
 		return erc;
 	}
 
@@ -206,7 +206,7 @@ Erc CborQueue::putMap(Cbor& cbor) {
 	int size = MAX_SIZE;
 	sema_wait();						//**************************** MUTEX SET
 	if (_write_size) {
-		LOGF(" CborQueue %X:%d ", this, _write_size);
+		WARN(" CborQueue %X:%d ", this, _write_size);
 		erc = EBUSY;
 	} else {
 		_start = _buffer.reserve((int) size + 2, reserved);

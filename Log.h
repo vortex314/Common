@@ -20,7 +20,7 @@ class Log : public Str
 {
 public:
 	typedef enum  { LOG_TRACE=0,LOG_DEBUG,LOG_INFO,LOG_WARN,LOG_ERROR,LOG_FATAL,LOG_NONE } LogLevel;
-    static char _logLevel[7]={'T','D','I','W','E','F','N'};
+    static char _logLevel[7];
 private:
 	bool _enabled;
 	LogFunction _logFunction;
