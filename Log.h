@@ -40,6 +40,7 @@ public:
 	void vprintf(const char* fmt,va_list args);
 	void time();
 	void host(const char* hostname);
+    void location(const char* module,uint32_t line);
 	void application(const char* applicationName);
 	void flush();
 	void level(LogLevel l);
@@ -47,19 +48,21 @@ public:
 };
 
 extern Log logger;
+//#define LOGF(fmt,...)  {logger.time();logger.host(0);logger.application(0);logger.location(__PRETTY_FUNCTION__ ,__LINE__);logger.printf(fmt,##__VA_ARGS__);logger.flush();}//delay(10);
+#define LOGF(fmt,...)  {logger.time();logger.host(0);logger.application(0);logger.location(__FUNCTION__ ,__LINE__);logger.printf(fmt,##__VA_ARGS__);logger.flush();}//delay(10);
+
 
 #ifdef ARDUINO
 #define nullptr 0
 #include <Arduino.h>
 
 #define __FLE__ strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
-#define LOGF(fmt,...)  {logger.printf("%lu | %s:%d | ", millis(),__FILE__,__LINE__);logger.printf(fmt,##__VA_ARGS__);logger.flush();}//delay(10);
+//#define LOGF(fmt,...)  {logger.printf("%lu | %s:%d | ", millis(),__FILE__,__LINE__);logger.printf(fmt,##__VA_ARGS__);logger.flush();}//delay(10);
 #define ASSERT_LOG(xxx) if ( !(xxx)) { logger.printf(" Assertion failed %s",#xxx); logger.flush();while(1){delay(1000);};}
 #define ASSERT(xxx) if ( !(xxx)) { logger.printf(" Assertion failed %s",#xxx); logger.flush();while(1){delay(1000);};}
 
 #else
 
-#define LOGF(fmt,...)  {logger.time();logger.host(0);logger.application(0);logger.printf("| %s:%d  ",__FILE__,__LINE__);logger.printf(fmt,##__VA_ARGS__);logger.flush();}//delay(10);
 #define ASSERT_LOG(xxx) if ( !(xxx)) { logger.printf(" Assertion failed %s",#xxx); logger.flush();while(1){Sys::delay(1000);};}
 #define ASSERT(xxx) if ( !(xxx)) { logger.printf(" Assertion failed %s",#xxx); logger.flush();while(1){Sys::delay(1000);};}
 

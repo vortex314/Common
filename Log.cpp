@@ -137,6 +137,15 @@ void Log::time()
 }
 
 //---------------------------------------------------------------------------------------------
+void Log::location(const char* module,uint32_t line)
+{
+    
+    printf("| %10s:%4d | ",module,line);
+
+//   strftime (line, sizeof(line), "%Y-%m-%d %H:%M:%S.mmm", sTm);
+}
+
+//---------------------------------------------------------------------------------------------
 
 void Log::host(const char* hostname)
 {
