@@ -274,7 +274,7 @@ bool Bytes::hasData() {
 }
 
 bool Bytes::hasSpace(uint32_t size) {
-	return (_capacity - _limit) > size;
+	return (_capacity - _limit) >= size;
 }
 const char *HEX_VALUES = "0123456789ABCDEF";
 #include "Str.h"
