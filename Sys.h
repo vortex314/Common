@@ -51,38 +51,5 @@ private:
 };
 #endif
 
-#ifdef __cplusplus
-
-
-
-
-extern "C" {
-#endif
-
-
-uint64_t SysMillis();
-// ---------------------- LINUX ------------------------------
-
-#if defined( __CYGWIN__) || defined(__linux__)
-#define IRAM
-#define IROM
-#endif
-// ---------------------- ESP8266 ----------------------------
-#ifdef __ESP8266__
-#include "mem.h"
-#define IROM __attribute__((section(".irom0.text")))
-#define IROM1 __attribute__((section(".irom01.text")))
-#define IRAM __attribute__((section(".iram.text")))
-#define noinline __attribute__ ((noinline))
-#define attr_pure __attribute__ ((pure))
-#define attr_const __attribute__ ((const))
-void* malloc(uint32_t size);
-void free(void* ptr);
-#endif
-
-#ifdef __cplusplus
-}
-;
-#endif
 
 #endif // SYS_H

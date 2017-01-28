@@ -318,7 +318,7 @@ bool Json::get(int64_t& ll) {
 }
 
 bool Json::get(double & d) {
-    if (_tokenIndex > _tokenCount)
+    if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_PRIMITIVE)
         return false;
@@ -331,7 +331,7 @@ bool Json::get(double & d) {
 }
 
 bool Json::get(bool & bl) {
-    if (_tokenIndex > _tokenCount)
+    if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_PRIMITIVE)
         return false;
@@ -352,7 +352,7 @@ bool Json::get(bool & bl) {
 
 bool Json::get(Str& str) {
     ;
-    if (_tokenIndex > _tokenCount)
+    if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_STRING)
         return false;
@@ -371,7 +371,7 @@ bool Json::get(Str& str) {
 }
 
 bool Json::get(Bytes& bytes) {
-    if (_tokenIndex > _tokenCount)
+    if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_STRING)
         return false;
@@ -391,7 +391,7 @@ bool Json::get(Bytes& bytes) {
 }
 
 bool Json::get(char* sDst, int length) {
-    if (_tokenIndex > _tokenCount)
+    if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_STRING)
         return false;
@@ -408,7 +408,7 @@ bool Json::get(char* sDst, int length) {
 }
 
 bool Json::getArray() {
-    if (_tokenIndex > _tokenCount)
+    if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_ARRAY)
         return false;
@@ -417,7 +417,7 @@ bool Json::getArray() {
 }
 
 bool Json::getMap() {
-    if (_tokenIndex > _tokenCount)
+    if (_tokenIndex >= _tokenCount)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_OBJECT)
         return false;
