@@ -18,12 +18,6 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
-static void usart_send_string(const char *s)
-{
-	while (*s) {
-		usart_send_blocking(USART1, *(s++));
-	}
-}
 #endif
 
 void serialLog(char* start, uint32_t length)
@@ -34,7 +28,9 @@ void serialLog(char* start, uint32_t length)
 #endif
 #ifdef OPENCM3
 	*(start + length) = '\0';
-	usart_send_string(start);
+	while (*s) {
+		usart_send_blocking(USART1, *(s++));
+	}
 #endif
 #ifdef __linux__
 	*(start + length) = '\0';
@@ -47,22 +43,22 @@ Log::Log(uint32_t size) :	Str(size),	_enabled(true), _logFunction(serialLog), _l
 {
 	_application[0] = 0;
 	_hostname[0] = 0;
-
 }
 
 Log::~Log()
 {
-
 }
 
 bool Log::enabled(LogLevel level)
 {
 	return level >= _level;
 }
+
 void Log::disable()
 {
 	_enabled = false;
 }
+
 void Log::enable()
 {
 	_enabled = true;
@@ -122,10 +118,16 @@ Log::LogLevel Log::level()
 	return _level;
 }
 
+
+//_________________________________________ LINUX  ___________________________________________
+//
 #ifdef __linux__
 #include <time.h>
 #include <sys/time.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+//---------------------------------------------------------------------------------------------
 void Log::time()
 {
 	struct timeval tv;
@@ -139,8 +141,9 @@ void Log::time()
 
 //   strftime (line, sizeof(line), "%Y-%m-%d %H:%M:%S.mmm", sTm);
 }
-#include <unistd.h>
-#include <string.h>
+
+//---------------------------------------------------------------------------------------------
+
 void Log::host(const char* hostname)
 {
 	if (hostname == 0) {
@@ -154,6 +157,7 @@ void Log::host(const char* hostname)
 }
 extern const char *__progname;
 
+//---------------------------------------------------------------------------------------------
 
 void Log::application(const char* application)
 {
@@ -167,6 +171,8 @@ void Log::application(const char* application)
 	}
 }
 #endif
+//_________________________________________ EMBEDDED  ________________________________________
+//
 #ifndef __linux__
 void Log::time()
 {
