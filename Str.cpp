@@ -1003,11 +1003,18 @@ bool Str::ishex(uint8_t c) {
 }
 
 uint8_t Str::hexToNibble(uint8_t ch) {
-    if (ch >= '0' || ch <= '9')
+    if (ch >= '0' && ch <= '9')
         return ch - '0';
-    if (ch >= 'A' || ch <= 'F')
-        return ch - 'A' + 10;
-    if (ch >= 'a' || ch <= 'f')
-        return ch - 'a' + 10;
+    if (ch >= 'A' && ch <= 'F')
+        return (ch - 'A') + 10;
+    if (ch >= 'a' && ch <= 'f')
+        return (ch - 'a') + 10;
     return 0;
 }
+/*
+ * String.cpp
+ *
+ *  Created on: 25-jun.-2013
+ *      Author: lieven2
+ */
+
