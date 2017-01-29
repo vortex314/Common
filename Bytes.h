@@ -52,6 +52,7 @@ public:
 	int peek(int32_t offset);
 	int peek();
 	int used();
+    bool seek(uint8_t b);
 
 	bool hasData();
 	bool hasData(int size);

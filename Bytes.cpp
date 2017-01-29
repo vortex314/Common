@@ -265,6 +265,15 @@ int Bytes::peek() {
 	return _start[_offset];
 }
 
+bool Bytes::seek(uint8_t b) {
+    for(uint32_t i=_offset;i<_limit;i++)
+        if( _start[i]==b) {
+            _offset=i;
+            return true;
+        }
+    return false;
+}
+
 int Bytes::peek(int32_t offset) {
 	return _start[offset];
 }
