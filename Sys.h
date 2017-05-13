@@ -50,6 +50,13 @@ protected:
 private:
 };
 #endif
+#ifdef __cplusplus
+extern "C" {
+#endif
+    uint64_t SysMillis();
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif // SYS_H

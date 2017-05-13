@@ -491,6 +491,15 @@ void Json::rewind()
     _tokenIndex = 0;
 }
 
+bool Json::next() {
+    if ( _tokenIndex < _tokenCount ) {
+        _tokenIndex++;
+        return true;
+    } else {
+        return false;
+    }
+}
+
 bool Json::findKey(const char* key)
 {
     if (_tokens[_tokenIndex].type != JSMN_OBJECT)
