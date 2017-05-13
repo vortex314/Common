@@ -345,6 +345,16 @@ bool Json::get(int64_t& ll)
     return false;
 }
 
+bool Json::get(uint32_t& ll)
+{
+    double d;
+    if ( get(d)) {
+        ll=d;
+        return true;
+    }
+    return false;
+}
+
 bool Json::get(double & d)
 {
     if (_tokenIndex >= _tokenCount)
@@ -385,7 +395,7 @@ bool Json::get(Str& str)
     ;
     if (_tokenIndex >= _tokenCount)
         return false;
-    if (_tokens[_tokenIndex].type != JSMN_STRING)
+    if (_tokens[_tokenIndex].type != JSMN_STRING && _tokens[_tokenIndex].type != JSMN_PRIMITIVE )
         return false;
 //	const char* s = c_str() + _tokens[_tokenIndex].start;
     /*if (s[_tokens[_tokenIndex].start] == '"'

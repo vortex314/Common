@@ -59,6 +59,7 @@ public:
     Erc parse();
     void rewind();
     bool next();
+    
     bool get(double& d);
     bool get(bool& bl);
     bool get(Str& str);

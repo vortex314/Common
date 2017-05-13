@@ -64,6 +64,7 @@ public:
     Str& substr(Str& master,uint32_t offset);
 
     bool operator==(Str& str);
+    bool operator==(const char* s);
     bool find(const char *str);
     bool endsWith(const char* end);
     bool startsWith(Str& str);
