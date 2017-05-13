@@ -613,12 +613,12 @@ static char *cvt(double arg, int ndigits, int *decpt, int *sign, char *buf,
     return buf;
 }
 #endif
-
+/*
 Str::Str() :
     Bytes(0)
 {
 }
-
+*/
 Str::Str(int size) :
     Bytes(size)
 {

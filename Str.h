@@ -17,7 +17,7 @@ class Log;
 class Str : public Bytes
 {
 public:
-    Str();
+//    Str();
     Str(int size);
 //    Str(const char*s );
     Str(Bytes& bytes);

@@ -361,11 +361,13 @@ bool Json::get(double & d)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_PRIMITIVE)
         return false;
-    Str value;
+    Str value(0);
     mapToken(value);
     _tokenIndex++;
     double t = atof(value.c_str());
     d = t;
+    float f=d;
+ //   INFO(" double : %f ",f);
     return true;
 }
 
@@ -375,7 +377,7 @@ bool Json::get(bool & bl)
         return false;
     if (_tokens[_tokenIndex].type != JSMN_PRIMITIVE)
         return false;
-    Str value;
+    Str value(0);
     mapToken(value);
     _tokenIndex++;
     if (strncmp(value.c_str(), "true",
@@ -481,7 +483,7 @@ Json::Type Json::getType()
     } else if (_tokens[_tokenIndex].type == JSMN_STRING) {
         return JSON_STRING;
     } else if ( _tokens[_tokenIndex].type == JSMN_PRIMITIVE ) {
-        Str value;
+        Str value(0);
         mapToken(value);
         if ( value.equals("true") || value.equals("false")) {
             return JSON_BOOL;
