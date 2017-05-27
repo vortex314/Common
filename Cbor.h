@@ -16,6 +16,7 @@ public:
 		float _float;
 		bool _bool;
 		int _length;
+        uint8_t _bytes[8];
 	} CborVariant;
 	typedef enum {
 		P_PINT = 0,

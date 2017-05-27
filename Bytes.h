@@ -55,7 +55,7 @@ public:
     bool seek(uint8_t b);
 
 	bool hasData();
-	bool hasData(int size);
+	bool hasData(uint32_t size);
 	bool hasSpace(uint32_t size);
 	bool equals(const uint8_t* pb,uint32_t length);
 

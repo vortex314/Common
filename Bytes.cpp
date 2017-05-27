@@ -282,6 +282,10 @@ bool Bytes::hasData() {
 	return _offset < _limit;
 }
 
+bool Bytes::hasData(uint32_t size) {
+	return _offset+size-1 < _limit;
+}
+
 bool Bytes::hasSpace(uint32_t size) {
 	return (_capacity - _limit) >= size;
 }
