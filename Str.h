@@ -60,6 +60,7 @@ public:
     Str& appendHex(uint8_t byte);
     Str& appendHex(uint32_t word);
     Str& appendHex(uint64_t word);
+    Str& appendHex(uint8_t* byte,uint32_t length,char separator);
 	Str& format(const char* fmt,va_list va);
     Str& substr(Str& master,uint32_t offset);
 
