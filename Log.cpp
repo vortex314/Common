@@ -22,7 +22,7 @@
 
 
 
-void serialLog(char* start, uint32_t length)
+void Log::serialLog(char* start, uint32_t length)
 {
 #ifdef ARDUINO
     Serial.write(start, length);
@@ -42,7 +42,7 @@ void serialLog(char* start, uint32_t length)
 }
 char Log::_logLevel[7]={'T','D','I','W','E','F','N'};
 
-Log::Log(uint32_t size) :	Str(size),	_enabled(true), _logFunction(serialLog), _level(LOG_ERROR)
+Log::Log(uint32_t size) :	Str(size),	_enabled(true), _logFunction(serialLog), _level(LOG_INFO)
 {
     _application[0] = 0;
     _hostname[0] = 0;
@@ -50,6 +50,14 @@ Log::Log(uint32_t size) :	Str(size),	_enabled(true), _logFunction(serialLog), _l
 
 Log::~Log()
 {
+}
+
+void Log::setLogLevel(char c){
+    for(int i=0;i<sizeof(_logLevel);i++)
+        if (_logLevel[i]==c) {
+            _level=(Log::LogLevel)i;
+            break;
+        }
 }
 
 bool Log::enabled(LogLevel level)

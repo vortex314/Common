@@ -32,6 +32,7 @@ public:
 	Log(uint32_t size);
 	~Log();
 	bool enabled(LogLevel level);
+    void setLogLevel(char l);
 	void disable();
 	void enable();
 	void defaultOutput();
@@ -44,6 +45,7 @@ public:
 	void application(const char* applicationName);
 	void flush();
 	void level(LogLevel l);
+    static void serialLog(char* start,uint32_t length);
 	LogLevel level();
 };
 
