@@ -366,7 +366,7 @@ bool Json::get(double & d)
     _tokenIndex++;
     double t = atof(value.c_str());
     d = t;
-    float f=d;
+ //   float f=d;
  //   INFO(" double : %f ",f);
     return true;
 }

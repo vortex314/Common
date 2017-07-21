@@ -25,7 +25,7 @@
 void Log::serialLog(char* start, uint32_t length)
 {
 #ifdef ARDUINO
-    Serial.write(start, length);
+    Serial.write((const uint8_t*)start, length);
     Serial.write("\r\n");
 #endif
 #ifdef OPENCM3
@@ -89,10 +89,11 @@ void Log::setOutput(LogFunction function)
     _logFunction = function;
 }
 #ifdef ARDUINO
+#ifdef ESP8266
 extern "C" {
 #include <ets_sys.h>
 };
-
+#endif
 #endif
 
 void Log::printf(const char* fmt, ...)

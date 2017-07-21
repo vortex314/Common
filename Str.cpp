@@ -1036,7 +1036,7 @@ Erc Str::parse(int64_t& ll)
 bool Str::isNumber()
 {
     offset(0);
-    enum { BEGIN , WHOLE,FRACT,EXP_BEGIN,EXP_VALUE} state;
+    enum { BEGIN , WHOLE,FRACT,EXP_BEGIN,EXP_VALUE} state=BEGIN;
     while ( hasData()) {
         char ch=read();
         switch(state) {
