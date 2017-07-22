@@ -79,6 +79,7 @@ public:
 
 	const char* toString(Str& str);
 	const char* toHex(Str& str);
+	bool fromHex(Str& str);
 public:
 	uint8_t *_start;
 	uint32_t _limit;

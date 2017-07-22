@@ -34,6 +34,7 @@ class Sys {
 public:
 	static  uint64_t _upTime;
 	static void init();
+	static uint64_t micros();
 	static uint64_t millis();
 	static uint64_t now();
 	static void setNow(uint64_t time);

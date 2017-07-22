@@ -75,6 +75,7 @@ public:
     bool isHex();
 
     Erc parse(uint64_t* pval);
+    Erc parseHex(Bytes& bytes);
     Erc parse(uint32_t* pval);
     Erc parse(int32_t* pval);
     Erc parse(double& d);
