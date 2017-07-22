@@ -681,6 +681,14 @@ Str& Str::appendHex(uint8_t* byt, uint32_t length, char separator) {
   return *this;
 }
 
+Str& Str::appendHex(Bytes& bytes) {
+  bytes.offset(0);
+  while (bytes.hasData()) {
+    appendHex(bytes.read());
+  };
+  return *this;
+}
+
 Str& Str::appendHex(uint8_t byt) {
   write(hexChar[byt >> 4]);
   write(hexChar[byt & 0xF]);
@@ -886,14 +894,14 @@ Erc Str::parse(uint32_t* pval) {
 }
 
 Erc Str::parseHex(Bytes& bytes) {
-  while(true){
-    uint8_t b=0;
-    if ( hasData() && ishex(peek())) {
+  while (true) {
+    uint8_t b = 0;
+    if (hasData() && ishex(peek())) {
       b = hexToNibble(read());
     } else {
       break;
     };
-    if ( hasData() && ishex(peek())) {
+    if (hasData() && ishex(peek())) {
       b = b << 4;
       b += hexToNibble(read());
     } else {
@@ -901,9 +909,8 @@ Erc Str::parseHex(Bytes& bytes) {
     }
     bytes.write(b);
   }
-return E_OK;
+  return E_OK;
 }
-
 
 Erc Str::parseHex(uint8_t* pb) {
   uint8_t b = 0;
