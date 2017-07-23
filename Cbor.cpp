@@ -53,11 +53,14 @@ bool Cbor::get(int32_t& i) {
 bool Cbor::get(uint16_t& i) {
   CborVariant v;
   PackType type;
-  if ((readToken(type, v) == E_OK) && (type == P_PINT)) {
-    i = v._uint64;
-    return true;
-  } else if (type == P_NILL) {
-    return true;
+  if (readToken(type, v) == E_OK) {
+    if (type == P_PINT) {
+      i = v._uint64;
+      return true;
+    } else if (type == P_DOUBLE) {
+      i = v._double;
+      return true;
+    }
   }
   //	LOGF("get uint32_t failed");
   return false;
