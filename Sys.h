@@ -47,6 +47,8 @@ public:
 	static void hostname(const char*hn);
 	static void setHostname(const char*hn);
 	static const char* hostname();
+	static uint32_t getFreeHeap();
+	static uint32_t getSerialId();
 protected:
 private:
 };
