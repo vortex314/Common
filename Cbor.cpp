@@ -94,16 +94,26 @@ bool Cbor::get(uint64_t& l) {
 bool Cbor::get(float& fl) {
   CborVariant v;
   PackType type;
-  if ((readToken(type, v) == E_OK) && (type == P_FLOAT)) {
-    union {
-      float f;
-      uint32_t i;
-    };
-    i = v._uint64;
-    fl = f;
-    return true;
-  } else if (type == P_NILL) {
-    return true;
+  if (readToken(type, v) == E_OK) {
+    if (type == P_FLOAT) {
+      union {
+        float f;
+        uint32_t i;
+      };
+      i = v._uint64;
+      fl = f;
+      return true;
+    } else if (type == P_DOUBLE) {
+      union {
+        double d;
+        uint64_t i;
+      };
+      i = v._uint64;
+      fl = d;
+      return true;
+    } else if (type == P_NILL) {
+      return true;
+    }
   }
   ERROR("get float failed");
   return false;
@@ -116,6 +126,14 @@ bool Cbor::get(double& d) {
     union {
       double f;
       uint64_t i;
+    };
+    i = v._uint64;
+    d = f;
+    return true;
+  } else if ((readToken(type, v) == E_OK) && (type == P_FLOAT)) {
+    union {
+      float f;
+      uint32_t i;
     };
     i = v._uint64;
     d = f;

@@ -70,6 +70,7 @@ class Cbor : public Bytes {
   bool vscanf(const char* fmt, va_list args);
   void sprintf(Str& s);
 
+  bool get(const char*& s) { return true; };  // to satisfy template Property
   bool get(bool& bl);
   bool get(uint16_t& i);
   bool get(uint32_t& i);
