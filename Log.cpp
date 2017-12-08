@@ -19,13 +19,15 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
 #endif
+#ifdef ESP32_IDF
+#endif
 
 
 
 void Log::serialLog(char* start, uint32_t length)
 {
 #ifdef ARDUINO
-    Serial.write(start, length);
+    Serial.write((const uint8_t*)start, length);
     Serial.write("\r\n");
 #endif
 #ifdef OPENCM3
@@ -38,6 +40,10 @@ void Log::serialLog(char* start, uint32_t length)
     *(start + length) = '\0';
     fprintf(stdout, "%s\n", start);
     fflush(stdout);
+#endif
+#ifdef ESP32_IDF
+*(start + length) = '\0';
+    ::printf("%s\n", start);
 #endif
 }
 char Log::_logLevel[7]={'T','D','I','W','E','F','N'};
@@ -89,10 +95,11 @@ void Log::setOutput(LogFunction function)
     _logFunction = function;
 }
 #ifdef ARDUINO
+#ifdef ESP8266
 extern "C" {
 #include <ets_sys.h>
 };
-
+#endif
 #endif
 
 void Log::printf(const char* fmt, ...)

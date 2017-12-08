@@ -34,6 +34,7 @@ class Sys {
 public:
 	static  uint64_t _upTime;
 	static void init();
+	static uint64_t micros();
 	static uint64_t millis();
 	static uint64_t now();
 	static void setNow(uint64_t time);
@@ -46,6 +47,8 @@ public:
 	static void hostname(const char*hn);
 	static void setHostname(const char*hn);
 	static const char* hostname();
+	static uint32_t getFreeHeap();
+	static uint32_t getSerialId();
 protected:
 private:
 };
