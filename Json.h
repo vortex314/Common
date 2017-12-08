@@ -59,12 +59,13 @@ public:
     Erc parse();
     void rewind();
     bool next();
-    
+
     bool get(double& d);
     bool get(bool& bl);
     bool get(Str& str);
     bool get(Bytes& str);
     bool get(int64_t& ul);
+    bool get(int32_t& ul);
     bool getHex(uint64_t& ul);
     bool get(uint32_t& ul);
     bool get(char* s, int length);

@@ -54,7 +54,7 @@ void Json::addComma()
 
 Json& Json::add(int i)
 {
-    bool get(int64_t& ul);
+ //   bool get(int64_t& ul);
     addComma();
     append((int64_t)i);
     return *this;
@@ -336,6 +336,16 @@ void Json::mapToken(Str& str)
 }
 #include <stdlib.h>
 bool Json::get(int64_t& ll)
+{
+    double d;
+    if ( get(d)) {
+        ll=d;
+        return true;
+    }
+    return false;
+}
+
+bool Json::get(int32_t& ll)
 {
     double d;
     if ( get(d)) {
