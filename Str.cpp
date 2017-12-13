@@ -12,7 +12,7 @@
 
 #include <math.h>
 
-void ftoa(float f, char* str, uint8_t precision);
+extern "C" void ftoa(float f, char* str, uint8_t precision);
 
 #define DOUBLE
 
@@ -1000,7 +1000,7 @@ uint8_t Str::hexToNibble(uint8_t ch) {
  *  Created on: 25-jun.-2013
  *      Author: lieven2
  */
-void ftoa(float f, char* str, uint8_t precision) {
+extern "C" void ftoa(float f, char* str, uint8_t precision) {
   uint8_t i, j, divisor = 1;
   int8_t log_f;
   int32_t int_digits = (int)f;  // store the integer digits
