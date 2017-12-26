@@ -53,6 +53,7 @@ class Str : public Bytes {
   Str& append(double d);
   Str& append(bool b);
   Str& appendHex(uint8_t byte);
+  Str& appendHex(uint16_t byte);
   Str& appendHex(uint32_t word);
   Str& appendHex(uint64_t word);
   Str& appendHex(uint8_t* byte, uint32_t length, char separator);

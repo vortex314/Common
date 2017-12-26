@@ -695,6 +695,12 @@ Str& Str::appendHex(uint8_t byt) {
   return *this;
 }
 
+Str& Str::appendHex(uint16_t word) {
+  appendHex((uint8_t)(word >> 8));
+  appendHex((uint8_t)(word));
+  return *this;
+}
+
 Str& Str::appendHex(uint32_t word) {
   appendHex((uint8_t)(word >> 24));
   appendHex((uint8_t)(word >> 16));
