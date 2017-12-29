@@ -9,14 +9,14 @@
 #include "Erc.h"
 #include "Sys.h"
 #include "Board.h"
-#include <Log.h>
+//#include <Log.h>
 //#include <Logger.h>
 //#include "Message.h"
 //#include "assert.h"
 
  CircBuf::CircBuf(int size) {
 	start = new uint8_t[size];
-	ASSERT(start != 0);
+//	ASSERT(start != 0);
 	readPos = 0;
 	writePos = 1;
 	limit = size;
@@ -30,7 +30,7 @@
  CircBuf::~CircBuf() {
 	delete[] start;
 }
-#include "Board.h"
+
  int  CircBuf::write(uint8_t b) { // not in  as it will be called in interrupt
 	uint16_t newPos = (writePos + 1) % limit;
 	if (newPos == readPos)
