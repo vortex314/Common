@@ -85,7 +85,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /*
  * Implementation
  */
-struct param {
+struct param
+{
   char lz : 1;         /**<  Leading zeros */
   char alt : 1;        /**<  alternate form */
   char uc : 1;         /**<  Upper case (for base16 only) */
@@ -98,17 +99,20 @@ struct param {
 
 #ifdef PRINTF_LONG_LONG_SUPPORT
 static void _TFP_GCC_NO_INLINE_ ulli2a(unsigned long long int num,
-                                       struct param *p) {
+                                       struct param *p)
+{
   int n = 0;
   unsigned long long int d = 1;
   char *bf = p->bf;
   while (num / d >= p->base)
     d *= p->base;
-  while (d != 0) {
+  while (d != 0)
+  {
     int dgt = num / d;
     num %= d;
     d /= p->base;
-    if (n || dgt > 0 || d == 0) {
+    if (n || dgt > 0 || d == 0)
+    {
       *bf++ = dgt + (dgt < 10 ? '0' : (p->uc ? 'A' : 'a') - 10);
       ++n;
     }
@@ -116,8 +120,10 @@ static void _TFP_GCC_NO_INLINE_ ulli2a(unsigned long long int num,
   *bf = 0;
 }
 
-static void lli2a(long long int num, struct param *p) {
-  if (num < 0) {
+static void lli2a(long long int num, struct param *p)
+{
+  if (num < 0)
+  {
     num = -num;
     p->sign = '-';
   }
@@ -126,17 +132,20 @@ static void lli2a(long long int num, struct param *p) {
 #endif
 
 #ifdef PRINTF_LONG_SUPPORT
-static void uli2a(unsigned long int num, struct param *p) {
+static void uli2a(unsigned long int num, struct param *p)
+{
   int n = 0;
   unsigned long int d = 1;
   char *bf = p->bf;
   while (num / d >= p->base)
     d *= p->base;
-  while (d != 0) {
+  while (d != 0)
+  {
     int dgt = num / d;
     num %= d;
     d /= p->base;
-    if (n || dgt > 0 || d == 0) {
+    if (n || dgt > 0 || d == 0)
+    {
       *bf++ = dgt + (dgt < 10 ? '0' : (p->uc ? 'A' : 'a') - 10);
       ++n;
     }
@@ -144,8 +153,10 @@ static void uli2a(unsigned long int num, struct param *p) {
   *bf = 0;
 }
 
-static void li2a(long num, struct param *p) {
-  if (num < 0) {
+static void li2a(long num, struct param *p)
+{
+  if (num < 0)
+  {
     num = -num;
     p->sign = '-';
   }
@@ -153,17 +164,20 @@ static void li2a(long num, struct param *p) {
 }
 #endif
 
-static void ui2a(unsigned int num, struct param *p) {
+static void ui2a(unsigned int num, struct param *p)
+{
   int n = 0;
   unsigned int d = 1;
   char *bf = p->bf;
   while (num / d >= p->base)
     d *= p->base;
-  while (d != 0) {
+  while (d != 0)
+  {
     int dgt = num / d;
     num %= d;
     d /= p->base;
-    if (n || dgt > 0 || d == 0) {
+    if (n || dgt > 0 || d == 0)
+    {
       *bf++ = dgt + (dgt < 10 ? '0' : (p->uc ? 'A' : 'a') - 10);
       ++n;
     }
@@ -171,15 +185,18 @@ static void ui2a(unsigned int num, struct param *p) {
   *bf = 0;
 }
 
-static void i2a(int num, struct param *p) {
-  if (num < 0) {
+static void i2a(int num, struct param *p)
+{
+  if (num < 0)
+  {
     num = -num;
     p->sign = '-';
   }
   ui2a(num, p);
 }
 
-static int a2d(char ch) {
+static int a2d(char ch)
+{
   if (ch >= '0' && ch <= '9')
     return ch - '0';
   else if (ch >= 'a' && ch <= 'f')
@@ -190,11 +207,13 @@ static int a2d(char ch) {
     return -1;
 }
 
-static char a2u(char ch, const char **src, int base, unsigned int *nump) {
+static char a2u(char ch, const char **src, int base, unsigned int *nump)
+{
   const char *p = *src;
   unsigned int num = 0;
   int digit;
-  while ((digit = a2d(ch)) >= 0) {
+  while ((digit = a2d(ch)) >= 0)
+  {
     if (digit > base)
       break;
     num = num * base + digit;
@@ -205,7 +224,8 @@ static char a2u(char ch, const char **src, int base, unsigned int *nump) {
   return ch;
 }
 
-static void putchw(Str &str, struct param *p) {
+static void putchw(Str &str, struct param *p)
+{
   char ch;
   int n = p->width;
   char *bf = p->bf;
@@ -221,7 +241,8 @@ static void putchw(Str &str, struct param *p) {
     n--;
 
   /* Fill with space to align to the right, before alternate or sign */
-  if (!p->lz && !p->align_left) {
+  if (!p->lz && !p->align_left)
+  {
     while (n-- > 0)
       str.append(' ');
   }
@@ -231,15 +252,19 @@ static void putchw(Str &str, struct param *p) {
     str.append(p->sign);
 
   /* Alternate */
-  if (p->alt && p->base == 16) {
+  if (p->alt && p->base == 16)
+  {
     str.append('0');
     str.append((p->uc ? 'X' : 'x'));
-  } else if (p->alt && p->base == 8) {
+  }
+  else if (p->alt && p->base == 8)
+  {
     str.append('0');
   }
 
   /* Fill with zeros, after alternate or sign */
-  if (p->lz) {
+  if (p->lz)
+  {
     while (n-- > 0)
       str.append('0');
   }
@@ -250,13 +275,15 @@ static void putchw(Str &str, struct param *p) {
     str.append(ch);
 
   /* Fill with space to align to the left, after string */
-  if (!p->lz && p->align_left) {
+  if (!p->lz && p->align_left)
+  {
     while (n-- > 0)
       str.append(' ');
   }
 }
 
-Str &Str::format(const char *fmt, va_list va) {
+Str &Str::format(const char *fmt, va_list va)
+{
   struct param p;
 #ifdef PRINTF_LONG_SUPPORT
   char bf[23]; /* long = 64b on some architectures */
@@ -266,10 +293,14 @@ Str &Str::format(const char *fmt, va_list va) {
   char ch;
   p.bf = bf;
 
-  while ((ch = *(fmt++))) {
-    if (ch != '%') {
+  while ((ch = *(fmt++)))
+  {
+    if (ch != '%')
+    {
       append(ch);
-    } else {
+    }
+    else
+    {
 #ifdef PRINTF_LONG_SUPPORT
       char lng = 0; /* 1 for long, 2 for long long */
 #endif
@@ -281,8 +312,10 @@ Str &Str::format(const char *fmt, va_list va) {
       p.sign = 0;
 
       /* Flags */
-      while ((ch = *(fmt++))) {
-        switch (ch) {
+      while ((ch = *(fmt++)))
+      {
+        switch (ch)
+        {
         case '-':
           p.align_left = 1;
           continue;
@@ -299,24 +332,28 @@ Str &Str::format(const char *fmt, va_list va) {
       }
 
       /* Width */
-      if (ch >= '0' && ch <= '9') {
+      if (ch >= '0' && ch <= '9')
+      {
         ch = a2u(ch, &fmt, 10, &(p.width));
       }
 
       /* We accept 'x.y' format but don't support it completely:
        * we ignore the 'y' digit => this ignores 0-fill
        * size and makes it == width (ie. 'x') */
-      if (ch == '.') {
+      if (ch == '.')
+      {
         p.lz = 1; /* zero-padding */
         /* ignore actual 0-fill size: */
-        do {
+        do
+        {
           ch = *(fmt++);
         } while ((ch >= '0') && (ch <= '9'));
       }
 
 #ifdef PRINTF_SIZE_T_SUPPORT
 #ifdef PRINTF_LONG_SUPPORT
-      if (ch == 'z') {
+      if (ch == 'z')
+      {
         ch = *(fmt++);
         if (sizeof(size_t) == sizeof(unsigned long int))
           lng = 1;
@@ -324,23 +361,27 @@ Str &Str::format(const char *fmt, va_list va) {
         else if (sizeof(size_t) == sizeof(unsigned long long int))
           lng = 2;
 #endif
-      } else
+      }
+      else
 #endif
 #endif
 
 #ifdef PRINTF_LONG_SUPPORT
-          if (ch == 'l') {
+          if (ch == 'l')
+      {
         ch = *(fmt++);
         lng = 1;
 #ifdef PRINTF_LONG_LONG_SUPPORT
-        if (ch == 'l') {
+        if (ch == 'l')
+        {
           ch = *(fmt++);
           lng = 2;
         }
 #endif
       }
 #endif
-      switch (ch) {
+      switch (ch)
+      {
       case 0:
         goto abort;
       case 'f':
@@ -435,12 +476,14 @@ abort:;
 static putcf stdout_putf;
 static void *stdout_putp;
 
-void init_printf(void *putp, putcf putf) {
+void init_printf(void *putp, putcf putf)
+{
   stdout_putf = putf;
   stdout_putp = putp;
 }
 
-void tfp_printf(char *fmt, ...) {
+void tfp_printf(char *fmt, ...)
+{
   va_list va;
   va_start(va, fmt);
   tfp_format(stdout_putp, stdout_putf, fmt, va);
@@ -449,20 +492,23 @@ void tfp_printf(char *fmt, ...) {
 #endif
 
 #if TINYPRINTF_DEFINE_TFP_SPRINTF
-struct _vsnprintf_putcf_data {
+struct _vsnprintf_putcf_data
+{
   size_t dest_capacity;
   char *dest;
   size_t num_chars;
 };
 
-static void _vsnprintf_putcf(void *p, char c) {
+static void _vsnprintf_putcf(void *p, char c)
+{
   struct _vsnprintf_putcf_data *data = (struct _vsnprintf_putcf_data *)p;
   if (data->num_chars < data->dest_capacity)
     data->dest[data->num_chars] = c;
   data->num_chars++;
 }
 
-int tfp_vsnprintf(char *str, size_t size, const char *format, va_list ap) {
+int tfp_vsnprintf(char *str, size_t size, const char *format, va_list ap)
+{
   struct _vsnprintf_putcf_data data;
 
   if (size < 1)
@@ -481,7 +527,8 @@ int tfp_vsnprintf(char *str, size_t size, const char *format, va_list ap) {
   return data.num_chars;
 }
 
-int tfp_snprintf(char *str, size_t size, const char *format, ...) {
+int tfp_snprintf(char *str, size_t size, const char *format, ...)
+{
   va_list ap;
   int retval;
 
@@ -491,17 +538,20 @@ int tfp_snprintf(char *str, size_t size, const char *format, ...) {
   return retval;
 }
 
-struct _vsprintf_putcf_data {
+struct _vsprintf_putcf_data
+{
   char *dest;
   size_t num_chars;
 };
 
-static void _vsprintf_putcf(void *p, char c) {
+static void _vsprintf_putcf(void *p, char c)
+{
   struct _vsprintf_putcf_data *data = (struct _vsprintf_putcf_data *)p;
   data->dest[data->num_chars++] = c;
 }
 
-int tfp_vsprintf(char *str, const char *format, va_list ap) {
+int tfp_vsprintf(char *str, const char *format, va_list ap)
+{
   struct _vsprintf_putcf_data data;
   data.dest = str;
   data.num_chars = 0;
@@ -510,7 +560,8 @@ int tfp_vsprintf(char *str, const char *format, va_list ap) {
   return data.num_chars;
 }
 
-int tfp_sprintf(char *str, const char *format, ...) {
+int tfp_sprintf(char *str, const char *format, ...)
+{
   va_list ap;
   int retval;
 
@@ -528,7 +579,8 @@ int tfp_sprintf(char *str, const char *format, ...) {
 // eflag : exponent flag
 #ifdef DOUBLE
 static char *cvt(double arg, int ndigits, int *decpt, int *sign, char *buf,
-                 int eflag) {
+                 int eflag)
+{
   int r2;
   double fi, fj;
   char *p, *p1;
@@ -540,24 +592,30 @@ static char *cvt(double arg, int ndigits, int *decpt, int *sign, char *buf,
   r2 = 0;
   *sign = 0;
   p = &buf[0];
-  if (arg < 0) {
+  if (arg < 0)
+  {
     *sign = 1;
     arg = -arg;
   }
   arg = modf(arg, &fi);
   p1 = &buf[CVTBUFSIZE];
 
-  if (fi != 0) {
+  if (fi != 0)
+  {
     p1 = &buf[CVTBUFSIZE];
-    while (fi != 0) {
+    while (fi != 0)
+    {
       fj = modf(fi / 10, &fi);
       *--p1 = (int)((fj + .03) * 10) + '0';
       r2++;
     }
     while (p1 < &buf[CVTBUFSIZE])
       *p++ = *p1++;
-  } else if (arg > 0) {
-    while ((fj = arg * 10) < 1) {
+  }
+  else if (arg > 0)
+  {
+    while ((fj = arg * 10) < 1)
+    {
       arg = fj;
       r2--;
     }
@@ -566,29 +624,37 @@ static char *cvt(double arg, int ndigits, int *decpt, int *sign, char *buf,
   if (eflag == 0)
     p1 += r2;
   *decpt = r2;
-  if (p1 < &buf[0]) {
+  if (p1 < &buf[0])
+  {
     buf[0] = '\0';
     return buf;
   }
-  while (p <= p1 && p < &buf[CVTBUFSIZE]) {
+  while (p <= p1 && p < &buf[CVTBUFSIZE])
+  {
     arg *= 10;
     arg = modf(arg, &fj);
     *p++ = (int)fj + '0';
   }
-  if (p1 >= &buf[CVTBUFSIZE]) {
+  if (p1 >= &buf[CVTBUFSIZE])
+  {
     buf[CVTBUFSIZE - 1] = '\0';
     return buf;
   }
   p = p1;
   *p1 += 5;
-  while (*p1 > '9') {
+  while (*p1 > '9')
+  {
     *p1 = '0';
-    if (p1 > buf) {
+    if (p1 > buf)
+    {
       ++*--p1;
-    } else {
+    }
+    else
+    {
       *p1 = '1';
       (*decpt)++;
-      if (eflag == 0) {
+      if (eflag == 0)
+      {
         if (p > buf)
           *p = '0';
         p++;
@@ -609,20 +675,25 @@ Str::Str(int size) : Bytes(size) {}
 
 Str::Str(uint8_t *pstart, int size) : Bytes(pstart, size) {}
 #include <string.h>
-Str::Str(const char *s) : Bytes((uint8_t *)s, strlen(s)) {}
+Str::Str(const char *s) : Bytes((uint8_t *)s, strlen(s))
+{
+}
 
-Str &Str::set(const char *const s) {
+Str &Str::set(const char *const s)
+{
   Bytes::clear();
   append(s);
   return *this;
 }
 
-Str &Str::clear() {
+Str &Str::clear()
+{
   Bytes::clear();
   return *this;
 }
 
-bool Str::equals(const char *s) {
+bool Str::equals(const char *s)
+{
   uint32_t i;
   uint32_t slen = strlen(s);
   if (slen != length())
@@ -633,15 +704,18 @@ bool Str::equals(const char *s) {
   return true;
 }
 #include <cstring>
-bool Str::find(const char *s) {
+bool Str::find(const char *s)
+{
   char *pch = strstr((char *)c_str(), s);
-  if (pch) {
+  if (pch)
+  {
     return true;
   }
   return false;
 }
 
-bool Str::endsWith(const char *s) {
+bool Str::endsWith(const char *s)
+{
   int sl = strlen(s);
   int offset = length() - sl;
   if (offset < 0)
@@ -653,7 +727,8 @@ bool Str::endsWith(const char *s) {
   return true;
 }
 
-bool Str::startsWith(Str &s) {
+bool Str::startsWith(Str &s)
+{
   if (s.length() > length())
     return false;
   uint32_t i;
@@ -663,7 +738,8 @@ bool Str::startsWith(Str &s) {
   return true;
 }
 
-bool Str::startsWith(const char *const s) {
+bool Str::startsWith(const char *const s)
+{
   Str ss(s);
   return startsWith(ss);
   /*   if ( s.length() > length()) return false;
@@ -673,24 +749,28 @@ bool Str::startsWith(const char *const s) {
   return true;*/
 }
 
-Str &Str::operator<<(char ch) {
+Str &Str::operator<<(char ch)
+{
   write(ch);
   return *this;
 }
 
-Str &Str::operator<<(int i) {
+Str &Str::operator<<(int i)
+{
   append((int32_t)i);
   return *this;
 }
 
-Str &Str::operator<<(Str &s) {
+Str &Str::operator<<(Str &s)
+{
   write(s._start, 0, s._limit);
   return *this;
 }
 
 Str &Str::operator+=(const char *s) { return append(s); }
 
-Str &Str::operator+=(Str &s) {
+Str &Str::operator+=(Str &s)
+{
   *this << s;
   return *this;
 }
@@ -699,8 +779,10 @@ const char *hexChar = "0123456789ABCDEF";
 
 char nibbleToHex(uint8_t value) { return hexChar[value & 0xF]; }
 
-Str &Str::appendHex(uint8_t *byt, uint32_t length, char separator) {
-  for (int i = 0; i < length; i++) {
+Str &Str::appendHex(uint8_t *byt, uint32_t length, char separator)
+{
+  for (uint32_t i = 0; i < length; i++)
+  {
     if (i && separator)
       append(separator);
     appendHex(byt[i]);
@@ -708,27 +790,32 @@ Str &Str::appendHex(uint8_t *byt, uint32_t length, char separator) {
   return *this;
 }
 
-Str &Str::appendHex(Bytes &bytes) {
+Str &Str::appendHex(Bytes &bytes)
+{
   bytes.offset(0);
-  while (bytes.hasData()) {
+  while (bytes.hasData())
+  {
     appendHex(bytes.read());
   };
   return *this;
 }
 
-Str &Str::appendHex(uint8_t byt) {
+Str &Str::appendHex(uint8_t byt)
+{
   write(hexChar[byt >> 4]);
   write(hexChar[byt & 0xF]);
   return *this;
 }
 
-Str &Str::appendHex(uint16_t word) {
+Str &Str::appendHex(uint16_t word)
+{
   appendHex((uint8_t)(word >> 8));
   appendHex((uint8_t)(word));
   return *this;
 }
 
-Str &Str::appendHex(uint32_t word) {
+Str &Str::appendHex(uint32_t word)
+{
   appendHex((uint8_t)(word >> 24));
   appendHex((uint8_t)(word >> 16));
   appendHex((uint8_t)(word >> 8));
@@ -736,7 +823,8 @@ Str &Str::appendHex(uint32_t word) {
   return *this;
 }
 
-Str &Str::appendHex(uint64_t word) {
+Str &Str::appendHex(uint64_t word)
+{
   uint32_t msb = word >> 32;
   appendHex(msb);
   appendHex((uint32_t)(word));
@@ -744,12 +832,14 @@ Str &Str::appendHex(uint64_t word) {
 }
 
 #ifdef DOUBLE
-Str &Str::operator<<(double d) {
+Str &Str::operator<<(double d)
+{
   append(d);
   return *this;
 }
 
-Str &Str::operator<<(float d) {
+Str &Str::operator<<(float d)
+{
   append(d);
   return *this;
 }
@@ -757,7 +847,8 @@ Str &Str::operator<<(float d) {
 
 #ifdef DOUBLE
 #include <cstdio>
-Str &Str::append(double d) {
+Str &Str::append(double d)
+{
   char buf[80];
   int decpt;
   int sign;
@@ -773,28 +864,33 @@ Str &Str::append(double d) {
   return *this;
 }
 
-Str &Str::append(float f) {
+Str &Str::append(float f)
+{
   double d = f;
   append(d);
   return *this;
 }
 
 #endif
-Str &Str::operator=(Str &s) {
+Str &Str::operator=(Str &s)
+{
   clear();
   s.offset(0);
-  while (s.hasData()) {
+  while (s.hasData())
+  {
     write(s.read());
   };
   return *this;
 }
-Str &Str::operator=(const char *s) {
+Str &Str::operator=(const char *s)
+{
   clear();
   return append(s);
 }
 Str &Str::operator<<(const char *s) { return append(s); }
 
-bool Str::operator==(Str &str) {
+bool Str::operator==(Str &str)
+{
   if (str.length() != length())
     return false;
   uint32_t i;
@@ -804,11 +900,13 @@ bool Str::operator==(Str &str) {
   return true;
 }
 
-bool Str::operator==(const char *str) {
+bool Str::operator==(const char *str)
+{
   if (strlen(str) != length())
     return false;
   uint32_t i = 0;
-  while (str[i]) {
+  while (str[i])
+  {
     if (str[i] != peek(i))
       return false;
     i++;
@@ -816,20 +914,24 @@ bool Str::operator==(const char *str) {
   return true;
 }
 
-Str &Str::append(const char *s) {
-  while (*s != '\0') {
+Str &Str::append(const char *s)
+{
+  while (*s != '\0')
+  {
     write((uint8_t)(*s));
     s++;
   }
   return *this;
 }
 
-Str &Str::append(Str &s) {
+Str &Str::append(Str &s)
+{
   write(s._start, 0, s._limit);
   return *this;
 }
 
-Str &Str::append(char s) {
+Str &Str::append(char s)
+{
   write((uint8_t)(s));
   return *this;
 }
@@ -838,17 +940,20 @@ Str &Str::append(char s) {
 #define is_digit(c) ((unsigned)to_digit(c) <= 9)
 #define to_char(n) ((n) + '0')
 
-bool ishex(uint8_t c) {
+bool ishex(uint8_t c)
+{
   return (c >= '0' || c <= '9') || (c >= 'A' || c <= 'F') ||
          (c >= 'a' || c <= 'f');
 }
 
-Str &Str::append(uint64_t val) {
+Str &Str::append(uint64_t val)
+{
 #define MAX_CHAR 22
   char str[MAX_CHAR];
   str[MAX_CHAR - 1] = '\0';
   char *cp = str + MAX_CHAR - 1;
-  do {
+  do
+  {
     *--cp = to_char(val % 10);
     val /= 10;
   } while (val != 0);
@@ -856,12 +961,14 @@ Str &Str::append(uint64_t val) {
   return *this;
 }
 
-Str &Str::append(uint32_t val) {
+Str &Str::append(uint32_t val)
+{
 #define MAX_CHAR_INT32 10
   char str[MAX_CHAR_INT32];
   str[MAX_CHAR_INT32 - 1] = '\0';
   char *cp = str + MAX_CHAR_INT32 - 1;
-  do {
+  do
+  {
     *--cp = to_char(val % 10);
     val /= 10;
   } while (val != 0);
@@ -869,18 +976,22 @@ Str &Str::append(uint32_t val) {
   return *this;
 }
 
-Str &Str::append(int32_t val) {
+Str &Str::append(int32_t val)
+{
   uint64_t v = val;
-  if (val < 0) {
+  if (val < 0)
+  {
     write('-');
     v = -val;
-  } else
+  }
+  else
     v = val;
   append(v);
   return *this;
 }
 
-Str &Str::append(bool b) {
+Str &Str::append(bool b)
+{
   if (b)
     append("true");
   else
@@ -888,7 +999,8 @@ Str &Str::append(bool b) {
   return *this;
 }
 
-Str &Str::append(void *ptr) {
+Str &Str::append(void *ptr)
+{
   union {
     void *ptr;
     uint8_t b[sizeof(int)];
@@ -901,14 +1013,16 @@ Str &Str::append(void *ptr) {
   return *this;
 }
 
-Str &Str::substr(Str &mstr, uint32_t offset) {
+Str &Str::substr(Str &mstr, uint32_t offset)
+{
   mstr.offset(offset);
   while (mstr.hasData())
     write(mstr.read());
   return *this;
 }
 
-const char *Str::c_str() {
+const char *Str::c_str()
+{
   if (_limit < _capacity)
     *(_start + _limit) = '\0';
   return (char *)_start;
@@ -916,38 +1030,51 @@ const char *Str::c_str() {
 
 bool Str::isdigit(uint8_t v) { return v >= '0' && v <= '9'; }
 
-Erc Str::parse(uint64_t *pval) {
+Erc Str::parse(uint64_t *pval)
+{
   uint64_t val = 0;
-  while (hasData()) {
-    if (isdigit(peek())) {
+  while (hasData())
+  {
+    if (isdigit(peek()))
+    {
       val = val * 10;
       val += read() - '0';
-    } else
+    }
+    else
       return E_INVAL;
   }
   *pval = val;
   return E_OK;
 }
 
-Erc Str::parse(uint32_t *pval) {
+Erc Str::parse(uint32_t *pval)
+{
   uint64_t val = 0;
   parse(&val);
   *pval = val;
   return E_OK;
 }
 
-Erc Str::parseHex(Bytes &bytes) {
-  while (true) {
+Erc Str::parseHex(Bytes &bytes)
+{
+  while (true)
+  {
     uint8_t b = 0;
-    if (hasData() && ishex(peek())) {
+    if (hasData() && ishex(peek()))
+    {
       b = hexToNibble(read());
-    } else {
+    }
+    else
+    {
       break;
     };
-    if (hasData() && ishex(peek())) {
+    if (hasData() && ishex(peek()))
+    {
       b = b << 4;
       b += hexToNibble(read());
-    } else {
+    }
+    else
+    {
       return E_NO_DATA;
     }
     bytes.write(b);
@@ -955,15 +1082,18 @@ Erc Str::parseHex(Bytes &bytes) {
   return E_OK;
 }
 
-Erc Str::parseHex(uint8_t *pb) {
+Erc Str::parseHex(uint8_t *pb)
+{
   uint8_t b = 0;
   int i;
   for (i = 0; i < 2; i++)
     if (hasData())
-      if (ishex(peek())) {
+      if (ishex(peek()))
+      {
         b = b << 4;
         b = hexToNibble(read());
-      } else
+      }
+      else
         return E_INVAL;
     else
       return E_LACK_RESOURCE;
@@ -972,25 +1102,38 @@ Erc Str::parseHex(uint8_t *pb) {
 }
 
 #include <cstdlib>
-Erc Str::parse(int64_t &ll) {
+Erc Str::parse(int64_t &ll)
+{
   //  ll=atoll(c_str());
   return E_OK;
 }
 
-bool Str::isNumber() {
+bool Str::isNumber()
+{
   offset(0);
-  enum { BEGIN, WHOLE, FRACT, EXP_BEGIN, EXP_VALUE } state = BEGIN;
-  while (hasData()) {
+  enum
+  {
+    BEGIN,
+    WHOLE,
+    FRACT,
+    EXP_BEGIN,
+    EXP_VALUE
+  } state = BEGIN;
+  while (hasData())
+  {
     char ch = read();
-    switch (state) {
-    case BEGIN: {
+    switch (state)
+    {
+    case BEGIN:
+    {
       if (ch == '+' || ch == '-' || isdigit(ch))
         state = WHOLE;
       else
         return false;
       break;
     }
-    case WHOLE: {
+    case WHOLE:
+    {
       if (isdigit(ch))
         state = WHOLE;
       else if (ch == '.')
@@ -1001,7 +1144,8 @@ bool Str::isNumber() {
         return false;
       break;
     }
-    case FRACT: {
+    case FRACT:
+    {
       if (isdigit(ch))
         state = FRACT;
       else if (ch == 'E' || ch == 'e')
@@ -1009,13 +1153,15 @@ bool Str::isNumber() {
       else
         return false;
     }
-    case EXP_BEGIN: {
+    case EXP_BEGIN:
+    {
       if (ch == '+' || ch == '-' || isdigit(ch))
         state = EXP_VALUE;
       else
         return false;
     }
-    case EXP_VALUE: {
+    case EXP_VALUE:
+    {
       if (isdigit(ch))
         state = EXP_VALUE;
       else
@@ -1026,12 +1172,14 @@ bool Str::isNumber() {
   return true;
 }
 
-bool Str::ishex(uint8_t c) {
+bool Str::ishex(uint8_t c)
+{
   return (c >= '0' || c <= '9') || (c >= 'A' || c <= 'F') ||
          (c >= 'a' || c <= 'f');
 }
 
-uint8_t Str::hexToNibble(uint8_t ch) {
+uint8_t Str::hexToNibble(uint8_t ch)
+{
   if (ch >= '0' && ch <= '9')
     return ch - '0';
   if (ch >= 'A' && ch <= 'F')
@@ -1046,7 +1194,8 @@ uint8_t Str::hexToNibble(uint8_t ch) {
  *  Created on: 25-jun.-2013
  *      Author: lieven2
  */
-extern "C" void ftoa(float f, char *str, uint8_t precision) {
+extern "C" void ftoa(float f, char *str, uint8_t precision)
+{
   uint8_t i, j, divisor = 1;
   int8_t log_f;
   int32_t int_digits = (int)f; // store the integer digits
@@ -1056,18 +1205,23 @@ extern "C" void ftoa(float f, char *str, uint8_t precision) {
   memset(str, 0, strlen(str));
   memset(s1, 0, 10);
 
-  if (f < 0) {    // if a negative number
+  if (f < 0)
+  {               // if a negative number
     str[0] = '-'; // start the char array with '-'
     f = abs(f);   // store its positive absolute value
   }
-  log_f = ceil(log10(f));     // get number of digits before the decimal
-  if (log_f > 0) {            // log value > 0 indicates a number > 1
-    if (log_f == precision) { // if number of digits = significant figures
-      f += 0.5;               // add 0.5 to round up decimals >= 0.5
-      itoa(f, s1, 10);        // itoa converts the number to a char array
-      strcat(str, s1);        // add to the number string
-    } else if ((log_f - precision) >
-               0) {          // if more integer digits than significant digits
+  log_f = ceil(log10(f)); // get number of digits before the decimal
+  if (log_f > 0)
+  { // log value > 0 indicates a number > 1
+    if (log_f == precision)
+    {                  // if number of digits = significant figures
+      f += 0.5;        // add 0.5 to round up decimals >= 0.5
+      itoa(f, s1, 10); // itoa converts the number to a char array
+      strcat(str, s1); // add to the number string
+    }
+    else if ((log_f - precision) >
+             0)
+    {                        // if more integer digits than significant digits
       i = log_f - precision; // count digits to discard
       divisor = 10;
       for (j = 0; j < i; j++)
@@ -1078,24 +1232,29 @@ extern "C" void ftoa(float f, char *str, uint8_t precision) {
       int_digits *= divisor; // and multiply back to the adjusted value
       itoa(int_digits, s1, 10);
       strcat(str, s1);
-    } else { // if more precision specified than integer digits,
+    }
+    else
+    {                           // if more precision specified than integer digits,
       itoa(int_digits, s1, 10); // convert
       strcat(str, s1);          // and append
     }
   }
 
-  else { // decimal fractions between 0 and 1: leading 0
+  else
+  { // decimal fractions between 0 and 1: leading 0
     s1[0] = '0';
     strcat(str, s1);
   }
 
-  if (log_f < precision) { // if precision exceeds number of integer digits,
+  if (log_f < precision)
+  {                        // if precision exceeds number of integer digits,
     decimals = f - (int)f; // get decimal value as float
     strcat(str, ".");      // append decimal point to char array
 
-    i = precision - log_f;    // number of decimals to read
-    for (j = 0; j < i; j++) { // for each,
-      decimals *= 10;         // multiply decimals by 10
+    i = precision - log_f; // number of decimals to read
+    for (j = 0; j < i; j++)
+    {                 // for each,
+      decimals *= 10; // multiply decimals by 10
       if (j == (i - 1))
         decimals += 0.5;           // and if it's the last, add 0.5 to round it
       itoa((int)decimals, s1, 10); // convert as integer to character array
