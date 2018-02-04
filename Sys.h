@@ -27,31 +27,34 @@
 #define ZERO(x) memset(&(x), 0, sizeof(x))
 
 #ifdef __cplusplus
-class Sys {
-  static char _hostname[30];
-  static uint64_t _boot_time;
+class Sys
+{
+    static char _hostname[30];
+    static uint64_t _boot_time;
 
- public:
-  static uint64_t _upTime;
-  static void init();
-  static uint64_t micros();
-  static uint64_t millis();
-  static uint64_t now();
-  static void setNow(uint64_t time);
-  static void warn(int erc, const char* s);
-  static void interruptEnable();
-  static void interruptDisable();
-  static void delayUs(uint32_t delay);
-  static void delay(uint32_t msec);
-  static void tick();
-  static void hostname(const char* hn);
-  static void setHostname(const char* hn);
-  static const char* hostname();
-  static uint32_t getFreeHeap();
-  static uint32_t getSerialId();
+public:
+    static uint64_t _upTime;
+    static void init();
+    static uint64_t micros();
+    static uint64_t millis();
+    static uint64_t now();
+    static void setNow(uint64_t time);
+    static void warn(int erc, const char* s);
+    static void interruptEnable();
+    static void interruptDisable();
+    static void delayUs(uint32_t delay);
+    static void delay(uint32_t msec);
+    static void tick();
+    static void hostname(const char* hn);
+    static void setHostname(const char* hn);
+    static const char* hostname();
+    static uint32_t getFreeHeap();
+    static uint32_t getSerialId();
+    static const char* getProcessor();
+    static const char* getBuild();
 
- protected:
- private:
+protected:
+private:
 };
 #endif
 #ifdef __cplusplus
