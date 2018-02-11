@@ -1141,6 +1141,7 @@ uint8_t Str::hexToNibble(uint8_t ch)
  *  Created on: 25-jun.-2013
  *      Author: lieven2
  */
+
 extern "C" void ftoa(float f, char *str, uint8_t precision)
 {
     uint8_t i, j, divisor = 1;
@@ -1155,6 +1156,7 @@ extern "C" void ftoa(float f, char *str, uint8_t precision)
     if (f < 0) {
         // if a negative number
         str[0] = '-'; // start the char array with '-'
+        str[1]=0;
         f = abs(f);   // store its positive absolute value
     }
     log_f = ceil(log10(f)); // get number of digits before the decimal

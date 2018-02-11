@@ -20,7 +20,7 @@
 #endif
 #ifdef ESP32_IDF
 #endif
-#define ESP8266_OPEN_RTOS
+//#define ESP8266_OPEN_RTOS
 #ifdef ESP8266_OPEN_RTOS
 
 #endif

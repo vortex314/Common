@@ -13,4 +13,11 @@ INC_DIRS += $(Common_ROOT)..  $(Common_ROOT)
 Common_SRC_DIR =  $(Common_ROOT)
 Common_CFLAGS= -DESP8266_OPEN_RTOS
 
-$(eval $(call component_compile_rules,Common))
+# $(eval $(call component_compile_rules,Common))
+
+#ESP32 COMPONENT.MK
+COMPONENT_SRCDIRS := .
+
+COMPONENT_ADD_INCLUDEDIRS := .
+
+COMPONENT_ADD_LDFLAGS += -lpthread
