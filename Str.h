@@ -77,16 +77,23 @@ public:
     bool isNumber();
     bool isHex();
 
-    Erc parse(uint64_t* pval);
+    Erc parse(uint64_t& pval);
+    Erc parse(int64_t& pval);
+//    Erc parse(int& val);
     Erc parseHex(Bytes& bytes);
-    Erc parse(uint32_t* pval);
-    Erc parse(int32_t* pval);
+    Erc parse(uint32_t& pval);
+    Erc parse(int32_t& pval);
+    Erc parse(float& pval);
     Erc parse(double& d);
-    Erc parse(int64_t& ll);
+    Erc parse(bool& pval);
+//    Erc parse(int64_t* ll);
     Erc parseHex(uint8_t* pb);
+
     static bool ishex(uint8_t ch);
     static bool isdigit(uint8_t ch);
     static uint8_t hexToNibble(uint8_t ch);
+    
+    Erc copyTo(char* buffer,uint32_t maxLength);
 
 private:
 };

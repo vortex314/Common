@@ -365,7 +365,7 @@ Str &Str::format(const char *fmt, va_list va)
             case 0:
                 goto abort;
             case 'f':
-                char str[30];
+                char str[40];
                 ftoa(va_arg(va, double), str, 5);
                 append(str);
                 break;
@@ -554,7 +554,7 @@ int tfp_sprintf(char *str, const char *format, ...)
 // cvt.c - IEEE floating point formatting routines for FreeBSD
 // from GNU libc-4.6.27
 //
-#define CVTBUFSIZE 30
+#define CVTBUFSIZE 40
 // eflag : exponent flag
 #ifdef DOUBLE
 static char *cvt(double arg, int ndigits, int *decpt, int *sign, char *buf,
@@ -818,6 +818,9 @@ Str &Str::operator<<(float d)
 Str &Str::append(double d)
 {
     char buf[80];
+    gcvt(d,80,buf);
+    append(buf);
+    /*
     int decpt;
     int sign;
     int i;
@@ -828,7 +831,7 @@ Str &Str::append(double d)
         append(buf[i]);
     append('.');
     for (uint32_t j = 0; (j + i < strlen(buf)) && j < 6; j++)
-        append(buf[j + i]);
+        append(buf[j + i]);*/
     return *this;
 }
 
@@ -997,7 +1000,12 @@ bool Str::isdigit(uint8_t v)
     return v >= '0' && v <= '9';
 }
 
-Erc Str::parse(uint64_t *pval)
+Erc Str::parse(int32_t& val){
+    val  = atoi(c_str());
+    return E_OK;
+}
+
+Erc Str::parse(uint64_t& pval)
 {
     uint64_t val = 0;
     while (hasData()) {
@@ -1007,16 +1015,47 @@ Erc Str::parse(uint64_t *pval)
         } else
             return E_INVAL;
     }
-    *pval = val;
+    pval = val;
     return E_OK;
 }
 
-Erc Str::parse(uint32_t *pval)
+Erc Str::parse(uint32_t& pval)
 {
     uint64_t val = 0;
-    parse(&val);
-    *pval = val;
+    parse(val);
+    pval = val;
     return E_OK;
+}
+
+Erc Str::parse(double& d){
+    char buffer[40];
+    uint32_t len=length();
+    if ( len<sizeof(buffer)) {
+        memcpy(buffer,data(),len);
+        buffer[len]='\0';
+        d =  atof(buffer);
+        return E_OK;
+    }
+    return EINVAL;
+}
+
+Erc Str::parse(float& f){
+    double d;
+    Erc erc = parse(d);
+    f=d;
+    return erc;
+}
+
+Erc Str::parse(bool& val){
+    if ( *this=="true") {
+        val=true;
+        return E_OK;
+    } else  if ( *this=="false") {
+        val=false;
+        return E_OK;
+    } else {
+        return EINVAL;
+    }
 }
 
 Erc Str::parseHex(Bytes &bytes)
@@ -1209,4 +1248,12 @@ extern "C" void ftoa(float f, char *str, uint8_t precision)
             decimals -= (int)decimals;   // and remove, moving to the next
         }
     }
+}
+
+
+Erc Str::copyTo(char* buffer,uint32_t maxLength){
+    if ( maxLength < (length()-1)) return E2BIG;
+    memcpy(buffer,data(),length());
+    buffer[length()]='\0';
+    return E_OK;
 }

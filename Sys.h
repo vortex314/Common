@@ -37,6 +37,7 @@ public:
     static void init();
     static uint64_t micros();
     static uint64_t millis();
+    static uint32_t sec();
     static uint64_t now();
     static void setNow(uint64_t time);
     static void warn(int erc, const char* s);
