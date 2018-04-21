@@ -7,6 +7,7 @@
  */
 
 #include "Str.h"
+#include <Log.h>
 
 #include <math.h>
 #include <stdlib.h>
@@ -365,7 +366,7 @@ Str &Str::format(const char *fmt, va_list va)
             case 0:
                 goto abort;
             case 'f':
-                char str[40];
+                char str[80];
                 ftoa(va_arg(va, double), str, 5);
                 append(str);
                 break;
@@ -992,6 +993,8 @@ const char *Str::c_str()
 {
     if (_limit < _capacity)
         *(_start + _limit) = '\0';
+        else
+            ERROR(" cannot put zero terminator ");
     return (char *)_start;
 }
 
