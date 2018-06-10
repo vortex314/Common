@@ -1011,6 +1011,12 @@ bool Str::isdigit(uint8_t v)
     return v >= '0' && v <= '9';
 }
 
+Erc Str::parse(Str& val)
+{
+    val=*this;
+    return E_OK;
+}
+
 Erc Str::parse(int32_t& val)
 {
     val  = atoi(c_str());

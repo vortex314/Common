@@ -86,6 +86,7 @@ public:
     Erc parse(float& pval);
     Erc parse(double& d);
     Erc parse(bool& pval);
+    Erc parse(Str& str);
 //    Erc parse(int64_t* ll);
     Erc parseHex(uint8_t* pb);
 
