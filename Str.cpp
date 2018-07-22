@@ -19,6 +19,8 @@ extern "C" void ftoa(float f, char *str, uint8_t precision);
 char *itoa(int value, char *str, int base)
 {
     sprintf(str,"%d",value);
+	return str;
+	
 }
 
 #define DOUBLE
