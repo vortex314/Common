@@ -286,6 +286,9 @@ Str& Str::format(const char *fmt, ...)
 
 Str &Str::format(const char *fmt, va_list va)
 {
+    _limit= vsnprintf((char*)data(),_capacity,fmt,va);
+    return *this;
+    
     struct param p;
 #ifdef PRINTF_LONG_SUPPORT
     char bf[23]; /* long = 64b on some architectures */
