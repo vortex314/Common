@@ -286,7 +286,7 @@ Str& Str::format(const char *fmt, ...)
 
 Str &Str::format(const char *fmt, va_list va)
 {
-    _limit= vsnprintf((char*)data(),_capacity,fmt,va);
+    _limit= vsnprintf((char*)data()+_offset,_capacity-_offset,fmt,va)+_offset;
     return *this;
     
     struct param p;
