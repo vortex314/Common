@@ -21,6 +21,7 @@ extern "C" void ftoa(float f, char* str, uint8_t precision);
 char* itoa(int value, char* str, int base) {
     sprintf(str, "%d", value);
     return str;
+
 }
 #endif
 
@@ -273,7 +274,12 @@ Str& Str::format(const char* fmt, ...) {
     return me;
 }
 
-Str& Str::format(const char* fmt, va_list va) {
+
+Str &Str::format(const char *fmt, va_list va)
+{
+    _limit= vsnprintf((char*)data()+_offset,_capacity-_offset,fmt,va)+_offset;
+    return *this;
+
     struct param p;
 #ifdef PRINTF_LONG_SUPPORT
     char bf[23]; /* long = 64b on some architectures */
