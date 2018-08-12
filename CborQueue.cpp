@@ -29,13 +29,15 @@ sem_t put_mutex;
 #include <libopencm3/cm3/cortex.h>
 #endif
 
-void sema_create() {
+void sema_create()
+{
 #ifdef __linux__
+#include <semaphore.h>
 //	sem = sem_open("pSem", O_CREAT | O_EXCL); //, 0644, value);
 //	if (sem < 0) {
 	if (sem_init(&put_mutex, 1, 1) < 0) {
 		WARN("connect: Unable to create semaphore  %s errno : %d : %s ",
-				"pSem", errno, strerror(errno));
+		     "pSem", errno, strerror(errno));
 	}
 	sem_unlink("pSem");
 #endif
@@ -43,11 +45,12 @@ void sema_create() {
 #endif
 }
 
-void sema_wait() {
+void sema_wait()
+{
 #ifdef __linux__
 	if (::sem_wait(&put_mutex) < 0) { /* P operation */
 		WARN("connect: Unable to wait semaphore  %s errno : %d : %s ",
-				"pSem", errno, strerror(errno));
+		     "pSem", errno, strerror(errno));
 	}
 #endif
 #ifdef STM32F1
@@ -55,11 +58,12 @@ void sema_wait() {
 #endif
 }
 
-void sema_release() {
+void sema_release()
+{
 #ifdef __linux__
 	if (::sem_post(&put_mutex) < 0) { /* V operation */
 		WARN("connect: Unable to post semaphore  %s errno : %d : %s ",
-				"pSem", errno, strerror(errno));
+		     "pSem", errno, strerror(errno));
 	}
 #endif
 #ifdef STM32F1
@@ -67,7 +71,8 @@ void sema_release() {
 #endif
 }
 
-CborQueue::CborQueue(uint32_t size) {
+CborQueue::CborQueue(uint32_t size)
+{
 	_read_size = 0;
 	_write_size = 0;
 	_start = 0;
@@ -76,27 +81,33 @@ CborQueue::CborQueue(uint32_t size) {
 //	WARN(" CborQueue %X:%d ",this,_size);
 }
 
-CborQueue::~CborQueue() {
+CborQueue::~CborQueue()
+{
 	_buffer.freeBuffer();
 }
 
-uint32_t CborQueue::getCapacity() {
+uint32_t CborQueue::getCapacity()
+{
 	return _buffer.getBufferSize();
 }
 
-uint32_t CborQueue::getUsed() {
+uint32_t CborQueue::getUsed()
+{
 	return _buffer.getCommittedSize();
 }
 
-bool CborQueue::hasData() {
+bool CborQueue::hasData()
+{
 	return _buffer.hasData();
 }
 
-bool CborQueue::hasSpace(uint32_t size) {
+bool CborQueue::hasSpace(uint32_t size)
+{
 	return _buffer.hasSpace(size + 2);
 }
 
-Erc CborQueue::put(Cbor& cbor) {
+Erc CborQueue::put(Cbor& cbor)
+{
 	int reserved = 0;
 	Erc erc;
 	uint32_t size = cbor.length();
@@ -119,7 +130,8 @@ Erc CborQueue::put(Cbor& cbor) {
 	return erc;
 }
 
-Erc CborQueue::get(Cbor& cbor) {
+Erc CborQueue::get(Cbor& cbor)
+{
 	Erc erc;
 	uint32_t length;
 	cbor.clear();
@@ -150,7 +162,8 @@ Erc CborQueue::get(Cbor& cbor) {
 	return erc;
 }
 
-Erc CborQueue::putf(const char * fmt, ...) {
+Erc CborQueue::putf(const char * fmt, ...)
+{
 	va_list args;
 	va_start(args, fmt);
 	Erc erc = vputf(fmt, args);
@@ -158,7 +171,8 @@ Erc CborQueue::putf(const char * fmt, ...) {
 	return erc;
 }
 
-Erc CborQueue::vputf(const char* fmt, va_list args) {
+Erc CborQueue::vputf(const char* fmt, va_list args)
+{
 //		va_list args;
 	Erc erc;
 	Cbor cbor(0);
@@ -200,7 +214,8 @@ Erc CborQueue::getf(const char * format, ...) {
 */
 
 #define MAX_SIZE 300
-Erc CborQueue::putMap(Cbor& cbor) {
+Erc CborQueue::putMap(Cbor& cbor)
+{
 	Erc erc;
 	int reserved = 0;
 	int size = MAX_SIZE;
@@ -223,7 +238,8 @@ Erc CborQueue::putMap(Cbor& cbor) {
 	return erc;
 }
 
-Erc CborQueue::putRelease(Cbor& cbor) {
+Erc CborQueue::putRelease(Cbor& cbor)
+{
 	Erc erc;
 	if (_write_size == 0) {
 		erc = ENOMEM;

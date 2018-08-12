@@ -193,7 +193,22 @@ void Log::application(const char *application)
 #endif
 //_________________________________________ EMBEDDED  ________________________________________
 //
-#ifndef __linux__
+#ifdef ARDUINO
+void Log::time()
+{
+//	Serial.print(__FILE__ );Serial.print( __LINE__ );
+	append(Sys::millis()).append(' ');
+//	Serial.println(c_str());
+}
+void Log::host(const char *hostname)
+{
+	append(Sys::hostname()).append(' ');
+}
+void Log::application(const char *application)
+{
+	append("-");
+}
+#else
 void Log::time()
 {
     append(Sys::millis()).append(' ');

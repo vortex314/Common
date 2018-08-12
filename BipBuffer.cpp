@@ -77,7 +77,7 @@ BipBuffer::~BipBuffer() {
 	 buflen = buffersize;
 	 return true;*/
 	pBuffer = (uint8_t*) malloc((uint32_t)buffersize);
-	if (pBuffer == NULL)
+	if (pBuffer == 0)
 		return false;
 
 	buflen = buffersize;
@@ -108,7 +108,7 @@ BipBuffer::~BipBuffer() {
 //   void
 
  void BipBuffer::freeBuffer() {
-	if (pBuffer == NULL)
+	if (pBuffer == 0)
 		return;
 
 	ixa = sza = ixb = szb = buflen = 0;
@@ -116,7 +116,7 @@ BipBuffer::~BipBuffer() {
 
 //		::VirtualFree(pBuffer, buflen, MEM_DECOMMIT);
 
-	pBuffer = NULL;
+	pBuffer = 0;
 }
 
 // Reserve
