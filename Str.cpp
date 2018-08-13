@@ -279,12 +279,12 @@ Str &Str::format(const char *fmt, va_list va)
 {
     _limit= vsnprintf((char*)data()+_offset,_capacity-_offset,fmt,va)+_offset;
     return *this;
-
+/*
     struct param p;
 #ifdef PRINTF_LONG_SUPPORT
-    char bf[23]; /* long = 64b on some architectures */
+    char bf[23]; // long = 64b on some architectures 
 #else
-    char bf[12]; /* int = 32b on some architectures */
+    char bf[12]; // int = 32b on some architectures 
 #endif
     char ch;
     p.bf = bf;
@@ -294,16 +294,16 @@ Str &Str::format(const char *fmt, va_list va)
             append(ch);
         } else {
 #ifdef PRINTF_LONG_SUPPORT
-            char lng = 0; /* 1 for long, 2 for long long */
+            char lng = 0; // 1 for long, 2 for long long 
 #endif
-            /* Init parameter struct */
+            // Init parameter struct 
             p.lz = 0;
             p.alt = 0;
             p.width = 0;
             p.align_left = 0;
             p.sign = 0;
 
-            /* Flags */
+            // Flags 
             while ((ch = *(fmt++))) {
                 switch (ch) {
                 case '-':
@@ -321,17 +321,17 @@ Str &Str::format(const char *fmt, va_list va)
                 break;
             }
 
-            /* Width */
+            // Width 
             if (ch >= '0' && ch <= '9') {
                 ch = a2u(ch, &fmt, 10, &(p.width));
             }
 
-            /* We accept 'x.y' format but don't support it completely:
-             * we ignore the 'y' digit => this ignores 0-fill
-             * size and makes it == width (ie. 'x') */
+            // We accept 'x.y' format but don't support it completely:
+             // we ignore the 'y' digit => this ignores 0-fill
+             // size and makes it == width (ie. 'x') 
             if (ch == '.') {
-                p.lz = 1; /* zero-padding */
-                /* ignore actual 0-fill size: */
+                p.lz = 1; // zero-padding 
+                // ignore actual 0-fill size: 
                 do {
                     ch = *(fmt++);
                 } while ((ch >= '0') && (ch <= '9'));
@@ -451,7 +451,7 @@ Str &Str::format(const char *fmt, va_list va)
         }
     }
 abort:;
-    return *this;
+    return *this;*/
 }
 
 #if TINYPRINTF_DEFINE_TFP_PRINTF
@@ -1120,7 +1120,7 @@ uint8_t Str::hexToNibble(uint8_t ch) {
  *  Created on: 25-jun.-2013
  *      Author: lieven2
  */
-
+#ifdef FTOA_NEEDED
 extern "C" void ftoa(float f, char* str, uint8_t precision) {
     uint8_t i, j, divisor = 1;
     int8_t log_f;
@@ -1188,6 +1188,8 @@ extern "C" void ftoa(float f, char* str, uint8_t precision) {
         }
     }
 }
+
+#endif
 
 Erc Str::copyTo(char* buffer, uint32_t maxLength) {
     if (maxLength < (length() - 1))

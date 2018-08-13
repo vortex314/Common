@@ -53,6 +53,7 @@ class Log : public Str {
     void application(const char* applicationName);
     void flush();
     void level(LogLevel l);
+    void logLevel();
     static void serialLog(char* start, uint32_t length);
     LogLevel level();
 };
@@ -62,7 +63,8 @@ extern Log logger;
 //{logger.time();logger.host(0);logger.application(0);logger.location(__PRETTY_FUNCTION__
 //,__LINE__);logger.printf(fmt,##__VA_ARGS__);logger.flush();}//delay(10);
 #define LOGF(fmt, ...)                                                         \
-    {                                                                          \
+    {                                                                           \
+        logger.logLevel();                                                         \
         logger.time();                                                         \
         logger.host(0);                                                        \
         logger.application(0);                                                 \

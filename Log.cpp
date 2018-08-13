@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+char Log::_logLevel[7] = {'T', 'D', 'I', 'W', 'E', 'F', 'N'};
+
 #ifdef ARDUINO
 #include <WString.h>
 #include <Arduino.h>
@@ -37,22 +39,13 @@ void Log::serialLog(char *start, uint32_t length)
         usart_send_blocking(USART1, *(s++));
     }
 #endif
-#ifdef __linux__
+#if defined(__linux__) || defined(ESP8266_OPEN_RTOS) || defined(ESP32_IDF)
     *(start + length) = '\0';
     fprintf(stdout, "%s\n", start);
     fflush(stdout);
 #endif
-#ifdef ESP8266_OPEN_RTOS
-    *(start + length) = '\0';
-    ::printf("%s\n", start);
-    fflush(stdout);
-#endif
-#ifdef ESP32_IDF
-    *(start + length) = '\0';
-    ::printf("%s\n", start);
-#endif
 }
-char Log::_logLevel[7] = {'T', 'D', 'I', 'W', 'E', 'F', 'N'};
+
 
 Log::Log(uint32_t size) : Str(size), _enabled(true), _logFunction(serialLog), _level(LOG_INFO)
 {
@@ -76,11 +69,12 @@ void Log::setLogLevel(char c)
 bool Log::enabled(LogLevel level)
 {
     if (level >= _level) {
-        append(_logLevel[level]).append('|');
         return true;
     }
     return false;
 }
+
+
 
 void Log::disable()
 {
@@ -134,13 +128,7 @@ Log::LogLevel Log::level()
     return _level;
 }
 //---------------------------------------------------------------------------------------------
-void Log::location(const char *module, uint32_t line)
-{
 
-    printf("| %10s:%4d | ", module, line);
-
-    //   strftime (line, sizeof(line), "%Y-%m-%d %H:%M:%S.mmm", sTm);
-}
 
 //_________________________________________ LINUX  ___________________________________________
 //
@@ -193,32 +181,30 @@ void Log::application(const char *application)
 #endif
 //_________________________________________ EMBEDDED  ________________________________________
 //
-#ifdef ARDUINO
+
+//#if ! defined(__linux__) && ! defined(ARDUINO)
+
+void Log::logLevel()
+{
+    append(_logLevel[_level]).append(" | ");
+}
+
 void Log::time()
 {
-//	Serial.print(__FILE__ );Serial.print( __LINE__ );
-	append(Sys::millis()).append(' ');
-//	Serial.println(c_str());
+    append(Sys::millis()).append(" | ");
 }
 void Log::host(const char *hostname)
 {
-	append(Sys::hostname()).append(' ');
+    append(Sys::hostname()).append(" | ");
 }
 void Log::application(const char *application)
 {
-	append("-");
+    append(" | ");
 }
-#else
-void Log::time()
+
+void Log::location(const char *module, uint32_t line)
 {
-    append(Sys::millis()).append(' ');
+    append(module).append(':').append(line).append(" | ");
 }
-void Log::host(const char *hostname)
-{
-    append(Sys::hostname()).append(' ');
-}
-void Log::application(const char *application)
-{
-    append("-");
-}
-#endif
+    //   strftime (line, sizeof(line), "%Y-%m-%d %H:%M:%S.mmm", sTm);
+

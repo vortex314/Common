@@ -12,13 +12,8 @@ OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
-<<<<<<< HEAD
-User                   :=Lieven
-Date                   :=05/08/18
-=======
 User                   :=lieven
-Date                   :=31/07/18
->>>>>>> 4ad83cc25ddf252e072b2443a20beff8cb74f782
+Date                   :=13/08/18
 CodeLitePath           :=/home/lieven/.codelite
 LinkerName             :=/usr/bin/g++
 SharedObjectLinkerName :=/usr/bin/g++ -shared -fPIC
@@ -55,11 +50,7 @@ LibPath                := $(LibraryPathSwitch).
 AR       := /usr/bin/ar rcu
 CXX      := /usr/bin/g++
 CC       := /usr/bin/gcc
-<<<<<<< HEAD
 CXXFLAGS := -std=c++11 -g -std=c++11 -fPIC $(Preprocessors)
-=======
-CXXFLAGS := -std=c++11 -g -std=c++0x $(Preprocessors)
->>>>>>> 4ad83cc25ddf252e072b2443a20beff8cb74f782
 CFLAGS   :=  -g $(Preprocessors)
 ASFLAGS  := 
 AS       := /usr/bin/as
