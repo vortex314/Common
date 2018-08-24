@@ -95,6 +95,26 @@ void Log::setOutput(LogFunction function)
 {
     _logFunction = function;
 }
+
+void Log::logLevel()
+{
+    append(_logLevel[_level]).append(" | ");
+}
+
+void Log::host(const char *hostname)
+{
+    append(Sys::hostname()).append(" | ");
+}
+void Log::application(const char *application)
+{
+    append(" | ");
+}
+
+void Log::location(const char *module, uint32_t line)
+{
+    append(module).append(':').append(line).append(" | ");
+}
+
 #ifdef ARDUINO
 #ifdef ESP8266
 extern "C" {
@@ -144,67 +164,32 @@ void Log::time()
     struct timeval tv;
     struct timezone tz;
     struct tm *tm;
+    static char buffer[100];
     gettimeofday(&tv, &tz);
     tm = ::localtime(&tv.tv_sec);
-    printf("%d/%02d/%02d %02d:%02d:%02d.%03ld ",
-           tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour,
+    sprintf(buffer,"%02d:%02d:%02d.%03ld ", tm->tm_hour,
            tm->tm_min, tm->tm_sec, tv.tv_usec / 1000);
 
-    //   strftime (line, sizeof(line), "%Y-%m-%d %H:%M:%S.mmm", sTm);
+    append(buffer).append(" | ");
 }
 
 //---------------------------------------------------------------------------------------------
 
-void Log::host(const char *hostname)
-{
-    if (hostname == 0) {
-        printf("| %s ", Sys::hostname());
-    } else {
-        printf("| %s ", hostname);
-    }
-}
 extern const char *__progname;
 
 //---------------------------------------------------------------------------------------------
 
-void Log::application(const char *application)
-{
-    if (application == 0) {
-        if (strlen(_application) == 0) {
-            strncpy(_application, __progname, sizeof(_application) - 1);
-        }
-        printf("| %s ", _application);
-    } else {
-        printf("| %s ", application);
-    }
-}
 #endif
 //_________________________________________ EMBEDDED  ________________________________________
 //
 
-//#if ! defined(__linux__) && ! defined(ARDUINO)
+#if ! defined(__linux__) && ! defined(ARDUINO)
 
-void Log::logLevel()
-{
-    append(_logLevel[_level]).append(" | ");
-}
+
 
 void Log::time()
 {
     append(Sys::millis()).append(" | ");
 }
-void Log::host(const char *hostname)
-{
-    append(Sys::hostname()).append(" | ");
-}
-void Log::application(const char *application)
-{
-    append(" | ");
-}
 
-void Log::location(const char *module, uint32_t line)
-{
-    append(module).append(':').append(line).append(" | ");
-}
-    //   strftime (line, sizeof(line), "%Y-%m-%d %H:%M:%S.mmm", sTm);
-
+#endif
