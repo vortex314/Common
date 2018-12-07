@@ -12,8 +12,8 @@ OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
-User                   :=lieven
-Date                   :=13/08/18
+User                   :=Lieven
+Date                   :=01/12/18
 CodeLitePath           :=/home/lieven/.codelite
 LinkerName             :=/usr/bin/g++
 SharedObjectLinkerName :=/usr/bin/g++ -shared -fPIC
@@ -60,9 +60,9 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix) $(IntermediateDirectory)/PIC32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/Bytes.cpp$(ObjectSuffix) $(IntermediateDirectory)/CircBuf.cpp$(ObjectSuffix) $(IntermediateDirectory)/EventSource.cpp$(ObjectSuffix) $(IntermediateDirectory)/Json.cpp$(ObjectSuffix) $(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix) $(IntermediateDirectory)/Log.cpp$(ObjectSuffix) $(IntermediateDirectory)/Msg.cpp$(ObjectSuffix) $(IntermediateDirectory)/Node.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/Str.cpp$(ObjectSuffix) $(IntermediateDirectory)/Strpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/printf.c$(ObjectSuffix) $(IntermediateDirectory)/BufferedByteStream.cpp$(ObjectSuffix) $(IntermediateDirectory)/Msgpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/Base64.cpp$(ObjectSuffix) $(IntermediateDirectory)/jsmn.c$(ObjectSuffix) $(IntermediateDirectory)/BipBuffer.cpp$(ObjectSuffix) $(IntermediateDirectory)/Cbor.cpp$(ObjectSuffix) \
-	
+Objects0=$(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix) $(IntermediateDirectory)/PIC32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/Bytes.cpp$(ObjectSuffix) $(IntermediateDirectory)/CircBuf.cpp$(ObjectSuffix) $(IntermediateDirectory)/EventSource.cpp$(ObjectSuffix) $(IntermediateDirectory)/Cbor.cpp$(ObjectSuffix) $(IntermediateDirectory)/Json.cpp$(ObjectSuffix) $(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix) $(IntermediateDirectory)/Log.cpp$(ObjectSuffix) $(IntermediateDirectory)/Msg.cpp$(ObjectSuffix) \
+	$(IntermediateDirectory)/Node.cpp$(ObjectSuffix) $(IntermediateDirectory)/Str.cpp$(ObjectSuffix) $(IntermediateDirectory)/Strpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/printf.c$(ObjectSuffix) $(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/BufferedByteStream.cpp$(ObjectSuffix) $(IntermediateDirectory)/Msgpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/Base64.cpp$(ObjectSuffix) $(IntermediateDirectory)/jsmn.c$(ObjectSuffix) $(IntermediateDirectory)/BipBuffer.cpp$(ObjectSuffix) \
+	$(IntermediateDirectory)/Semaphore.cpp$(ObjectSuffix) 
 
 
 
@@ -135,6 +135,14 @@ $(IntermediateDirectory)/EventSource.cpp$(DependSuffix): EventSource.cpp
 $(IntermediateDirectory)/EventSource.cpp$(PreprocessSuffix): EventSource.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/EventSource.cpp$(PreprocessSuffix) EventSource.cpp
 
+$(IntermediateDirectory)/Cbor.cpp$(ObjectSuffix): Cbor.cpp $(IntermediateDirectory)/Cbor.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/Cbor.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Cbor.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/Cbor.cpp$(DependSuffix): Cbor.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Cbor.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Cbor.cpp$(DependSuffix) -MM Cbor.cpp
+
+$(IntermediateDirectory)/Cbor.cpp$(PreprocessSuffix): Cbor.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Cbor.cpp$(PreprocessSuffix) Cbor.cpp
+
 $(IntermediateDirectory)/Json.cpp$(ObjectSuffix): Json.cpp $(IntermediateDirectory)/Json.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/Json.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Json.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/Json.cpp$(DependSuffix): Json.cpp
@@ -191,14 +199,6 @@ $(IntermediateDirectory)/Strpack.cpp$(DependSuffix): Strpack.cpp
 $(IntermediateDirectory)/Strpack.cpp$(PreprocessSuffix): Strpack.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Strpack.cpp$(PreprocessSuffix) Strpack.cpp
 
-$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix): STM32_stubs.cpp $(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/STM32_stubs.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix): STM32_stubs.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix) -MM STM32_stubs.cpp
-
-$(IntermediateDirectory)/STM32_stubs.cpp$(PreprocessSuffix): STM32_stubs.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/STM32_stubs.cpp$(PreprocessSuffix) STM32_stubs.cpp
-
 $(IntermediateDirectory)/printf.c$(ObjectSuffix): printf.c $(IntermediateDirectory)/printf.c$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/lieven/workspace/Common/printf.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/printf.c$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/printf.c$(DependSuffix): printf.c
@@ -206,6 +206,14 @@ $(IntermediateDirectory)/printf.c$(DependSuffix): printf.c
 
 $(IntermediateDirectory)/printf.c$(PreprocessSuffix): printf.c
 	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/printf.c$(PreprocessSuffix) printf.c
+
+$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix): STM32_stubs.cpp $(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/STM32_stubs.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix): STM32_stubs.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix) -MM STM32_stubs.cpp
+
+$(IntermediateDirectory)/STM32_stubs.cpp$(PreprocessSuffix): STM32_stubs.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/STM32_stubs.cpp$(PreprocessSuffix) STM32_stubs.cpp
 
 $(IntermediateDirectory)/BufferedByteStream.cpp$(ObjectSuffix): BufferedByteStream.cpp $(IntermediateDirectory)/BufferedByteStream.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/BufferedByteStream.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/BufferedByteStream.cpp$(ObjectSuffix) $(IncludePath)
@@ -247,13 +255,13 @@ $(IntermediateDirectory)/BipBuffer.cpp$(DependSuffix): BipBuffer.cpp
 $(IntermediateDirectory)/BipBuffer.cpp$(PreprocessSuffix): BipBuffer.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/BipBuffer.cpp$(PreprocessSuffix) BipBuffer.cpp
 
-$(IntermediateDirectory)/Cbor.cpp$(ObjectSuffix): Cbor.cpp $(IntermediateDirectory)/Cbor.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/Cbor.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Cbor.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/Cbor.cpp$(DependSuffix): Cbor.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Cbor.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Cbor.cpp$(DependSuffix) -MM Cbor.cpp
+$(IntermediateDirectory)/Semaphore.cpp$(ObjectSuffix): Semaphore.cpp $(IntermediateDirectory)/Semaphore.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/Semaphore.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Semaphore.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/Semaphore.cpp$(DependSuffix): Semaphore.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Semaphore.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Semaphore.cpp$(DependSuffix) -MM Semaphore.cpp
 
-$(IntermediateDirectory)/Cbor.cpp$(PreprocessSuffix): Cbor.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Cbor.cpp$(PreprocessSuffix) Cbor.cpp
+$(IntermediateDirectory)/Semaphore.cpp$(PreprocessSuffix): Semaphore.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Semaphore.cpp$(PreprocessSuffix) Semaphore.cpp
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

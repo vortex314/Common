@@ -115,12 +115,14 @@ void Log::location(const char *module, uint32_t line)
     append(module).append(':').append(line).append(" | ");
 }
 
-#ifdef ARDUINO
 #ifdef ESP8266
 extern "C" {
 #include <ets_sys.h>
 };
 #endif
+
+#ifdef ARDUINO
+
 #endif
 
 void Log::printf(const char *fmt, ...)
@@ -173,17 +175,13 @@ void Log::time()
     append(buffer).append(" | ");
 }
 
-//---------------------------------------------------------------------------------------------
-
 extern const char *__progname;
-
-//---------------------------------------------------------------------------------------------
 
 #endif
 //_________________________________________ EMBEDDED  ________________________________________
 //
 
-#if ! defined(__linux__) && ! defined(ARDUINO)
+#if ! defined(__linux__) && ! defined(__ARDUINO__)
 
 
 

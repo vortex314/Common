@@ -17,6 +17,7 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
+    <File Name="Semaphore.cpp"/>
     <File Name="printf.c"/>
     <File Name="jsmn.c"/>
     <File Name="Strpack.cpp"/>
@@ -39,6 +40,8 @@
     <File Name="Base64.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
+    <File Name="StaticLinkedList.hpp"/>
+    <File Name="Semaphore.h"/>
     <File Name="pt.h"/>
     <File Name="pt-sem.h"/>
     <File Name="printf.h"/>
@@ -174,4 +177,6 @@
       </Completion>
     </Configuration>
   </Settings>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Release"/>
 </CodeLite_Project>

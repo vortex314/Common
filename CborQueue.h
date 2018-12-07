@@ -11,6 +11,7 @@
 #include "Erc.h"
 #include "Cbor.h"
 #include <BipBuffer.h>
+#include <Semaphore.h>
 
 class CborQueue {
 private:
@@ -20,6 +21,7 @@ public:
 	uint32_t _read_size;
 	uint32_t _write_size;
 	uint8_t* _start;
+	Semaphore& _semaphore;
 	Erc getMap(Cbor& cbor);
 	Erc getRelease(Cbor& cbor);
 	Erc putMap(Cbor& cbor);

@@ -57,8 +57,9 @@ Bytes::Bytes(uint32_t size) {
     _capacity = size;
     if (size > 0) {
         //		INFO("calling malloc : %d ",size);
-        _start = (uint8_t*)malloc(size); // (uint8_t*) Sys::malloc(size);
-                                         //		INFO("malloc result : %x",_start);
+        _start = (uint8_t*)malloc(
+            size); // (uint8_t*) Sys::malloc(size);
+                   //		INFO("malloc result : %x",_start);
         _capacity = size;
     }
     isMemoryOwner = true;
@@ -194,8 +195,8 @@ int Bytes::available() {
     else
         return 0;
 }
-
-Erc Bytes::write(uint8_t value) {
+/*
+ Erc Bytes::write(uint8_t value) {
     if (_offset < _capacity) {
         _start[_offset++] = value;
         _limit = _offset;
@@ -203,7 +204,7 @@ Erc Bytes::write(uint8_t value) {
         return E_LACK_RESOURCE;
     return 0;
 }
-
+*/
 Erc Bytes::write(uint8_t* data, int offset, int length) {
     for (int i = 0; i < length; i++) {
         int erc;
