@@ -5,6 +5,8 @@
       <![CDATA[00010001N0005Debug000000000000]]>
     </Plugin>
   </Plugins>
+  <File Name="Semaphore.h"/>
+  <File Name="Semaphore.cpp"/>
   <Reconciliation>
     <Regexes/>
     <Excludepaths/>
@@ -17,7 +19,6 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
-    <File Name="Semaphore.cpp"/>
     <File Name="printf.c"/>
     <File Name="jsmn.c"/>
     <File Name="Strpack.cpp"/>
@@ -40,8 +41,6 @@
     <File Name="Base64.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
-    <File Name="StaticLinkedList.hpp"/>
-    <File Name="Semaphore.h"/>
     <File Name="pt.h"/>
     <File Name="pt-sem.h"/>
     <File Name="printf.h"/>
