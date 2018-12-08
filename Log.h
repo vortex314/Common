@@ -67,7 +67,6 @@ extern Log logger;
         logger.logLevel();                                                     \
         logger.time();                                                         \
         logger.host(0);                                                        \
-        logger.application(0);                                                 \
         logger.location(__FLE__, __LINE__);                                    \
         logger.printf(fmt, ##__VA_ARGS__);                                     \
         logger.flush();                                                        \
