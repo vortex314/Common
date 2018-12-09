@@ -13,7 +13,6 @@ CborQueue::CborQueue(uint32_t size) : _semaphore(Semaphore::create()) {
     _write_size = 0;
     _start = 0;
     _buffer.allocateBuffer(size);
-
 }
 
 CborQueue::~CborQueue() { _buffer.freeBuffer(); }
@@ -95,7 +94,7 @@ Erc CborQueue::vputf(const char* fmt, va_list args) {
     Cbor cbor(0);
     erc = putMap(cbor);
     if (erc) {
-        WARN(" putMap failed : %d ", erc)
+        WARN(" putMap failed : %d ", erc);
         return erc;
     }
 
@@ -137,7 +136,7 @@ Erc CborQueue::putMap(Cbor& cbor) {
     int size = MAX_SIZE;
     _semaphore.wait(); //**************************** MUTEX SET
     if (_write_size) {
-        WARN(" CborQueue %X:%d ", this, _write_size);
+        WARN(" CborQueue %X:%d ", (uint32_t)this, _write_size);
         erc = EBUSY;
     } else {
         _start = _buffer.reserve((int)size + 2, reserved);
@@ -149,8 +148,7 @@ Erc CborQueue::putMap(Cbor& cbor) {
             erc = E_OK;
         }
     }
-    if (erc)
-        _semaphore.release();
+    _semaphore.release();
     return erc;
 }
 

@@ -5,8 +5,6 @@
       <![CDATA[00010001N0005Debug000000000000]]>
     </Plugin>
   </Plugins>
-  <File Name="Semaphore.h"/>
-  <File Name="Semaphore.cpp"/>
   <Reconciliation>
     <Regexes/>
     <Excludepaths/>
@@ -19,6 +17,8 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
+    <File Name="Semaphore.h"/>
+    <File Name="Semaphore.cpp"/>
     <File Name="printf.c"/>
     <File Name="jsmn.c"/>
     <File Name="Strpack.cpp"/>
@@ -87,6 +87,8 @@
     <File Name="BipBuffer.h"/>
     <File Name="Base64.h"/>
   </VirtualDirectory>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Release"/>
   <Settings Type="Static Library">
     <GlobalSettings>
       <Compiler Options="-std=c++11" C_Options="" Assembler="">
@@ -176,6 +178,4 @@
       </Completion>
     </Configuration>
   </Settings>
-  <Dependencies Name="Debug"/>
-  <Dependencies Name="Release"/>
 </CodeLite_Project>

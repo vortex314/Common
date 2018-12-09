@@ -13,10 +13,11 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <string.h>
+#include <string>
 
 typedef void (*LogFunction)(char* start, uint32_t length);
 
-class Log : public Str {
+class Log {
   public:
     typedef enum {
         LOG_TRACE = 0,
@@ -28,6 +29,7 @@ class Log : public Str {
         LOG_NONE
     } LogLevel;
     static char _logLevel[7];
+    std::string _line;
 
   private:
     bool _enabled;
@@ -46,8 +48,11 @@ class Log : public Str {
     void defaultOutput();
     void setOutput(LogFunction function);
     void printf(const char* fmt, ...);
+    void log(const char* file, uint32_t line, const char* function,
+             const char* fmt, ...);
+
     void vprintf(const char* fmt, va_list args);
-    void time();
+    const char* time();
     void host(const char* hostname);
     void location(const char* module, uint32_t line);
     void application(const char* applicationName);
@@ -59,26 +64,21 @@ class Log : public Str {
 };
 
 extern Log logger;
-//#define LOGF(fmt,...)
-//{logger.time();logger.host(0);logger.application(0);logger.location(__PRETTY_FUNCTION__
-//,__LINE__);logger.printf(fmt,##__VA_ARGS__);logger.flush();}//delay(10);
+#include <cstdio>
+
 #define LOGF(fmt, ...)                                                         \
-    {                                                                          \
-        logger.logLevel();                                                     \
-        logger.time();                                                         \
-        logger.host(0);                                                        \
-        logger.location(__FLE__, __LINE__);                                    \
-        logger.printf(fmt, ##__VA_ARGS__);                                     \
-        logger.flush();                                                        \
-    } // delay(10);
+    logger.log(__FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+
+/*
+#define LOGF(fmt, ...)                                                         \
+    logger.log(__FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+*/
+#define __FLE__ strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
 
 #ifdef ARDUINO
 #define nullptr 0
 #include <Arduino.h>
 
-#define __FLE__ strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
-//#define LOGF(fmt,...)  {logger.printf("%lu | %s:%d | ",
-// millis(),__FILE__,__LINE__);logger.printf(fmt,##__VA_ARGS__);logger.flush();}//delay(10);
 #define ASSERT_LOG(xxx)                                                        \
     if (!(xxx)) {                                                              \
         logger.printf(" Assertion failed %s", #xxx);                           \
@@ -116,7 +116,7 @@ extern Log logger;
     }
 
 #endif
-#define __FLE__ strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
+
 #define INFO(fmt, ...)                                                         \
     if (logger.enabled(Log::LOG_INFO))                                         \
     LOGF(fmt, ##__VA_ARGS__)
@@ -137,3 +137,7 @@ extern Log logger;
     LOGF(fmt, ##__VA_ARGS__)
 
 #endif /* LOG_H_ */
+
+#define LL                                                                     \
+    ::fprintf(stdout, "%s:%d\n", __FILE__, __LINE__);                          \
+    ::fflush(stdout)

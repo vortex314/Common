@@ -6,18 +6,18 @@
  */
 #include <Log.h>
 #include <Str.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 char Log::_logLevel[7] = {'T', 'D', 'I', 'W', 'E', 'F', 'N'};
 
 #ifdef ARDUINO
-#include <WString.h>
 #include <Arduino.h>
+#include <WString.h>
 #endif
 #ifdef OPENCM3
-#include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/usart.h>
 #endif
 #ifdef ESP32_IDF
@@ -27,10 +27,29 @@ char Log::_logLevel[7] = {'T', 'D', 'I', 'W', 'E', 'F', 'N'};
 
 #endif
 
-void Log::serialLog(char *start, uint32_t length)
-{
+std::string string_format(std::string& str, const char* fmt, ...) {
+    int size = strlen(fmt) * 2 + 50; // Use a rubric appropriate for your code
+    va_list ap;
+    while (1) { // Maximum two passes on a POSIX system...
+        str.resize(size);
+        va_start(ap, fmt);
+        int n = vsnprintf((char*)str.data(), size, fmt, ap);
+        va_end(ap);
+        if (n > -1 && n < size) { // Everything worked
+            str.resize(n);
+            return str;
+        }
+        if (n > -1)       // Needed size returned
+            size = n + 1; // For null char
+        else
+            size *= 2; // Guess at a larger size (OS specific)
+    }
+    return str;
+}
+
+void Log::serialLog(char* start, uint32_t length) {
 #ifdef ARDUINO
-    Serial.write((const uint8_t *)start, length);
+    Serial.write((const uint8_t*)start, length);
     Serial.write("\r\n");
 #endif
 #ifdef OPENCM3
@@ -46,19 +65,16 @@ void Log::serialLog(char *start, uint32_t length)
 #endif
 }
 
-
-Log::Log(uint32_t size) : Str(size), _enabled(true), _logFunction(serialLog), _level(LOG_INFO)
-{
+Log::Log(uint32_t size)
+    : _enabled(true), _logFunction(serialLog), _level(LOG_INFO) {
+    _line.reserve(size);
     _application[0] = 0;
     _hostname[0] = 0;
 }
 
-Log::~Log()
-{
-}
+Log::~Log() {}
 
-void Log::setLogLevel(char c)
-{
+void Log::setLogLevel(char c) {
     for (uint32_t i = 0; i < sizeof(_logLevel); i++)
         if (_logLevel[i] == c) {
             _level = (Log::LogLevel)i;
@@ -66,54 +82,20 @@ void Log::setLogLevel(char c)
         }
 }
 
-bool Log::enabled(LogLevel level)
-{
+bool Log::enabled(LogLevel level) {
     if (level >= _level) {
         return true;
     }
     return false;
 }
 
+void Log::disable() { _enabled = false; }
 
+void Log::enable() { _enabled = true; }
 
-void Log::disable()
-{
-    _enabled = false;
-}
+void Log::defaultOutput() { _logFunction = serialLog; }
 
-void Log::enable()
-{
-    _enabled = true;
-}
-
-void Log::defaultOutput()
-{
-    _logFunction = serialLog;
-}
-
-void Log::setOutput(LogFunction function)
-{
-    _logFunction = function;
-}
-
-void Log::logLevel()
-{
-    append(_logLevel[_level]).append(" | ");
-}
-
-void Log::host(const char *hostname)
-{
-    append(Sys::hostname()).append(" | ");
-}
-void Log::application(const char *application)
-{
-    append(" | ");
-}
-
-void Log::location(const char *module, uint32_t line)
-{
-    append(module).append(':').append(line).append(" | ");
-}
+void Log::setOutput(LogFunction function) { _logFunction = function; }
 
 #ifdef ESP8266
 extern "C" {
@@ -125,69 +107,68 @@ extern "C" {
 
 #endif
 
-void Log::printf(const char *fmt, ...)
-{
+void Log::log(const char* file, uint32_t lineNbr, const char* function,
+              const char* fmt, ...) {
+
     va_list args;
     va_start(args, fmt);
-    format(fmt, args);
+    static char logLine[100];
+    vsnprintf(logLine, sizeof(logLine) - 1, fmt, args);
     va_end(args);
+    _application[0] = 0;
+#ifdef ESP32_IDF
+    extern void* pxCurrentTCB;
+    ::snprintf(_application, sizeof(_application), "%X",
+               (uint32_t)pxCurrentTCB);
+#endif
+    string_format(_line, "%s%c | %8s | %s | %-10s:%-4d | %s", _application,
+                  _logLevel[_level], time(), Sys::hostname(), file, lineNbr,
+                  logLine);
+    logger.flush();
 }
 
-void Log::flush()
-{
+void Log::flush() {
     if (_logFunction)
-        _logFunction((char *)data(), length());
-    clear();
+        _logFunction((char*)_line.c_str(), _line.size());
+    _line = "";
 }
 
-void Log::level(LogLevel l)
-{
-    _level = l;
-}
+void Log::level(LogLevel l) { _level = l; }
 
-Log::LogLevel Log::level()
-{
-    return _level;
-}
+Log::LogLevel Log::level() { return _level; }
 //---------------------------------------------------------------------------------------------
 
-
-//_________________________________________ LINUX  ___________________________________________
+//_________________________________________ LINUX
+//___________________________________________
 //
 #ifdef __linux__
-#include <time.h>
-#include <sys/time.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
+#include <sys/time.h>
+#include <time.h>
+#include <unistd.h>
 //---------------------------------------------------------------------------------------------
-void Log::time()
-{
+const char* Log::time() {
     struct timeval tv;
     struct timezone tz;
-    struct tm *tm;
+    struct tm* tm;
     static char buffer[100];
     gettimeofday(&tv, &tz);
     tm = ::localtime(&tv.tv_sec);
-    sprintf(buffer,"%02d:%02d:%02d.%03ld ", tm->tm_hour,
-           tm->tm_min, tm->tm_sec, tv.tv_usec / 1000);
-
-    append(buffer).append(" | ");
+    sprintf(buffer, "%02d:%02d:%02d.%03ld ", tm->tm_hour, tm->tm_min,
+            tm->tm_sec, tv.tv_usec / 1000);
+    return buffer;
 }
 
-extern const char *__progname;
+extern const char* __progname;
 
 #endif
-//_________________________________________ EMBEDDED  ________________________________________
-//
+//_________________________________________ EMBEDDED
 
-#if ! defined(__linux__) && ! defined(__ARDUINO__)
-
-
-
-void Log::time()
-{
-    append(Sys::millis()).append(" | ");
+#if !defined(__linux__) && !defined(__ARDUINO__)
+const char* Log::time() {
+    static char szTime[20];
+    snprintf(szTime, sizeof(szTime), "%llu", Sys::millis());
+    return szTime;
 }
-
 #endif
