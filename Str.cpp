@@ -97,11 +97,6 @@ bool Str::startsWith(Str& s) {
 bool Str::startsWith(const char* const s) {
     Str ss(s);
     return startsWith(ss);
-    /*   if ( s.length() > length()) return false;
-    int i;
-    for(i=0; i<s.length(); i++)
-    if (s.peek(i) !=peek(i)) return false;
-    return true;*/
 }
 
 Str& Str::operator<<(char ch) {
@@ -191,24 +186,8 @@ Str& Str::operator<<(float d) {
 #include <stdlib.h>
 Str& Str::append(double d) {
     char buf[80];
-#ifdef ESP8266_OPEN_RTOS
-    int decpt;
-    int sign;
-    int i;
-    cvt(d, sizeof(buf), &decpt, &sign, buf, 1);
-    if (sign)
-        append('-');
-    for (i = 0; i < decpt; i++)
-        append(buf[i]);
-    append('.');
-    for (uint32_t j = 0; (j + i < strlen(buf)) && j < 6; j++)
-        append(buf[j + i]);
-#else
-    sprintf(buf, "%.5f", d);
-    //    gcvt(d, 80, buf);
+    sprintf(buf, "%.5f", (float)d);
     append(buf);
-#endif
-
     return *this;
 }
 

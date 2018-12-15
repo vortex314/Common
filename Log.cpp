@@ -25,10 +25,11 @@ char Log::_logLevel[7] = {'T', 'D', 'I', 'W', 'E', 'F', 'N'};
 #ifdef ESP8266_OPEN_RTOS
 #endif
 
-std::string string_format(std::string& str, const char* fmt, ...) {
+std::string& string_format(std::string& str, const char* fmt, ...) {
     int size = strlen(fmt) * 2 + 50; // Use a rubric appropriate for your code
     va_list ap;
     while (1) { // Maximum two passes on a POSIX system...
+        ASSERT(size < 1024);
         str.resize(size);
         va_start(ap, fmt);
         int n = vsnprintf((char*)str.data(), size, fmt, ap);
@@ -103,8 +104,6 @@ extern "C" {
 #include <ets_sys.h>
 };
 #endif
-
-
 
 void Log::log(char level, const char* file, uint32_t lineNbr,
               const char* function, const char* fmt, ...) {
