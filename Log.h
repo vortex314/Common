@@ -29,7 +29,7 @@ class Log {
         LOG_NONE
     } LogLevel;
     static char _logLevel[7];
-    std::string _line;
+    std::string* _line;
 
   private:
     bool _enabled;
@@ -48,7 +48,7 @@ class Log {
     void defaultOutput();
     void setOutput(LogFunction function);
     void printf(const char* fmt, ...);
-    void log(const char* file, uint32_t line, const char* function,
+    void log(char level, const char* file, uint32_t line, const char* function,
              const char* fmt, ...);
 
     void vprintf(const char* fmt, va_list args);
@@ -73,71 +73,57 @@ extern Log logger;
 #define LOGF(fmt, ...)                                                         \
     logger.log(__FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 */
-#define __FLE__ strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
-
-#ifdef ARDUINO
-#define nullptr 0
-#include <Arduino.h>
-
-#define ASSERT_LOG(xxx)                                                        \
-    if (!(xxx)) {                                                              \
-        logger.printf(" Assertion failed %s", #xxx);                           \
-        logger.flush();                                                        \
-        while (1) {                                                            \
-            delay(1000);                                                       \
-        };                                                                     \
-    }
+#undef ASSERT
 #define ASSERT(xxx)                                                            \
     if (!(xxx)) {                                                              \
-        logger.printf(" Assertion failed %s", #xxx);                           \
-        logger.flush();                                                        \
-        while (1) {                                                            \
-            delay(1000);                                                       \
-        };                                                                     \
-    }
-
-#else
-
-#define ASSERT_LOG(xxx)                                                        \
-    if (!(xxx)) {                                                              \
-        logger.printf(" Assertion failed %s", #xxx);                           \
-        logger.flush();                                                        \
+        WARN(" ASSERT FAILED : %s", #xxx);                                     \
         while (1) {                                                            \
             Sys::delay(1000);                                                  \
         };                                                                     \
     }
-#define ASSERT(xxx)                                                            \
-    if (!(xxx)) {                                                              \
-        logger.printf(" Assertion failed %s", #xxx);                           \
-        logger.flush();                                                        \
-        while (1) {                                                            \
-            Sys::delay(1000);                                                  \
-        };                                                                     \
-    }
-
-#endif
 
 #define INFO(fmt, ...)                                                         \
     if (logger.enabled(Log::LOG_INFO))                                         \
-    LOGF(fmt, ##__VA_ARGS__)
+    logger.log('I', __FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 #define ERROR(fmt, ...)                                                        \
     if (logger.enabled(Log::LOG_ERROR))                                        \
-    LOGF(fmt, ##__VA_ARGS__)
+    logger.log('E', __FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 #define WARN(fmt, ...)                                                         \
     if (logger.enabled(Log::LOG_WARN))                                         \
-    LOGF(fmt, ##__VA_ARGS__)
+    logger.log('W', __FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 #define FATAL(fmt, ...)                                                        \
     if (logger.enabled(Log::LOG_FATAL))                                        \
-    LOGF(fmt, ##__VA_ARGS__)
+    logger.log('F', __FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 #define DEBUG(fmt, ...)                                                        \
     if (logger.enabled(Log::LOG_DEBUG))                                        \
-    LOGF(fmt, ##__VA_ARGS__)
+    logger.log('D', __FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 #define TRACE(fmt, ...)                                                        \
     if (logger.enabled(Log::LOG_TRACE))                                        \
-    LOGF(fmt, ##__VA_ARGS__)
+    logger.log('T', __FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+
+#define __FLE__                                                                \
+    (__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1   \
+                                      : __FILE__)
 
 #endif /* LOG_H_ */
 
-#define LL                                                                     \
-    ::fprintf(stdout, "%s:%d\n", __FILE__, __LINE__);                          \
-    ::fflush(stdout)
+//#define __FLE__ strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
+//#define __FLE__ __FILE__
+//#define __FLE__ past_last_slash(__FILE__)
+/*
+ * using cstr = const char* const;
+
+static constexpr cstr past_last_slash(cstr str, cstr last_slash) {
+    return *str == '\0' ? last_slash
+                        : *str == '/' ? past_last_slash(str + 1, str + 1)
+                                      : past_last_slash(str + 1, last_slash);
+}
+
+static constexpr cstr past_last_slash(cstr str) {
+    return past_last_slash(str, str);
+}
+#define __FLEE__                                                               \
+    ({                                                                         \
+        constexpr cstr sf__{past_last_slash(__FILE__)};                        \
+        sf__;                                                                  \
+    })*/

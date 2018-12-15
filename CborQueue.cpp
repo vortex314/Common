@@ -136,7 +136,7 @@ Erc CborQueue::putMap(Cbor& cbor) {
     int size = MAX_SIZE;
     _semaphore.wait(); //**************************** MUTEX SET
     if (_write_size) {
-        WARN(" CborQueue %X:%d ", (uint32_t)this, _write_size);
+        WARN(" CborQueue %X:%d ", (void*)this, _write_size);
         erc = EBUSY;
     } else {
         _start = _buffer.reserve((int)size + 2, reserved);

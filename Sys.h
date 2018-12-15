@@ -27,12 +27,11 @@
 #define ZERO(x) memset(&(x), 0, sizeof(x))
 
 #ifdef __cplusplus
-class Sys
-{
+class Sys {
     static char _hostname[30];
     static uint64_t _boot_time;
 
-public:
+  public:
     static uint64_t _upTime;
     static void init();
     static uint64_t micros();
@@ -53,9 +52,10 @@ public:
     static uint32_t getSerialId();
     static const char* getProcessor();
     static const char* getBuild();
+    static const char* getBoard();
 
-protected:
-private:
+  protected:
+  private:
 };
 #endif
 #ifdef __cplusplus
@@ -66,4 +66,4 @@ uint64_t SysMillis();
 }
 #endif
 
-#endif  // SYS_H
+#endif // SYS_H

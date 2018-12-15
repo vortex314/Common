@@ -79,9 +79,16 @@ class STM32Semaphore : public Semaphore {
 Semaphore& Semaphore::create() { return *(new STM32Semaphore()); }
 #endif
 
+#if defined(ESP32_IDF) || defined(ESP8266_OPEN_RTOS)
+#ifdef ESP8266_OPEN_RTOS
+#include <FreeRTOS.h>
+#include <semphr.h>
+#endif
 #ifdef ESP32_IDF
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
+
+#endif
 class Esp32Semaphore : public Semaphore {
     SemaphoreHandle_t xSemaphore = NULL;
 
@@ -91,13 +98,19 @@ class Esp32Semaphore : public Semaphore {
         xSemaphoreGive(xSemaphore);
     }
     ~Esp32Semaphore() {}
-    void wait() { xSemaphoreTake(xSemaphore, (TickType_t)portMAX_DELAY); }
+    void wait() {
+        if (xSemaphoreTake(xSemaphore, (TickType_t)1000) != pdTRUE) {
+            WARN(" xSemaphoreTake()  timed out ");
+        }
+    }
 
-    void release() { xSemaphoreGive(xSemaphore); }
+    void release() {
+        if (xSemaphoreGive(xSemaphore) != pdTRUE) {
+            WARN("xSemaphoreGive() failed");
+        }
+    }
     static Semaphore& create() { return *(new Esp32Semaphore()); }
 };
 
-Semaphore& Semaphore::create() {
-    return *new Esp32Semaphore();
-}
+Semaphore& Semaphore::create() { return *new Esp32Semaphore(); }
 #endif

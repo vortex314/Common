@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Lieven
-Date                   :=09/12/18
+Date                   :=15/12/18
 CodeLitePath           :=/home/lieven/.codelite
 LinkerName             :=/usr/bin/g++
 SharedObjectLinkerName :=/usr/bin/g++ -shared -fPIC
@@ -60,9 +60,9 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/CircBuf.cpp$(ObjectSuffix) $(IntermediateDirectory)/EventSource.cpp$(ObjectSuffix) $(IntermediateDirectory)/Json.cpp$(ObjectSuffix) $(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix) $(IntermediateDirectory)/Log.cpp$(ObjectSuffix) $(IntermediateDirectory)/Msg.cpp$(ObjectSuffix) $(IntermediateDirectory)/PIC32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix) $(IntermediateDirectory)/Bytes.cpp$(ObjectSuffix) $(IntermediateDirectory)/Strpack.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/Node.cpp$(ObjectSuffix) $(IntermediateDirectory)/Str.cpp$(ObjectSuffix) $(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/printf.c$(ObjectSuffix) $(IntermediateDirectory)/BufferedByteStream.cpp$(ObjectSuffix) $(IntermediateDirectory)/Msgpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/jsmn.c$(ObjectSuffix) $(IntermediateDirectory)/Base64.cpp$(ObjectSuffix) $(IntermediateDirectory)/BipBuffer.cpp$(ObjectSuffix) $(IntermediateDirectory)/Semaphore.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/Cbor.cpp$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/Fast.cpp$(ObjectSuffix) $(IntermediateDirectory)/CircBuf.cpp$(ObjectSuffix) $(IntermediateDirectory)/EventSource.cpp$(ObjectSuffix) $(IntermediateDirectory)/Json.cpp$(ObjectSuffix) $(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix) $(IntermediateDirectory)/Log.cpp$(ObjectSuffix) $(IntermediateDirectory)/Msg.cpp$(ObjectSuffix) $(IntermediateDirectory)/PIC32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix) $(IntermediateDirectory)/Bytes.cpp$(ObjectSuffix) \
+	$(IntermediateDirectory)/Strpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/Node.cpp$(ObjectSuffix) $(IntermediateDirectory)/Str.cpp$(ObjectSuffix) $(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/printf.c$(ObjectSuffix) $(IntermediateDirectory)/BufferedByteStream.cpp$(ObjectSuffix) $(IntermediateDirectory)/Msgpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/jsmn.c$(ObjectSuffix) $(IntermediateDirectory)/Base64.cpp$(ObjectSuffix) $(IntermediateDirectory)/BipBuffer.cpp$(ObjectSuffix) \
+	$(IntermediateDirectory)/Semaphore.cpp$(ObjectSuffix) $(IntermediateDirectory)/Cbor.cpp$(ObjectSuffix) 
 
 
 
@@ -95,6 +95,14 @@ PreBuild:
 ##
 ## Objects
 ##
+$(IntermediateDirectory)/Fast.cpp$(ObjectSuffix): Fast.cpp $(IntermediateDirectory)/Fast.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/Fast.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Fast.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/Fast.cpp$(DependSuffix): Fast.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Fast.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Fast.cpp$(DependSuffix) -MM Fast.cpp
+
+$(IntermediateDirectory)/Fast.cpp$(PreprocessSuffix): Fast.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Fast.cpp$(PreprocessSuffix) Fast.cpp
+
 $(IntermediateDirectory)/CircBuf.cpp$(ObjectSuffix): CircBuf.cpp $(IntermediateDirectory)/CircBuf.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/lieven/workspace/Common/CircBuf.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/CircBuf.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/CircBuf.cpp$(DependSuffix): CircBuf.cpp

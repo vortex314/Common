@@ -22,9 +22,7 @@ char Log::_logLevel[7] = {'T', 'D', 'I', 'W', 'E', 'F', 'N'};
 #endif
 #ifdef ESP32_IDF
 #endif
-//#define ESP8266_OPEN_RTOS
 #ifdef ESP8266_OPEN_RTOS
-
 #endif
 
 std::string string_format(std::string& str, const char* fmt, ...) {
@@ -67,7 +65,10 @@ void Log::serialLog(char* start, uint32_t length) {
 
 Log::Log(uint32_t size)
     : _enabled(true), _logFunction(serialLog), _level(LOG_INFO) {
-    _line.reserve(size);
+    if (_line == 0) {
+        _line = new std::string;
+        _line->reserve(size);
+    }
     _application[0] = 0;
     _hostname[0] = 0;
 }
@@ -103,12 +104,14 @@ extern "C" {
 };
 #endif
 
-#ifdef ARDUINO
 
-#endif
 
-void Log::log(const char* file, uint32_t lineNbr, const char* function,
-              const char* fmt, ...) {
+void Log::log(char level, const char* file, uint32_t lineNbr,
+              const char* function, const char* fmt, ...) {
+    if (_line == 0) {
+        ::printf("%s:%d %s:%d\n", __FILE__, __LINE__, file, lineNbr);
+        return;
+    }
 
     va_list args;
     va_start(args, fmt);
@@ -116,21 +119,20 @@ void Log::log(const char* file, uint32_t lineNbr, const char* function,
     vsnprintf(logLine, sizeof(logLine) - 1, fmt, args);
     va_end(args);
     _application[0] = 0;
-#ifdef ESP32_IDF
+#if defined(ESP32_IDF) || defined(ESP8266_OPEN_RTOS)
     extern void* pxCurrentTCB;
     ::snprintf(_application, sizeof(_application), "%X",
                (uint32_t)pxCurrentTCB);
 #endif
-    string_format(_line, "%s%c | %8s | %s | %-10s:%-4d | %s", _application,
-                  _logLevel[_level], time(), Sys::hostname(), file, lineNbr,
-                  logLine);
+    string_format(*_line, "%s %c | %8s | %s | %-10s:%-4d | %s", _application,
+                  level, time(), Sys::hostname(), file, lineNbr, logLine);
     logger.flush();
 }
 
 void Log::flush() {
     if (_logFunction)
-        _logFunction((char*)_line.c_str(), _line.size());
-    _line = "";
+        _logFunction((char*)_line->c_str(), _line->size());
+    *_line = "";
 }
 
 void Log::level(LogLevel l) { _level = l; }
@@ -165,10 +167,22 @@ extern const char* __progname;
 #endif
 //_________________________________________ EMBEDDED
 
-#if !defined(__linux__) && !defined(__ARDUINO__)
+#if defined(ESP32_IDF)
 const char* Log::time() {
     static char szTime[20];
     snprintf(szTime, sizeof(szTime), "%llu", Sys::millis());
     return szTime;
 }
+#endif
+
+#if defined(ESP8266_OPEN_RTOS) // doesn't support 64 bit printf
+const char* Log::time() {
+    static char szTime[20];
+    snprintf(szTime, sizeof(szTime), "%d", (uint32_t)Sys::millis());
+    return szTime;
+}
+#endif
+
+#ifdef ARDUINO
+
 #endif

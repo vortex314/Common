@@ -14,7 +14,7 @@ Common_SRC_DIR =  $(Common_ROOT)
 Common_CFLAGS= -DESP8266_OPEN_RTOS
 Common_CXXFLAGS= -DESP8266_OPEN_RTOS -fno-rtti -std=gnu++11 -fno-exceptions
 
-$(eval $(call component_compile_rules,Common))
+# $(eval $(call component_compile_rules,Common))
 
 #ESP32 COMPONENT.MK
 COMPONENT_SRCDIRS := .
