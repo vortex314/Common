@@ -54,6 +54,7 @@ class Sys {
     static const char* getBuild();
     static const char* getBoard();
 
+
   protected:
   private:
 };

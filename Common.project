@@ -5,6 +5,15 @@
       <![CDATA[00010001N0005Debug000000000000]]>
     </Plugin>
   </Plugins>
+  <VirtualDirectory Name="Common">
+    <File Name="StaticLinkedList.hpp"/>
+    <File Name="XdrQueue.h"/>
+    <File Name="XdrQueue.cpp"/>
+  </VirtualDirectory>
+  <File Name="Xdr.h"/>
+  <File Name="Xdr.cpp"/>
+  <File Name="Config.h"/>
+  <File Name="Config.cpp"/>
   <Reconciliation>
     <Regexes/>
     <Excludepaths/>
@@ -17,6 +26,7 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
+    <File Name="Xdr.cpp"/>
     <File Name="Fast.cpp"/>
     <File Name="Fast.h"/>
     <File Name="Semaphore.h"/>
@@ -43,6 +53,8 @@
     <File Name="Base64.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
+    <File Name="Uid.cpp"/>
+    <File Name="Uid.h"/>
     <File Name="pt.h"/>
     <File Name="pt-sem.h"/>
     <File Name="printf.h"/>
@@ -102,8 +114,9 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-std=c++11;-fPIC" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="-g;-std=c++11;-fPIC;" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
+        <IncludePath Value="../ArduinoJson/"/>
       </Compiler>
       <Linker Options="" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
