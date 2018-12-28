@@ -11,8 +11,8 @@ INC_DIRS += $(Common_ROOT)..  $(Common_ROOT)
 
 # args for passing into compile rule generation
 Common_SRC_DIR =  $(Common_ROOT)
-Common_CFLAGS= -DESP8266_OPEN_RTOS
-Common_CXXFLAGS= -DESP8266_OPEN_RTOS -fno-rtti -std=gnu++11 -fno-exceptions -I../../ArduinoJson
+Common_CFLAGS= -DESP_OPEN_RTOS
+Common_CXXFLAGS= -DESP_OPEN_RTOS -fno-rtti -std=gnu++11 -fno-exceptions -I../../ArduinoJson
 
 $(eval $(call component_compile_rules,Common))
 

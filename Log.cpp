@@ -22,7 +22,7 @@ char Log::_logLevel[7] = {'T', 'D', 'I', 'W', 'E', 'F', 'N'};
 #endif
 #ifdef ESP32_IDF
 #endif
-#ifdef ESP8266_OPEN_RTOS
+#ifdef ESP_OPEN_RTOS
 #endif
 
 std::string& string_format(std::string& str, const char* fmt, ...) {
@@ -57,7 +57,7 @@ void Log::serialLog(char* start, uint32_t length) {
 		usart_send_blocking(USART1, *(s++));
 	}
 #endif
-#if defined(__linux__) || defined(ESP8266_OPEN_RTOS) || defined(ESP32_IDF)
+#if defined(__linux__) || defined(ESP_OPEN_RTOS) || defined(ESP32_IDF)
 	*(start + length) = '\0';
 	fprintf(stdout, "%s\n", start);
 	fflush(stdout);
@@ -123,7 +123,7 @@ void Log::log(char level, const char* file, uint32_t lineNbr,
 #ifdef __linux__
 	::snprintf(_application,sizeof(_application),"%X",(uint32_t)pthread_self());
 #endif
-#if defined(ESP32_IDF) || defined(ESP8266_OPEN_RTOS)
+#if defined(ESP32_IDF) || defined(ESP_OPEN_RTOS)
 	extern void* pxCurrentTCB;
 	::snprintf(_application, sizeof(_application), "%X",
 	           (uint32_t)pxCurrentTCB);
@@ -180,7 +180,7 @@ const char* Log::time() {
 }
 #endif
 
-#if defined(ESP8266_OPEN_RTOS) // doesn't support 64 bit printf
+#if defined(ESP_OPEN_RTOS) // doesn't support 64 bit printf
 const char* Log::time() {
 	static char szTime[20];
 	snprintf(szTime, sizeof(szTime), "%d", (uint32_t)Sys::millis());

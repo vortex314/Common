@@ -95,8 +95,8 @@ class STM32Semaphore : public Semaphore {
 Semaphore& Semaphore::create() { return *(new STM32Semaphore()); }
 #endif
 
-#if defined(ESP32_IDF) || defined(ESP8266_OPEN_RTOS)
-#ifdef ESP8266_OPEN_RTOS
+#if defined(ESP32_IDF) || defined(ESP_OPEN_RTOS)
+#ifdef ESP_OPEN_RTOS
 #include <FreeRTOS.h>
 #include <semphr.h>
 #endif

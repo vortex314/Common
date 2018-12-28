@@ -6,26 +6,9 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="Common">
-    <File Name="StaticLinkedList.hpp"/>
+    <File Name="RtosQueue.cpp"/>
     <File Name="XdrQueue.h"/>
     <File Name="XdrQueue.cpp"/>
-  </VirtualDirectory>
-  <File Name="Xdr.h"/>
-  <File Name="Xdr.cpp"/>
-  <File Name="Config.h"/>
-  <File Name="Config.cpp"/>
-  <Reconciliation>
-    <Regexes/>
-    <Excludepaths/>
-    <Ignorefiles/>
-    <Extensions>
-      <![CDATA[*.cpp;*.c;*.h;*.hpp;*.xrc;*.wxcp;*.fbp]]>
-    </Extensions>
-    <Topleveldir>/home/lieven/workspace/Common</Topleveldir>
-  </Reconciliation>
-  <Description/>
-  <Dependencies/>
-  <VirtualDirectory Name="src">
     <File Name="Xdr.cpp"/>
     <File Name="Fast.cpp"/>
     <File Name="Fast.h"/>
@@ -51,8 +34,25 @@
     <File Name="BufferedByteStream.cpp"/>
     <File Name="BipBuffer.cpp"/>
     <File Name="Base64.cpp"/>
+    <File Name="Xdr.cpp"/>
+    <File Name="Config.cpp"/>
   </VirtualDirectory>
+  <Reconciliation>
+    <Regexes/>
+    <Excludepaths/>
+    <Ignorefiles/>
+    <Extensions>
+      <![CDATA[*.cpp;*.c;*.h;*.hpp;*.xrc;*.wxcp;*.fbp]]>
+    </Extensions>
+    <Topleveldir>/home/lieven/workspace/Common</Topleveldir>
+  </Reconciliation>
+  <Description/>
+  <Dependencies/>
   <VirtualDirectory Name="include">
+    <File Name="StaticLinkedList.hpp"/>
+    <File Name="Config.h"/>
+    <File Name="Xdr.h"/>
+    <File Name="RtosQueue.h"/>
     <File Name="Uid.cpp"/>
     <File Name="Uid.h"/>
     <File Name="pt.h"/>
