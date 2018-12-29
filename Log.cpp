@@ -78,6 +78,7 @@ Log::Log(uint32_t size)
 Log::~Log() {}
 
 void Log::setLogLevel(char c) {
+	::printf("%s:%d was here\n",__FILE__,__LINE__);
 	for (uint32_t i = 0; i < sizeof(_logLevel); i++)
 		if (_logLevel[i] == c) {
 			_level = (Log::LogLevel)i;
