@@ -414,7 +414,7 @@ int Xdr::getNext(Uid uid,double& d) {
 
 bool Xdr::skip() {
 	Tag tag(peek());
-	return readInc(BYTES_TO_WORDS(tag.length));
+	return readInc(BYTES_TO_WORDS(tag.length)+1);
 }
 
 int Xdr::getNext(Uid key, std::string& s) {
