@@ -34,7 +34,7 @@ class Uid {
 	public:
 		Uid(const char* label);
 		Uid(uid_type id) ;
-		Uid(void*);
+//		Uid(void*);
 		Uid();
 		inline uid_type id() { return _id;};
 		void operator=(uid_type a);

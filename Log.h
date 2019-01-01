@@ -9,7 +9,6 @@
 #define LOG_H_
 
 #include <Semaphore.h>
-#include <Str.h>
 #include <Sys.h>
 #include <stdarg.h>
 #include <stdint.h>

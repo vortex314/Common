@@ -3,18 +3,21 @@
 RtosQueue::~RtosQueue() {
 
 }
-
+//___________________________________________________ ESP8266 / ESP32
+//
 #if defined(ESP32_IDF) || defined(ESP_OPEN_RTOS)
 
-#ifdef ESP32_IDF
+#if defined(ESP32_IDF)
 #include <freertos/FreeRTOS.h>
 #include <freertos/queue.h>
 #endif // ESP32_IDF
 
-#ifdef ESP_OPEN_RTOS
+#if defined(ESP_OPEN_RTOS)
 #include <FreeRTOS.h>
 #include <queue.h>
 #endif // ESP_OPEN_RTOS
+
+
 
 class FreeRtosQueue : public RtosQueue {
 
@@ -66,7 +69,61 @@ RtosQueue& RtosQueue::create(uint32_t size ) {
 
 
 #endif // defined(ESP32_IDF) || defined(ESP_OPEN_RTOS)
+//______________________________________________________ ARDUINO
+//
 
+#if  defined(ARDUINO)
+#include <Log.h>
+#include <queue>
+
+
+class ArduinoRtosQueue : public RtosQueue {
+
+	private:
+		std::queue<Xdr*> _queue;
+	public:
+		ArduinoRtosQueue(uint32_t size) ;
+		virtual ~ArduinoRtosQueue() ;
+		int enqueue(Xdr& );
+		int dequeue(Xdr&,uint32_t time);
+};
+
+
+ArduinoRtosQueue::ArduinoRtosQueue(uint32_t size) {
+	INFO(" ArduinoRtosQueue created ");
+
+}
+
+ArduinoRtosQueue::~ArduinoRtosQueue() {
+}
+
+
+int ArduinoRtosQueue::enqueue(Xdr& xdr) {
+	Xdr* nx = new Xdr(xdr.size());
+	*nx=xdr;
+	_queue.push(nx);
+	return 0;
+}
+int ArduinoRtosQueue::dequeue(Xdr& xdr,uint32_t time) {
+	Xdr* px;
+	if ( time < 10 ) time=10; // timer tick is at 10 msec
+	if ( _queue.empty() ) return ENOENT;
+	px= _queue.front();
+	_queue.pop();
+	xdr = *px; // copy data
+	delete px;
+	return 0;
+}
+
+
+
+RtosQueue& RtosQueue::create(uint32_t size ) {
+	return *new ArduinoRtosQueue(size);
+}
+
+#endif // ESP32_IDF
+//_______________________________________________________ LINUX
+//
 #ifdef __linux__
 #include <fcntl.h>           /* For O_* constants */
 #include <sys/stat.h>        /* For mode constants */
@@ -140,7 +197,5 @@ int LinuxRtosQueue::dequeue(Xdr& xdr,uint32_t waitTime) {
 RtosQueue& RtosQueue::create(uint32_t size ) {
 	return *new LinuxRtosQueue(size);
 }
-
-
 
 #endif // __linux__

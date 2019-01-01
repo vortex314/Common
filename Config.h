@@ -9,6 +9,7 @@
 #define ACTOR_CONFIG_H_
 #define ARDUINOJSON_USE_LONG_LONG 1
 //#define ARDUINOJSON_USE_INT64 1
+#define ARDUINOJSON_ENABLE_STD_STRING 1
 #include <ArduinoJson.h>
 #include <Log.h>
 

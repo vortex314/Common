@@ -39,8 +39,8 @@ class Xdr { /*: public Stream<uint32_t> */
 		uint32_t* _start;
 
 	public:
-		typedef enum { BOOL, INT, UINT, BYTES, FLOAT, OBJECT, SPECIAL, RESERVED } Type;
-		static const char* typeStrings[Type::SPECIAL + 1];
+		typedef enum { BOOL, INT, UINT, BYTES, FLOAT, OBJECT, XDR_1, RESERVED } Type;
+		static const char* typeStrings[Type::XDR_1 + 1];
 
 		uint32_t&  operator[](uint32_t idx) { return _start[idx];};
 

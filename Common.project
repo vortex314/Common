@@ -6,6 +6,7 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="Common">
+    <File Name="Sys.cpp"/>
     <File Name="RtosQueue.cpp"/>
     <File Name="XdrQueue.h"/>
     <File Name="XdrQueue.cpp"/>

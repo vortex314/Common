@@ -5,7 +5,6 @@
  *      Author: lieven
  */
 #include <Log.h>
-#include <Str.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -173,7 +172,7 @@ extern const char* __progname;
 #endif
 //_________________________________________ EMBEDDED
 
-#if defined(ESP32_IDF)
+#if defined(ESP32_IDF) || defined(ARDUINO)
 const char* Log::time() {
 	static char szTime[20];
 	snprintf(szTime, sizeof(szTime), "%llu", Sys::millis());

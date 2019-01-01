@@ -47,7 +47,7 @@ design decisions :
 #define BYTES_TO_WORDS(lll) (lll&0x3) ? (lll>>2)+1 : (lll>>2)
 
 
-const char* Tag::typeStrings[] = { "BOOL", "INT", "UINT", "BYTES", "FLOAT", "OBJECT", "SPECIAL", "RESERVED" };
+const char* Tag::typeStrings[] = { "BOOL", "INT", "UINT", "BYTES", "FLOAT", "OBJECT", "XDR_1", "RESERVED" };
 
 Tag::Tag(uint32_t i) {
 	ui32 = i;
