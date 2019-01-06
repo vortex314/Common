@@ -6,6 +6,8 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="Common">
+    <File Name="Msg.cpp.old"/>
+    <File Name="Cbor.cpp.old"/>
     <File Name="Sys.cpp"/>
     <File Name="RtosQueue.cpp"/>
     <File Name="XdrQueue.h"/>
@@ -23,14 +25,12 @@
     <File Name="PIC32_stubs.cpp"/>
     <File Name="Node.cpp"/>
     <File Name="Msgpack.cpp"/>
-    <File Name="Msg.cpp"/>
     <File Name="Log.cpp"/>
     <File Name="LinkedList.cpp"/>
     <File Name="Json.cpp"/>
     <File Name="EventSource.cpp"/>
     <File Name="CircBuf.cpp"/>
     <File Name="CborQueue.cpp"/>
-    <File Name="Cbor.cpp"/>
     <File Name="Bytes.cpp"/>
     <File Name="BufferedByteStream.cpp"/>
     <File Name="BipBuffer.cpp"/>

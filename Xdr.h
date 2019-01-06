@@ -50,7 +50,9 @@ class Xdr { /*: public Stream<uint32_t> */
 		inline void rewind() {_readIdx=0;};
 		inline void end();
 		void clear();
-		uint32_t peek();
+		uint32_t peek(uint32_t offset) const;
+		uint32_t peek() const;
+
 		bool skip();
 		int writeInc(uint32_t );
 		inline int readInc(uint32_t);
@@ -92,15 +94,16 @@ class Xdr { /*: public Stream<uint32_t> */
 		};
 
 		int vscanf(const char* fmt,...);
-		bool hasData();
+		bool hasData() const ;
 
 		std::string toString();
-		bool find(Tag& t);
+		bool find(Tag& t) ;
 		Xdr& operator=(const Xdr &)   ;
 
-		uint32_t size();
-		uint32_t capacity();
+		uint32_t size() const;
+		uint32_t capacity() const;
 		void resize(uint32_t newSize);
+		void poke(uint32_t offset,uint32_t value);
 
 };
 

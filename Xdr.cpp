@@ -83,9 +83,7 @@ Xdr::Xdr(Xdr& src) {
 	_writeIdx = src._writeIdx;
 	uint32_t max=src._writeIdx;
 
-	for( uint32_t i=0; i < max; i++) {
-		_start[i]=src._start[i];
-	}
+	memcpy(_start,src._start,src._writeIdx<<2);
 }
 
 Xdr& Xdr::operator=(const Xdr& src)  {
@@ -93,10 +91,10 @@ Xdr& Xdr::operator=(const Xdr& src)  {
 		clear();
 		if ( _capacity < src._writeIdx )  resize(src._writeIdx);
 		uint32_t max=src._writeIdx;
-
-		for( uint32_t i=0; i < max; i++) {
-			_start[i]=src._start[i];
-		}
+		memcpy(_start,src._start,src._writeIdx<<2);
+		/*		for( uint32_t i=0; i < max; i++) {
+					_start[i]=src._start[i];
+				}*/
 		_writeIdx=max;
 		_readIdx=0;
 	}
@@ -113,28 +111,24 @@ void Xdr::clear() {
 	_readIdx = 0;
 }
 
-uint32_t Xdr::size() {
+uint32_t Xdr::size() const {
 	return _writeIdx;
 }
-uint32_t Xdr::capacity() {
+uint32_t Xdr::capacity() const {
 	return _capacity;
 }
 
 void Xdr::resize(uint32_t newSize) {
+//	INFO("resize %X : [%d]",this,newSize);
+
 	if ( newSize < _capacity ) return;
-	if ( _writeIdx == 0 ) {
-		delete[] _start;
-		_start = new uint32_t[newSize];
-		_capacity = newSize;
-	} else {
-		uint32_t* _newStart= new uint32_t[newSize];
-		for(uint32_t i=0; i<_writeIdx; i++) {
-			_newStart[i]=_start[i];
-		}
-		delete[] _start;
-		_start = _newStart;
-		_capacity = newSize;
-	}
+
+	uint32_t* _newStart= new uint32_t[newSize];
+	memcpy(_newStart,_start,_writeIdx<<2);
+	delete[] _start;
+	_start = _newStart;
+	_capacity = newSize;
+
 }
 
 bool Xdr::hasSpace(uint32_t size) {
@@ -147,13 +141,25 @@ bool Xdr::hasSpace(uint32_t size) {
 //	return (size <= (_capacity - _writeIdx));
 }
 
-bool Xdr::hasData() {
+bool Xdr::hasData() const {
 	return (_readIdx < _writeIdx);
 }
 
-uint32_t Xdr::peek() {
+uint32_t Xdr::peek() const {
 	return *(_start + _readIdx);
 }
+
+uint32_t Xdr::peek(uint32_t offset) const {
+	if ( offset < _writeIdx )
+		return *(_start + offset);
+	return 0;
+}
+
+
+void Xdr::poke(uint32_t offset,uint32_t value) {
+	if ( offset < _writeIdx ) *(_start+offset)=value;
+}
+
 int Xdr::readInc(uint32_t delta) {
 	if(_readIdx + delta > _writeIdx)
 		return ENOENT;
@@ -282,7 +288,7 @@ int Xdr::add(Uid key, uint8_t* bytes, uint32_t length) {
 }
 
 
-bool Xdr::find(Tag& tag) {
+bool Xdr::find(Tag& tag)  {
 	Tag t(0);
 
 	while(read(t.ui32)==0) {
@@ -443,10 +449,12 @@ int Xdr::getNext(Uid key, std::string& s) {
 
 std::string Xdr::toString() {
 	std::string output;
+	std::string s;
+
 	Tag tag(0);
 	rewind();
+	output += string_format(s,"[%X] ",this);
 	while( hasData() ) {
-		std::string s;
 		uint32_t ui32=peek();
 		tag = Tag(ui32);
 		s = tag.toString();
