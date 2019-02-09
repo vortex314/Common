@@ -83,7 +83,10 @@ Xdr::Xdr(Xdr& src) {
 	_writeIdx = src._writeIdx;
 	uint32_t max=src._writeIdx;
 
-	memcpy(_start,src._start,src._writeIdx<<2);
+//	memcpy(_start,src._start,src._writeIdx<<2);
+	for(uint32_t i=0; i<_writeIdx; i++) {
+		*(_start+i)= *(src._start+i);
+	}
 }
 
 Xdr& Xdr::operator=(const Xdr& src)  {
@@ -91,10 +94,10 @@ Xdr& Xdr::operator=(const Xdr& src)  {
 		clear();
 		if ( _capacity < src._writeIdx )  resize(src._writeIdx);
 		uint32_t max=src._writeIdx;
-		memcpy(_start,src._start,src._writeIdx<<2);
-		/*		for( uint32_t i=0; i < max; i++) {
-					_start[i]=src._start[i];
-				}*/
+		//	memcpy(_start,src._start,src._writeIdx<<2);
+		for( uint32_t i=0; i < max; i++) {
+			_start[i]=src._start[i];
+		}
 		_writeIdx=max;
 		_readIdx=0;
 	}
@@ -124,7 +127,10 @@ void Xdr::resize(uint32_t newSize) {
 	if ( newSize < _capacity ) return;
 
 	uint32_t* _newStart= new uint32_t[newSize];
-	memcpy(_newStart,_start,_writeIdx<<2);
+//	memcpy(_newStart,_start,_writeIdx<<2);
+	for(uint32_t i=0; i<_writeIdx; i++) {
+		*(_newStart+i)= *(_start+i);
+	}
 	delete[] _start;
 	_start = _newStart;
 	_capacity = newSize;
@@ -226,42 +232,42 @@ int Xdr::add(Xdr& xdr) {
 }
 
 
-int Xdr::add(Uid key, bool b) {
+int Xdr::add(uid_type key, bool b) {
 	write(Tag(BOOL, 1, key));
 	return write((uint32_t)b);
 }
 
-int Xdr::add(Uid key, uint16_t v) {
+int Xdr::add(const uid_type key, uint16_t v) {
 	write(Tag(UINT, 4, key));
 	write(v);
 	return 0;
 }
 
-int Xdr::add(Uid key, int32_t v) {
+int Xdr::add(const uid_type key, int32_t v) {
 	write(Tag(INT, 4, key));
 	return write((uint32_t)v);
 }
 
-int Xdr::add(Uid key, uint32_t v) {
+int Xdr::add(const uid_type key, uint32_t v) {
 	write(Tag(UINT, 4, key));
 	return write(v);
 }
 
-int Xdr::add(Uid key, uint64_t v) {
+int Xdr::add(const uid_type key, uint64_t v) {
 	write(Tag(UINT, 8, key));
 	return write((uint32_t*)&v,2);
 }
 
-int Xdr::add(Uid key, int64_t v) {
+int Xdr::add(const uid_type key, int64_t v) {
 	write(Tag(INT, 8, key));
 	return write((uint32_t*)&v,2);
 }
 
 
-int Xdr::add(Uid key, double d) {
+int Xdr::add( uid_type key, double d) {
 	//   printf("%s:%d \n",__FILE__,__LINE__);
-	Tag tag(FLOAT, 8, key.id());
-	write(Tag(FLOAT, 8, key.id()).ui32);
+	Tag tag(FLOAT, 8, key);
+	write(Tag(FLOAT, 8, key).ui32);
 
 	union {
 		double dd;
@@ -273,15 +279,15 @@ int Xdr::add(Uid key, double d) {
 	return 0;
 }
 
-int Xdr::add(Uid key, const char* s) {
+int Xdr::add(const uid_type key, const char* s) {
 	return add(key, (uint8_t*)s, strlen(s));
 }
 
-int Xdr::add(Uid key, std::string& v) {
+int Xdr::add(const uid_type key, std::string& v) {
 	return add(key, (uint8_t*)v.data(), v.size());
 }
 
-int Xdr::add(Uid key, uint8_t* bytes, uint32_t length) {
+int Xdr::add(const uid_type key, uint8_t* bytes, uint32_t length) {
 	write(Tag(BYTES, length, key));
 	write((uint8_t*)bytes, length);
 	return 0;
@@ -303,7 +309,7 @@ bool Xdr::find(Tag& tag)  {
 	return false;
 }
 
-int Xdr::getNext(Uid uid, bool& b) {
+int Xdr::getNext(const uid_type uid, bool& b) {
 	Tag tag = Tag(BOOL, 0, uid);
 
 	if(find(tag)) {
@@ -315,7 +321,7 @@ int Xdr::getNext(Uid uid, bool& b) {
 	return ENOENT;
 }
 
-int Xdr::getNext(Uid uid, uint16_t& i) {
+int Xdr::getNext(const uid_type uid, uint16_t& i) {
 	Tag tag = Tag(UINT, 0, uid);
 
 	if(find(tag)) {
@@ -327,7 +333,7 @@ int Xdr::getNext(Uid uid, uint16_t& i) {
 	return ENOENT;
 }
 
-int Xdr::getNext(Uid uid, uint32_t& i) {
+int Xdr::getNext(const uid_type uid, uint32_t& i) {
 	Tag tag = Tag(UINT, 0, uid);
 
 	if(find(tag)) {
@@ -336,7 +342,7 @@ int Xdr::getNext(Uid uid, uint32_t& i) {
 	return ENOENT;
 }
 
-int Xdr::getNext(Uid uid, uint64_t& i) {
+int Xdr::getNext(const uid_type uid, uint64_t& i) {
 	Tag tag = Tag(UINT, 0, uid);
 	if(find(tag)) {
 		union {
@@ -360,7 +366,7 @@ int Xdr::getNext(Uid uid, uint64_t& i) {
 	return ENOENT;
 }
 
-int Xdr::getNext(Uid uid, int& i) {
+int Xdr::getNext(const uid_type uid, int& i) {
 	Tag tag = Tag(INT, 0, uid);
 
 	if(find(tag)) {
@@ -372,7 +378,7 @@ int Xdr::getNext(Uid uid, int& i) {
 	return ENOENT;
 }
 
-int Xdr::getNext(Uid uid, int64_t& i) {
+int Xdr::getNext(const uid_type uid, int64_t& i) {
 	Tag tag = Tag(INT, 0, uid);
 	if(find(tag)) {
 		union {
@@ -396,7 +402,7 @@ int Xdr::getNext(Uid uid, int64_t& i) {
 	return ENOENT;
 }
 
-int Xdr::getNext(Uid uid,double& d) {
+int Xdr::getNext(const uid_type uid,double& d) {
 	Tag tag = Tag(FLOAT, 0, uid);
 	if (find(tag)) {
 		union {
@@ -423,7 +429,7 @@ bool Xdr::skip() {
 	return readInc(BYTES_TO_WORDS(tag.length)+1);
 }
 
-int Xdr::getNext(Uid key, std::string& s) {
+int Xdr::getNext(const uid_type key, std::string& s) {
 	Tag tag(BYTES, 0, key);
 
 	if(find(tag)) {
@@ -487,22 +493,46 @@ std::string Xdr::toString() {
 }
 
 
-#define UID(xxx) H(xxx)
+
+
+#define UID1(xxx) UI(xxx).uid()
+#define UID2(x) Uid(std::integral_constant<uint16_t, H(x)>::value,x).id()
+#define UID3(xxx) Uid(xxx)
+#define UID4(xxxx) (xxxx)
+
+/*
+#undef assert
+#define assert(xxxx) (xxxx)
+*/
+
+class UI  {
+	private :
+		const uid_type _uid;
+		const char* _label;
+	public :
+		constexpr UI(const char* name) :_uid(H(name)),_label(name) {};
+		constexpr uid_type uid() { return _uid; }
+};
+
+//#define UID(str) UI(str)
+
+UI lieven("lieven");
 
 void XdrTester(uint32_t MAX) {
 	Xdr xdr(12);
 	std::string HW = "hello world";
 	Tag t(Xdr::FLOAT, 2, "Hello");
-	LOG(" Start Xdrtester .... ");
-	LOG("Tag : %s", t.toString().c_str());
-	LOG("sizeof(Tag)=%u",(uint32_t) sizeof(Tag));
-	LOG("sizeof(Type)=%u", (uint32_t)sizeof(Xdr::Type));
+	printf(" Start Xdrtester %u.... \n",MAX);
+	/*	LOG("Tag : %s", t.toString().c_str());
+		LOG("sizeof(Tag)=%u",(uint32_t) sizeof(Tag));
+		LOG("sizeof(Type)=%u", (uint32_t)sizeof(Xdr::Type));*/
 
 	const char* test1 = "{\"$src\":\"master/brain\",\"$dst\":\"ESP82-10027/System\",\"$cls\":\"Properties\"}";
 
 	double d;
 
-	Uid::add("temp");
+	uid_type a = UI("temp").uid();
+
 	Uid::add("temp");
 	Uid::add("anInt32");
 	Uid::add("aString");
@@ -514,6 +544,7 @@ void XdrTester(uint32_t MAX) {
 
 	for(uint32_t loop=0; loop<MAX; loop++) {
 		xdr.clear();
+		xdr.add(UID("temp"),1.23);
 		xdr.add(UID("temp"), 1.23);
 		xdr.add(UID("anInt32"), -15);
 		xdr.add(UID("aString"), "The quick brown fox jumps over the lazy dog !");
@@ -538,29 +569,8 @@ void XdrTester(uint32_t MAX) {
 		assert(xdr.get(UID("booleke"),bb)==0);
 		assert(bb==false);
 	}
-	LOG(" xdr = %s ", xdr.toString().c_str());
-
-
-	Xdr xdr2=xdr;
-	assert(xdr2.get(UID("temp"),d)==0);
-	assert( d == 1.23 );
-	int ii;
-	assert(xdr2.get(UID("anInt32"),ii)==0);
-	assert( ii == -15 );
-	std::string ss;
-	ss.reserve(100);
-	assert(xdr2.get(UID("aString"),ss)==0);
-	assert(ss.compare("The quick brown fox jumps over the lazy dog !")==0);
-	assert(xdr2.get(UID("sStdString"),ss)==0);
-	assert(ss.compare(HW)==0);
-	assert(xdr2.get(UID("test1"),ss)==0);
-	assert(ss.compare(test1)==0);
-	bool bb;
-	assert(xdr2.get(UID("booleke"),bb)==0);
-	assert(bb==false);
-
 
 	uint32_t delta = Sys::millis()-start;
-	LOG(" %d took %u msec, %f msg/sec , double : %f",MAX,delta,(MAX*1000.0)/delta,d);
+	printf("\n  %d took %u msec, %f msg/sec \n",MAX,delta,(MAX*1000.0)/delta);
 	std::string s = xdr.toString();
 }

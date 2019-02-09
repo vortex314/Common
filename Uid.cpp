@@ -2,25 +2,29 @@
 
 #include <cstring>
 
-#define UID(xxxx) Uid(xxxx)
-//std::unordered_map<uint16_t, std::string> Uid::_uids;
+//#define UID(xxxx) Uid(xxxx)
 
 std::unordered_map<uint16_t, void*>* Uid::_uids=0;
 
-/*
-Uid::Uid(const char* label) {
-	_id = H(label);
-	if(uids()->find(_id) == uids()->end()) return;
-	uids()->emplace(_id, (void*)label);
-	return ;
-};*/
+Uid::Uid(const char* label) :  _id(H(label)) {
+	if (uids()->find(_id) == uids()->end()) {
+		char* l = new char[strlen(label) + 1]();
+		strcpy(l, label);
+		uids()->emplace(_id, (void*)l);
+	}
+}
 
+Uid::Uid(uid_type id,const char* label) :  _id(id) {
+	if (uids()->find(_id) == uids()->end()) {
+		char* l = new char[strlen(label) + 1]();
+		strcpy(l, label);
+		uids()->emplace(_id, (void*)l);
+	}
+}
 
-Uid::Uid(const char* label) { _id = add(label); }
+Uid::Uid(uid_type id) :_id(id) {  }
 
-Uid::Uid(uid_type id) { _id = id; }
-
-
+// Uid::Uid(const Uid& src) { _id=src._id; };
 
 uid_type Uid::add(const char* label) {
 	uid_type h;
@@ -34,23 +38,13 @@ uid_type Uid::add(const char* label) {
 	return h;
 }
 
-
 const char* Uid::label() { return Uid::label(_id); }
 
+Uid::Uid() :_id(0) {}
 
-Uid::Uid() {
-	_id = 0;
-}
+void Uid::operator=(const uid_type a) { _id=a; }
 
-
-void Uid::operator=(uid_type a) {
-	_id = a;
-}
-bool Uid::operator==(Uid b) {
-	return _id == b._id;
-}
-
-
+bool Uid::operator==(Uid b) { return _id == b._id;}
 
 std::unordered_map<uid_type, void*>* Uid::uids() {
 	if (_uids == 0) {

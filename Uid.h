@@ -27,16 +27,21 @@ constexpr uint16_t H(const char* s) {
 	return (fnv1(FNV_OFFSET, s) & FNV_MASK);
 }
 
+#define UID(x) std::integral_constant<uint16_t, H(x)>::value
+
+
 class Uid {
 		static std::unordered_map<uint16_t, void*>* _uids;
 		uid_type _id;
 
 	public:
+		Uid(uid_type uid,const char* label);
 		Uid(const char* label);
 		Uid(uid_type id) ;
 //		Uid(void*);
 		Uid();
-		inline uid_type id() { return _id;};
+//		Uid(const Uid&);
+		const inline uid_type id() { return _id;};
 		void operator=(uid_type a);
 		bool operator==(Uid b) ;
 		static uid_type hash(const char* label);

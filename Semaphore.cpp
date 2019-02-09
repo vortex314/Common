@@ -126,10 +126,10 @@ class Esp32Semaphore : public Semaphore {
 		}
 
 		void release() {
+			counter--;
 			if (xSemaphoreGive(xSemaphore) != pdTRUE) {
 				printf("xSemaphoreGive() failed");
 			}
-			counter--;
 			if ( counter != 0 ) {
 				printf(" ======> give sema counter %d \n",counter);
 			}

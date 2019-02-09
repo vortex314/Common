@@ -12,27 +12,11 @@
 #include <Uid.h>
 #include <Log.h>
 
+typedef uint16_t uid_type;
+
 class Tag;
-/*
-template <class T> class Stream {
-	public:
-		virtual void rewind() = 0;
-		virtual T peek() = 0;
-		virtual int read(T&) = 0;
-		virtual int write(T) = 0;
-		virtual int write(T*, uint32_t) = 0;
-};
 
-template <class T> class Queue {
-	public:
-		Queue(uint32_t size);
-		int enqueue(T& );
-		int dequeue(T& );
-		bool hasData();
-};
-
-*/
-class Xdr { /*: public Stream<uint32_t> */
+class Xdr {
 		uint32_t _writeIdx;
 		uint32_t _readIdx;
 		uint32_t _capacity;
@@ -63,34 +47,41 @@ class Xdr { /*: public Stream<uint32_t> */
 		int write(uint32_t* pi, uint32_t i);
 		int write(uint8_t* pi, uint32_t i);
 		int write(Tag tag);
-		int add(Uid key, int v);
-		int add(Uid key, bool b);
-		int add(Uid key, double d);
-		int add(Uid key, uint16_t v);
-		int add(Uid key, uint32_t v);
-		int add(Uid key, uint64_t v);
-		int add(Uid key, int64_t v);
-		int add(Uid key, uint8_t* bytes, uint32_t length);
-		int add(Uid key, std::string& v);
-		int add(Uid key, const char* s);
+		int add(const uid_type key, int v);
+		int add(const uid_type key, bool b);
+		int add(const uid_type key, double d);
+		int add(const uid_type key, uint16_t v);
+		int add(const uid_type key, uint32_t v);
+		int add(const uid_type key, uint64_t v);
+		int add(const uid_type key, int64_t v);
+		int add(const uid_type key, uint8_t* bytes, uint32_t length);
+		int add(const uid_type key, std::string& v);
+		int add(const uid_type key, const char* s);
 		int add(Xdr& xdr);
-		template <typename T> Xdr& operator()(Uid key, T v) {
+
+		template <typename T> Xdr& operator()(uid_type key, T v) {
 			add(key,v);
 			return *this;
 		};
 
-		int getNext(Uid key, bool& b);
-		int getNext(Uid key, double& i);
-		int getNext(Uid key, int32_t& i);
-		int getNext(Uid key, uint16_t& i);
-		int getNext(Uid key, uint32_t& i);
-		int getNext(Uid key, uint64_t& i);
-		int getNext(Uid key, int64_t& i);
-		int getNext(Uid key, std::string& s);
-		int getNext(Uid key, uint8_t* bytes, uint32_t& size);
-		template <typename T> int get(Uid key, T& v) {
+		template <typename T> Xdr& add(const char* key, T v) {
+			add(Uid(key).id(),v);
+			return *this;
+		};
+
+		int getNext(const uid_type key, bool& b);
+		int getNext(const uid_type key, double& i);
+		int getNext(const uid_type key, int32_t& i);
+		int getNext(const uid_type key, uint16_t& i);
+		int getNext(const uid_type key, uint32_t& i);
+		int getNext(const uid_type key, uint64_t& i);
+		int getNext(const uid_type key, int64_t& i);
+		int getNext(const uid_type key, std::string& s);
+		int getNext(const uid_type key, uint8_t* bytes, uint32_t& size);
+
+		template <typename T> int get( Uid key, T& v) {
 			rewind();
-			return getNext(key, v);
+			return getNext(key.id(), v);
 		};
 
 		int vscanf(const char* fmt,...);
