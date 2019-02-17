@@ -121,14 +121,15 @@ void Log::log(char level, const char* file, uint32_t lineNbr,
 	va_end(args);
 	_application[0] = 0;
 #ifdef __linux__
-	::snprintf(_application,sizeof(_application),"%X",(uint32_t)pthread_self());
+//	::snprintf(_application,sizeof(_application),"%X",(uint32_t)pthread_self());
+	pthread_getname_np(pthread_self(),_application,sizeof(_application));
 #endif
 #if defined(ESP32_IDF) || defined(ESP_OPEN_RTOS)
 	extern void* pxCurrentTCB;
 	::snprintf(_application, sizeof(_application), "%X",
 	           (uint32_t)pxCurrentTCB);
 #endif
-	string_format(*_line, "%s %c | %8s | %s | %+10s:%-4d | %s", _application,
+	string_format(*_line, "%+10.10s %c | %8s | %s | %+10s:%-4d | %s", _application,
 	              level, time(), Sys::hostname(), file, lineNbr, logLine);
 	logger.flush();
 	_sema.release();
