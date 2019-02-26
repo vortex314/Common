@@ -2,9 +2,9 @@
 #ifndef SEMAPHORE_H_
 #define SEMAPHORE_H_
 
-class Semaphore {
+class Sema {
 	public:
-		static Semaphore& create();
+		static Sema& create();
 		virtual void wait() = 0;
 		virtual void release() = 0;
 };

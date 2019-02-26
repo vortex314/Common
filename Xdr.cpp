@@ -191,7 +191,7 @@ inline int Xdr::write(Tag tag) { return write(tag.ui32); }
 
 #define RETURN_ERR(xxx)                                                        \
 	{                                                                          \
-		register int erc = 0;                                                  \
+		int erc = 0;                                                  \
 		if ((erc = xxx) != 0)                                                  \
 			return erc;                                                        \
 	}

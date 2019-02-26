@@ -8,7 +8,7 @@
 #include <CborQueue.h>
 #include <Log.h>
 
-CborQueue::CborQueue(uint32_t size) : _semaphore(Semaphore::create()) {
+CborQueue::CborQueue(uint32_t size) : _semaphore(Sema::create()) {
     _read_size = 0;
     _write_size = 0;
     _start = 0;

@@ -12,7 +12,7 @@
 #include <Log.h>
 
 
-#include "malloc.h"
+//#include "malloc.h"
 #if defined(__CYGWIN__)
 #include "stdio.h"
 #endif
@@ -76,7 +76,8 @@ BipBuffer::~BipBuffer() {
 
 	 buflen = buffersize;
 	 return true;*/
-	pBuffer = (uint8_t*) malloc((uint32_t)buffersize);
+	 pBuffer =  new uint8_t[buffersize];
+//	pBuffer = (uint8_t*) malloc((uint32_t)buffersize);
 	if (pBuffer == 0)
 		return false;
 

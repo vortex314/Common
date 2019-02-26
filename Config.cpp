@@ -287,7 +287,7 @@ void Config::save() {
 }
 #endif
 
-#ifdef __linux__
+#if defined( __linux__ ) || defined( __APPLE__) 
 //TODO save and load to file
 #include <string>
 #include <fstream>

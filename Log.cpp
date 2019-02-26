@@ -56,7 +56,7 @@ void Log::serialLog(char* start, uint32_t length) {
 		usart_send_blocking(USART1, *(s++));
 	}
 #endif
-#if defined(__linux__) || defined(ESP_OPEN_RTOS) || defined(ESP32_IDF)
+#if defined(__linux__) || defined(ESP_OPEN_RTOS) || defined(ESP32_IDF) || defined (__APPLE__ )
 	*(start + length) = '\0';
 	fprintf(stdout, "%s\n", start);
 	fflush(stdout);
@@ -65,7 +65,7 @@ void Log::serialLog(char* start, uint32_t length) {
 
 Log::Log(uint32_t size)
 	: _enabled(true), _logFunction(serialLog), _level(LOG_INFO),
-	  _sema(Semaphore::create()) {
+	  _sema(Sema::create()) {
 	if (_line == 0) {
 		_line = new std::string;
 		_line->reserve(size);
@@ -149,7 +149,7 @@ Log::LogLevel Log::level() { return _level; }
 //_________________________________________ LINUX
 //___________________________________________
 //
-#ifdef __linux__
+#if defined( __linux__ )  || defined( __APPLE__)
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
@@ -163,8 +163,8 @@ const char* Log::time() {
 	static char buffer[100];
 	gettimeofday(&tv, &tz);
 	tm = ::localtime(&tv.tv_sec);
-	sprintf(buffer, "%02d:%02d:%02d.%03ld ", tm->tm_hour, tm->tm_min,
-	        tm->tm_sec, tv.tv_usec / 1000);
+	sprintf(buffer, "%02d:%02d:%02d.%03u ", tm->tm_hour, tm->tm_min,
+	        tm->tm_sec, (uint32_t)tv.tv_usec / 1000);
 	return buffer;
 }
 

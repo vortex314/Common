@@ -8,7 +8,7 @@ char Sys::_hostname[30] = "";
 uint64_t Sys::_boot_time = 0;
 
 //_____________________________________________________________ LINUX and CYGWIN
-#if defined(__linux__) || defined(__CYGWIN__)
+#if defined(__linux__) || defined(__CYGWIN__) || defined ( __APPLE__ )
 #include <chrono>
 #include <time.h>
 

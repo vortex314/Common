@@ -8,7 +8,7 @@
 #include <XdrQueue.h>
 #include <Log.h>
 
-XdrQueue::XdrQueue(uint32_t size) : _semaphore(Semaphore::create()) {
+XdrQueue::XdrQueue(uint32_t size) : _semaphore(Sema::create()) {
 	_start = new uint32_t[size];
 	_capacity=size;
 	_head=0;

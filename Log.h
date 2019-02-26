@@ -8,7 +8,7 @@
 #ifndef LOG_H_
 #define LOG_H_
 
-#include <Semaphore.h>
+#include <Sema.h>
 #include <Sys.h>
 #include <stdarg.h>
 #include <stdint.h>
@@ -40,7 +40,7 @@ class Log {
 		char _hostname[20];
 		char _application[20];
 		LogLevel _level;
-		Semaphore& _sema;
+		Sema& _sema;
 
 	public:
 		Log(uint32_t size);

@@ -6,6 +6,8 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="Common">
+    <File Name="Sema.cpp"/>
+    <File Name="Sema.h"/>
     <File Name="Msg.cpp.old"/>
     <File Name="Cbor.cpp.old"/>
     <File Name="Sys.cpp"/>
@@ -13,10 +15,6 @@
     <File Name="XdrQueue.h"/>
     <File Name="XdrQueue.cpp"/>
     <File Name="Xdr.cpp"/>
-    <File Name="Fast.cpp"/>
-    <File Name="Fast.h"/>
-    <File Name="Semaphore.h"/>
-    <File Name="Semaphore.cpp"/>
     <File Name="printf.c"/>
     <File Name="jsmn.c"/>
     <File Name="Strpack.cpp"/>
@@ -102,6 +100,8 @@
     <File Name="BipBuffer.h"/>
     <File Name="Base64.h"/>
   </VirtualDirectory>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Release"/>
   <Settings Type="Static Library">
     <GlobalSettings>
       <Compiler Options="-std=c++11" C_Options="" Assembler="">
@@ -112,7 +112,7 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="Debug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Debug" CompilerType="GCC" DebuggerType="LLDB Debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g;-std=c++11;-fPIC;" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
         <IncludePath Value="../ArduinoJson/"/>
@@ -192,6 +192,4 @@
       </Completion>
     </Configuration>
   </Settings>
-  <Dependencies Name="Debug"/>
-  <Dependencies Name="Release"/>
 </CodeLite_Project>

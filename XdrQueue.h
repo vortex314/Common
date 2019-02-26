@@ -12,7 +12,7 @@
 #include <Xdr.h>
 #include "XdrQueue.h"
 #include <BipBuffer.h>
-#include <Semaphore.h>
+#include <Sema.h>
 
 class XdrQueue {
 	private:
@@ -20,7 +20,7 @@ class XdrQueue {
 		uint32_t _tail;
 		uint32_t _head;
 		uint32_t _capacity;
-		Semaphore& _semaphore;
+		Sema& _semaphore;
 		int write(uint32_t);
 		int read(uint32_t&);
 		uint32_t read();
