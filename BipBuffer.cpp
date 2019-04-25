@@ -10,6 +10,7 @@
 #include "platform.h"
 #include "Sys.h"
 #include <Log.h>
+//#include <malloc.h>
 
 
 //#include "malloc.h"
@@ -46,7 +47,7 @@ BipBuffer::~BipBuffer() {
 	// We don't call FreeBuffer, because we don't need to reset our variables - our object is dying
 	if (pBuffer != NULL) {
 		//		::VirtualFree(pBuffer, buflen, MEM_DECOMMIT);
-		::free(pBuffer); // LMR
+		delete (pBuffer); // LMR
 	}
 }
 
@@ -61,9 +62,9 @@ BipBuffer::~BipBuffer() {
 //   bool                        true if successful, false if buffer cannot be allocated
 
  bool BipBuffer::allocateBuffer(int buffersize = 4096) {
-	/*    if (buffersize <= 0) return false;
 
-	 if (pBuffer != NULL) FreeBuffer();
+	 if (pBuffer != NULL) freeBuffer();
+	/*    if (buffersize <= 0) return false;
 
 	 SYSTEM_INFO si;
 	 ::GetSystemInfo(&si);
@@ -113,7 +114,7 @@ BipBuffer::~BipBuffer() {
 		return;
 
 	ixa = sza = ixb = szb = buflen = 0;
-	free(pBuffer); // LMR
+	delete (pBuffer); // LMR
 
 //		::VirtualFree(pBuffer, buflen, MEM_DECOMMIT);
 

@@ -41,7 +41,7 @@ class Uid {
 //		Uid(void*);
 		Uid();
 //		Uid(const Uid&);
-		const inline uid_type id() { return _id;};
+		inline uid_type id() { return _id;};
 		void operator=(uid_type a);
 		bool operator==(Uid b) ;
 		static uid_type hash(const char* label);

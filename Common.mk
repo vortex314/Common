@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Lieven Merckx
-Date                   :=26/02/2019
+Date                   :=27/02/2019
 CodeLitePath           :="/Users/lieven/Library/Application Support/CodeLite"
 LinkerName             :=/usr/bin/g++
 SharedObjectLinkerName :=/usr/bin/g++ -dynamiclib -fPIC
@@ -60,9 +60,9 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/Applications/codelite.app/Contents/SharedSupport/
-Objects0=$(IntermediateDirectory)/Sema.cpp$(ObjectSuffix) $(IntermediateDirectory)/BipBuffer.cpp$(ObjectSuffix) $(IntermediateDirectory)/Base64.cpp$(ObjectSuffix) $(IntermediateDirectory)/CircBuf.cpp$(ObjectSuffix) $(IntermediateDirectory)/Uid.cpp$(ObjectSuffix) $(IntermediateDirectory)/BufferedByteStream.cpp$(ObjectSuffix) $(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix) $(IntermediateDirectory)/PIC32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/EventSource.cpp$(ObjectSuffix) $(IntermediateDirectory)/Log.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/Msgpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/Node.cpp$(ObjectSuffix) $(IntermediateDirectory)/printf.c$(ObjectSuffix) $(IntermediateDirectory)/Strpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/jsmn.c$(ObjectSuffix) $(IntermediateDirectory)/Json.cpp$(ObjectSuffix) $(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix) $(IntermediateDirectory)/Xdr.cpp$(ObjectSuffix) $(IntermediateDirectory)/RtosQueue.cpp$(ObjectSuffix) $(IntermediateDirectory)/XdrQueue.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/Config.cpp$(ObjectSuffix) $(IntermediateDirectory)/Bytes.cpp$(ObjectSuffix) $(IntermediateDirectory)/Sys.cpp$(ObjectSuffix) $(IntermediateDirectory)/Str.cpp$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/BipBuffer.cpp$(ObjectSuffix) $(IntermediateDirectory)/Base64.cpp$(ObjectSuffix) $(IntermediateDirectory)/CircBuf.cpp$(ObjectSuffix) $(IntermediateDirectory)/Uid.cpp$(ObjectSuffix) $(IntermediateDirectory)/BufferedByteStream.cpp$(ObjectSuffix) $(IntermediateDirectory)/PIC32_stubs.cpp$(ObjectSuffix) $(IntermediateDirectory)/EventSource.cpp$(ObjectSuffix) $(IntermediateDirectory)/Json.cpp$(ObjectSuffix) $(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix) $(IntermediateDirectory)/Log.cpp$(ObjectSuffix) \
+	$(IntermediateDirectory)/Msgpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/Node.cpp$(ObjectSuffix) $(IntermediateDirectory)/printf.c$(ObjectSuffix) $(IntermediateDirectory)/Strpack.cpp$(ObjectSuffix) $(IntermediateDirectory)/jsmn.c$(ObjectSuffix) $(IntermediateDirectory)/Str.cpp$(ObjectSuffix) $(IntermediateDirectory)/Sema.cpp$(ObjectSuffix) $(IntermediateDirectory)/Xdr.cpp$(ObjectSuffix) $(IntermediateDirectory)/RtosQueue.cpp$(ObjectSuffix) $(IntermediateDirectory)/Bytes.cpp$(ObjectSuffix) \
+	$(IntermediateDirectory)/Sys.cpp$(ObjectSuffix) $(IntermediateDirectory)/XdrQueue.cpp$(ObjectSuffix) $(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix) $(IntermediateDirectory)/Config.cpp$(ObjectSuffix) $(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) 
 
 
 
@@ -95,14 +95,6 @@ PreBuild:
 ##
 ## Objects
 ##
-$(IntermediateDirectory)/Sema.cpp$(ObjectSuffix): Sema.cpp $(IntermediateDirectory)/Sema.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/Sema.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Sema.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/Sema.cpp$(DependSuffix): Sema.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Sema.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Sema.cpp$(DependSuffix) -MM Sema.cpp
-
-$(IntermediateDirectory)/Sema.cpp$(PreprocessSuffix): Sema.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Sema.cpp$(PreprocessSuffix) Sema.cpp
-
 $(IntermediateDirectory)/BipBuffer.cpp$(ObjectSuffix): BipBuffer.cpp $(IntermediateDirectory)/BipBuffer.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/BipBuffer.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/BipBuffer.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/BipBuffer.cpp$(DependSuffix): BipBuffer.cpp
@@ -143,14 +135,6 @@ $(IntermediateDirectory)/BufferedByteStream.cpp$(DependSuffix): BufferedByteStre
 $(IntermediateDirectory)/BufferedByteStream.cpp$(PreprocessSuffix): BufferedByteStream.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/BufferedByteStream.cpp$(PreprocessSuffix) BufferedByteStream.cpp
 
-$(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix): CborQueue.cpp $(IntermediateDirectory)/CborQueue.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/CborQueue.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/CborQueue.cpp$(DependSuffix): CborQueue.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/CborQueue.cpp$(DependSuffix) -MM CborQueue.cpp
-
-$(IntermediateDirectory)/CborQueue.cpp$(PreprocessSuffix): CborQueue.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/CborQueue.cpp$(PreprocessSuffix) CborQueue.cpp
-
 $(IntermediateDirectory)/PIC32_stubs.cpp$(ObjectSuffix): PIC32_stubs.cpp $(IntermediateDirectory)/PIC32_stubs.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/PIC32_stubs.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/PIC32_stubs.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/PIC32_stubs.cpp$(DependSuffix): PIC32_stubs.cpp
@@ -166,6 +150,22 @@ $(IntermediateDirectory)/EventSource.cpp$(DependSuffix): EventSource.cpp
 
 $(IntermediateDirectory)/EventSource.cpp$(PreprocessSuffix): EventSource.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/EventSource.cpp$(PreprocessSuffix) EventSource.cpp
+
+$(IntermediateDirectory)/Json.cpp$(ObjectSuffix): Json.cpp $(IntermediateDirectory)/Json.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/Json.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Json.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/Json.cpp$(DependSuffix): Json.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Json.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Json.cpp$(DependSuffix) -MM Json.cpp
+
+$(IntermediateDirectory)/Json.cpp$(PreprocessSuffix): Json.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Json.cpp$(PreprocessSuffix) Json.cpp
+
+$(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix): LinkedList.cpp $(IntermediateDirectory)/LinkedList.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/LinkedList.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/LinkedList.cpp$(DependSuffix): LinkedList.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/LinkedList.cpp$(DependSuffix) -MM LinkedList.cpp
+
+$(IntermediateDirectory)/LinkedList.cpp$(PreprocessSuffix): LinkedList.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/LinkedList.cpp$(PreprocessSuffix) LinkedList.cpp
 
 $(IntermediateDirectory)/Log.cpp$(ObjectSuffix): Log.cpp $(IntermediateDirectory)/Log.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/Log.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Log.cpp$(ObjectSuffix) $(IncludePath)
@@ -215,21 +215,21 @@ $(IntermediateDirectory)/jsmn.c$(DependSuffix): jsmn.c
 $(IntermediateDirectory)/jsmn.c$(PreprocessSuffix): jsmn.c
 	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/jsmn.c$(PreprocessSuffix) jsmn.c
 
-$(IntermediateDirectory)/Json.cpp$(ObjectSuffix): Json.cpp $(IntermediateDirectory)/Json.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/Json.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Json.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/Json.cpp$(DependSuffix): Json.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Json.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Json.cpp$(DependSuffix) -MM Json.cpp
+$(IntermediateDirectory)/Str.cpp$(ObjectSuffix): Str.cpp $(IntermediateDirectory)/Str.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/Str.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Str.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/Str.cpp$(DependSuffix): Str.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Str.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Str.cpp$(DependSuffix) -MM Str.cpp
 
-$(IntermediateDirectory)/Json.cpp$(PreprocessSuffix): Json.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Json.cpp$(PreprocessSuffix) Json.cpp
+$(IntermediateDirectory)/Str.cpp$(PreprocessSuffix): Str.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Str.cpp$(PreprocessSuffix) Str.cpp
 
-$(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix): LinkedList.cpp $(IntermediateDirectory)/LinkedList.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/LinkedList.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/LinkedList.cpp$(DependSuffix): LinkedList.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/LinkedList.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/LinkedList.cpp$(DependSuffix) -MM LinkedList.cpp
+$(IntermediateDirectory)/Sema.cpp$(ObjectSuffix): Sema.cpp $(IntermediateDirectory)/Sema.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/Sema.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Sema.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/Sema.cpp$(DependSuffix): Sema.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Sema.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Sema.cpp$(DependSuffix) -MM Sema.cpp
 
-$(IntermediateDirectory)/LinkedList.cpp$(PreprocessSuffix): LinkedList.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/LinkedList.cpp$(PreprocessSuffix) LinkedList.cpp
+$(IntermediateDirectory)/Sema.cpp$(PreprocessSuffix): Sema.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Sema.cpp$(PreprocessSuffix) Sema.cpp
 
 $(IntermediateDirectory)/Xdr.cpp$(ObjectSuffix): Xdr.cpp $(IntermediateDirectory)/Xdr.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/Xdr.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Xdr.cpp$(ObjectSuffix) $(IncludePath)
@@ -247,30 +247,6 @@ $(IntermediateDirectory)/RtosQueue.cpp$(DependSuffix): RtosQueue.cpp
 $(IntermediateDirectory)/RtosQueue.cpp$(PreprocessSuffix): RtosQueue.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/RtosQueue.cpp$(PreprocessSuffix) RtosQueue.cpp
 
-$(IntermediateDirectory)/XdrQueue.cpp$(ObjectSuffix): XdrQueue.cpp $(IntermediateDirectory)/XdrQueue.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/XdrQueue.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/XdrQueue.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/XdrQueue.cpp$(DependSuffix): XdrQueue.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/XdrQueue.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/XdrQueue.cpp$(DependSuffix) -MM XdrQueue.cpp
-
-$(IntermediateDirectory)/XdrQueue.cpp$(PreprocessSuffix): XdrQueue.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/XdrQueue.cpp$(PreprocessSuffix) XdrQueue.cpp
-
-$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix): STM32_stubs.cpp $(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/STM32_stubs.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix): STM32_stubs.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix) -MM STM32_stubs.cpp
-
-$(IntermediateDirectory)/STM32_stubs.cpp$(PreprocessSuffix): STM32_stubs.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/STM32_stubs.cpp$(PreprocessSuffix) STM32_stubs.cpp
-
-$(IntermediateDirectory)/Config.cpp$(ObjectSuffix): Config.cpp $(IntermediateDirectory)/Config.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/Config.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Config.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/Config.cpp$(DependSuffix): Config.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Config.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Config.cpp$(DependSuffix) -MM Config.cpp
-
-$(IntermediateDirectory)/Config.cpp$(PreprocessSuffix): Config.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Config.cpp$(PreprocessSuffix) Config.cpp
-
 $(IntermediateDirectory)/Bytes.cpp$(ObjectSuffix): Bytes.cpp $(IntermediateDirectory)/Bytes.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/Bytes.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Bytes.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/Bytes.cpp$(DependSuffix): Bytes.cpp
@@ -287,13 +263,37 @@ $(IntermediateDirectory)/Sys.cpp$(DependSuffix): Sys.cpp
 $(IntermediateDirectory)/Sys.cpp$(PreprocessSuffix): Sys.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Sys.cpp$(PreprocessSuffix) Sys.cpp
 
-$(IntermediateDirectory)/Str.cpp$(ObjectSuffix): Str.cpp $(IntermediateDirectory)/Str.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/Str.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Str.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/Str.cpp$(DependSuffix): Str.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Str.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Str.cpp$(DependSuffix) -MM Str.cpp
+$(IntermediateDirectory)/XdrQueue.cpp$(ObjectSuffix): XdrQueue.cpp $(IntermediateDirectory)/XdrQueue.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/XdrQueue.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/XdrQueue.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/XdrQueue.cpp$(DependSuffix): XdrQueue.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/XdrQueue.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/XdrQueue.cpp$(DependSuffix) -MM XdrQueue.cpp
 
-$(IntermediateDirectory)/Str.cpp$(PreprocessSuffix): Str.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Str.cpp$(PreprocessSuffix) Str.cpp
+$(IntermediateDirectory)/XdrQueue.cpp$(PreprocessSuffix): XdrQueue.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/XdrQueue.cpp$(PreprocessSuffix) XdrQueue.cpp
+
+$(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix): CborQueue.cpp $(IntermediateDirectory)/CborQueue.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/CborQueue.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/CborQueue.cpp$(DependSuffix): CborQueue.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/CborQueue.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/CborQueue.cpp$(DependSuffix) -MM CborQueue.cpp
+
+$(IntermediateDirectory)/CborQueue.cpp$(PreprocessSuffix): CborQueue.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/CborQueue.cpp$(PreprocessSuffix) CborQueue.cpp
+
+$(IntermediateDirectory)/Config.cpp$(ObjectSuffix): Config.cpp $(IntermediateDirectory)/Config.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/Config.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/Config.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/Config.cpp$(DependSuffix): Config.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/Config.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/Config.cpp$(DependSuffix) -MM Config.cpp
+
+$(IntermediateDirectory)/Config.cpp$(PreprocessSuffix): Config.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/Config.cpp$(PreprocessSuffix) Config.cpp
+
+$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix): STM32_stubs.cpp $(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/Users/lieven/workspace/Common/STM32_stubs.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix): STM32_stubs.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/STM32_stubs.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/STM32_stubs.cpp$(DependSuffix) -MM STM32_stubs.cpp
+
+$(IntermediateDirectory)/STM32_stubs.cpp$(PreprocessSuffix): STM32_stubs.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/STM32_stubs.cpp$(PreprocessSuffix) STM32_stubs.cpp
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

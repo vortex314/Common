@@ -76,9 +76,6 @@ Xdr::Xdr(Xdr& src) {
 	_readIdx = src._readIdx;
 	_capacity = src._writeIdx;
 	_writeIdx = src._writeIdx;
-	uint32_t max=src._writeIdx;
-
-//	memcpy(_start,src._start,src._writeIdx<<2);
 	for(uint32_t i=0; i<_writeIdx; i++) {
 		*(_start+i)= *(src._start+i);
 	}

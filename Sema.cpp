@@ -2,7 +2,7 @@
 #include <Sema.h>
 //________________________________________________________________ LINUX
 //
-#if defined( __linux__) || defined(__APPLE__)
+#if defined( __linux__)
 #include <errno.h> /* errno, ECHILD            */
 #include <fcntl.h>
 #include <semaphore.h> /* sem_open(), sem_destroy(), sem_wait().. */
@@ -20,7 +20,7 @@ class LinuxSemaphore : public Sema {
 
 public:
 	LinuxSemaphore() {
-		if (sem_init(&sema, 1, 1) < 0) {
+		if (sem_init(&sema, 1, 1) < 0) { 
 			WARN("connect: Unable to create semaphore  errno : %d : %s ",errno, strerror(errno));
 		}
 		counter=0;
@@ -59,7 +59,7 @@ Sema& Sema::create() {return *new LinuxSemaphore();}
 
 #endif
 
-#if  defined(__OSX__)
+#if  defined(__APPLE__)
 #include <stdio.h>
 #include <stdlib.h>
 #include <semaphore.h>

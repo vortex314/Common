@@ -16,7 +16,7 @@ uint64_t Sys::millis() { // time in msec since boot, only increasing
 	using namespace std::chrono;
 	milliseconds ms =
 	    duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-	Sys::_upTime = system_clock::now().time_since_epoch().count() / 1000000;
+	Sys::_upTime = ms.count();//system_clock::now().time_since_epoch().count() / 1000000;
 	return _upTime;
 }
 
