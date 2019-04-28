@@ -15,6 +15,8 @@
 #include <string.h>
 #include <string>
 
+#define myASSERT(xxx) if (!(xxx) ) {WARN(" assertion " # xxx " failed.");};
+
 extern std::string& string_format(std::string& str, const char* fmt, ...);
 
 typedef void (*LogFunction)(char* start, uint32_t length);
@@ -86,7 +88,7 @@ extern Log logger;
 #include <cstdio>
 
 #define LOGF(fmt, ...)                                                         \
-	logger.log(__FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+	logger.log(__FLE__, __SHORT_FILE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 
 /*
  #define LOGF(fmt, ...)                                                         \
@@ -106,19 +108,19 @@ extern Log logger;
 		logger.log('I', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 #define ERROR(fmt, ...)                                                        \
 	if (logger.enabled(Log::LOG_ERROR))                                        \
-		logger.log('E', __FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+		logger.log('E', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 #define WARN(fmt, ...)                                                         \
 	if (logger.enabled(Log::LOG_WARN))                                         \
-		logger.log('W', __FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+		logger.log('W', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 #define FATAL(fmt, ...)                                                        \
 	if (logger.enabled(Log::LOG_FATAL))                                        \
-		logger.log('F', __FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+		logger.log('F', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 #define DEBUG(fmt, ...)                                                        \
 	if (logger.enabled(Log::LOG_DEBUG))                                        \
-		logger.log('D', __FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+		logger.log('D', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 #define TRACE(fmt, ...)                                                        \
 	if (logger.enabled(Log::LOG_TRACE))                                        \
-		logger.log('T', __FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+		logger.log('T', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 
 #define __FLE__                                                                \
 	(__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1   \

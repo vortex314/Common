@@ -65,6 +65,7 @@ std::string Tag::toString() {
 }
 
 Xdr::Xdr(uint32_t size) {
+	if ( size > 50 ) WARN(" huge XDR %d ",size);
 	_start = new uint32_t[size];
 	_readIdx = 0;
 	_capacity = size;
@@ -72,6 +73,8 @@ Xdr::Xdr(uint32_t size) {
 }
 
 Xdr::Xdr(Xdr& src) {
+	if ( src._writeIdx > 100 ) WARN(" huge XDR ");
+
 	_start = new uint32_t[src._writeIdx];
 	_readIdx = src._readIdx;
 	_capacity = src._writeIdx;

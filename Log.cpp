@@ -129,7 +129,7 @@ void Log::log(char level, const char* file, uint32_t lineNbr,
 	::snprintf(_application, sizeof(_application), "%X",
 	           (uint32_t)pxCurrentTCB);
 #endif
-	string_format(*_line, "%+10.10s %c | %8s | %s | %+10s:%-4d | %s", _application,
+	string_format(*_line, "%+10.10s %c | %8s | %s | %20s:%4d | %s", _application,
 	              level, time(), Sys::hostname(), file, lineNbr, logLine);
 	logger.flush();
 	_sema.release();
