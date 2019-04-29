@@ -228,9 +228,10 @@ void Config::load()
         nvs_close(my_handle);
     }
     _loaded = true;
-    _root = &_jsonBuffer.parseObject((const char*)_charBuffer);
-    if(!_root->success()) {
-        _root = &_jsonBuffer.parseObject("{}");
+    auto error = deserializeJson(_jsonBuffer,(const char*)_charBuffer);
+    _root = _jsonBuffer.as<JsonObject>();
+    if( error ) {
+        _root = _jsonBuffer.to<JsonObject>();
     }
 }
 
@@ -238,7 +239,7 @@ void Config::save()
 {
     esp_err_t err;
     char buffer[512];
-    _root->printTo(buffer, sizeof(buffer));
+    serializeJson(_root,buffer, sizeof(buffer));
     nvs_handle my_handle;
     err = nvs_open("storage", NVS_READWRITE, &my_handle);
     if(err != ESP_OK) {
@@ -345,23 +346,24 @@ void Config::load()
     std::string str((std::istreambuf_iterator<char>(t)),
                     std::istreambuf_iterator<char>());
     _loaded = true;
-    _root = &_jsonBuffer.parseObject(str.c_str());
-    if(_root->success()) {
+    auto error = deserializeJson(_jsonBuffer,str.c_str());
 
+    if(!error) {
+        _root = _jsonBuffer.as<JsonObject>();
     } else {
         ERROR(" couldn't parse config '%s' , dropped old config ! ", str.c_str());
         strcpy(_charBuffer, "{}");
-        _root = &_jsonBuffer.parseObject("{}");
+        _root = _jsonBuffer.to<JsonObject>();
     }
     //    char buffer[1024];
-    _root->printTo(_charBuffer, sizeof(_charBuffer));
+    serializeJson(_root,_charBuffer, sizeof(_charBuffer));
     INFO(" config loaded : %s", _charBuffer);
 }
 void Config::save()
 {
     std::ofstream out("config.json");
     std::string output;
-    _root->printTo(output);
+    serializeJson(_root,output);
     out << output;
     out.close();
 }
