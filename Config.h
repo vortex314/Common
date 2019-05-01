@@ -18,15 +18,12 @@ class Config
     void initialize();
     void initMagic();
     bool checkMagic();
-    char _charBuffer[1024];
+//    std::string _strBuffer;
     DynamicJsonDocument _jsonBuffer;
     JsonObject _root;
 
     std::string _nameSpace;
     bool _loaded;
-
-    JsonObject nameSpace();
-//   const char* clone(const char* s);
 
 public:
     Config();
@@ -41,17 +38,29 @@ public:
     bool hasKey(const char* key);
     void setNameSpace(const char* ns);
     const char* getNameSpace();
-    void get(const char*, int32_t&, int32_t defaultValue);
-    void get(const char*, uint32_t&, uint32_t defaultValue);
-    void get(const char*, std::string&, const char* defaultValue);
-    void get(const char*, double&, double defaultValue);
-    void remove(const char* key);
 
-    void set(const char*, uint32_t);
-    void set(const char*, int32_t);
-    void set(const char*, std::string&);
-    void set(const char*, double);
-    void set(const char* key, const char* value);
+    void remove(const char* key);
+    template <typename T> void set(const char* key,T value) {
+    	_root[_nameSpace][key]=value;
+    }
+    template <typename T,typename T1> T get(const char* key,T& value,T1 defaultValue){
+    	if ( _root[_nameSpace].containsKey(key))
+    	value= _root[_nameSpace][key];
+    	else {
+    		_root[_nameSpace][key]=defaultValue;
+    		value= defaultValue;
+    	}
+    }
+    void get(const char* key,std::string& value,const char* defaultValue){
+    	if ( _root[_nameSpace].containsKey(key))
+    	value= _root[_nameSpace][key].as<std::string>();
+    	else {
+    		_root[_nameSpace][key]=defaultValue;
+    		value= defaultValue;
+    	}
+    }
+
+
 };
 
 extern Config config;
