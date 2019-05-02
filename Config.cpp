@@ -22,13 +22,6 @@ Config::Config()
 Config::~Config() {
 }
 
-void Config::initMagic() {
-}
-
-bool Config::checkMagic() {
-	return false;
-}
-
 void Config::clear() {
 	deserializeJson(_jsonBuffer, "{}");
 	_root = _jsonBuffer.as<JsonObject>();
@@ -51,12 +44,24 @@ void Config::remove(const char* key) {
 	_root[_nameSpace].remove(key);
 }
 
-void Config::print(std::string& str) {
+void Config::save(std::string& str) {
 	serializeJson(_root, str);
 }
 
+void Config::load(std::string& str){
+	auto error = deserializeJson(_jsonBuffer,str);
+	if ( error == DeserializationError::Ok) {
+		_root = _jsonBuffer.as<JsonObject>();
+		if ( _root != 0 ) {
+			save();
+		} else {
+			WARN(" not a JSON object : '%s'",str.c_str());
+		}
+	} else {
+		WARN(" no JSON in '%s'",str.c_str());
+	}
+}
 void Config::printPretty(std::string& str) {
-	load();
 	serializeJsonPretty(_root, str);
 }
 
