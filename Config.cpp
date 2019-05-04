@@ -52,7 +52,7 @@ void Config::load(std::string& str){
 	auto error = deserializeJson(_jsonBuffer,str);
 	if ( error == DeserializationError::Ok) {
 		_root = _jsonBuffer.as<JsonObject>();
-		if ( _root != 0 ) {
+		if ( !_root.isNull() ) {
 			save();
 		} else {
 			WARN(" not a JSON object : '%s'",str.c_str());

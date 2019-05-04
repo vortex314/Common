@@ -28,6 +28,7 @@ public:
 	void load(std::string&);
 	void save(std::string&);
 	void printPretty(std::string& str);
+	JsonObject root() { return _root;};
 
 	bool hasKey(const char* key);
 	void setNameSpace(const char* ns);
