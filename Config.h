@@ -38,7 +38,7 @@ public:
 	template<typename T> void set(const char* key, T value) {
 		_root[_nameSpace][key] = value;
 	}
-	template<typename T, typename T1> T get(const char* key, T& value,
+	template<typename T, typename T1> void get(const char* key, T& value,
 			T1 defaultValue) {
 		if (_root[_nameSpace].containsKey(key))
 			value = _root[_nameSpace][key];
