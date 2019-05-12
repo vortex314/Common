@@ -45,6 +45,15 @@ std::string& string_format(std::string& str, const char* fmt, ...) {
 	return str;
 }
 
+void bytesToHex(std::string& ret, uint8_t* input, uint32_t length) {
+	static const char characters[] = "0123456789ABCDEF";
+	for (uint32_t i = 0; i < length; i++) {
+		ret += (characters[input[i] >> 4]);
+		ret += characters[input[i] & 0x0F];
+		ret += ' ';
+	}
+}
+
 void Log::serialLog(char* start, uint32_t length) {
 #ifdef ARDUINO
 	Serial.write((const uint8_t*)start, length);
