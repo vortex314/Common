@@ -54,18 +54,27 @@ Tag::Tag(Xdr::Type t, uint16_t l, Uid ui) {
 	length = l;
 	uid = ui.id();
 }
+
+bool Tag::equivalentType(Tag& src) {
+	if ( this->type == src.type ) return true;
+	if ( this->type == Xdr::UINT && src.type==Xdr::INT ) return true;
+	if ( this->type == Xdr::INT && src.type==Xdr::UINT ) return true;
+	return false;
+}
+
+extern const char* uidToString(uid_type);
 void Tag::operator=(uint32_t i) { ui32 = i; }
 
 std::string Tag::toString() {
 	std::string out;
 	out.reserve(100);
-	string_format(out, "'%s'[%s:%d]", Uid(uid).label(), typeStrings[type],
+	string_format(out, "'%s'[%s:%d]",uidToString(uid), typeStrings[type],
 	              length);
 	return out;
 }
 
 Xdr::Xdr(uint32_t size) {
-	if ( size > 50 ) WARN(" huge XDR %d ",size);
+	if ( size > 200 ) WARN(" huge XDR %d ",size);
 	_start = new uint32_t[size];
 	_readIdx = 0;
 	_capacity = size;
@@ -73,7 +82,7 @@ Xdr::Xdr(uint32_t size) {
 }
 
 Xdr::Xdr(Xdr& src) {
-	if ( src._writeIdx > 100 ) WARN(" huge XDR ");
+	if ( src._writeIdx > 200 ) WARN(" huge XDR ");
 
 	_start = new uint32_t[src._writeIdx];
 	_readIdx = src._readIdx;
@@ -281,7 +290,7 @@ bool Xdr::find(Tag& tag) {
 	Tag t(0);
 
 	while (read(t.ui32) == 0) {
-		if (t.uid == tag.uid && t.type == tag.type) {
+		if (t.uid == tag.uid && tag.equivalentType(t)) {
 			tag.ui32 = t.ui32;
 			return true;
 		}

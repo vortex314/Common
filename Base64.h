@@ -9,7 +9,8 @@
 #define SRC_BASE64_H_
 
 #include <Erc.h>
-#include <Str.h>
+#include <string>
+#include <Bytes.h>
 
 class Base64 {
 private:
@@ -18,8 +19,8 @@ private:
 public:
 	Base64();
 	~Base64();
-	static Erc encode( Str& out, Bytes& in);
-	static Erc decode( Bytes& out, Str& in);
+	static Erc encode( std::string& out, Bytes& in);
+	static Erc decode( Bytes& out, std::string& in);
 };
 
 #endif /* SRC_BASE64_H_ */

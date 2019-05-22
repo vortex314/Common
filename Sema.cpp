@@ -168,7 +168,7 @@ public:
 	~Esp32Semaphore() {}
 
 	void wait() {
-		if (xSemaphoreTake(xSemaphore, (TickType_t)1000) != pdTRUE) {
+		if (xSemaphoreTake(xSemaphore, (TickType_t)100000) == pdFALSE) {
 			printf(" xSemaphoreTake()  timed out ");
 		}
 		counter++;
@@ -178,7 +178,7 @@ public:
 	}
 
 	void release() {
-		if (xSemaphoreGive(xSemaphore) != pdTRUE) {
+		if (xSemaphoreGive(xSemaphore) == pdFALSE) {
 			printf("xSemaphoreGive() failed");
 		}
 		counter--;

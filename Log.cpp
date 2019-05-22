@@ -45,12 +45,12 @@ std::string& string_format(std::string& str, const char* fmt, ...) {
 	return str;
 }
 
-void bytesToHex(std::string& ret, uint8_t* input, uint32_t length) {
+void bytesToHex(std::string& ret, uint8_t* input, uint32_t length,char sep) {
 	static const char characters[] = "0123456789ABCDEF";
 	for (uint32_t i = 0; i < length; i++) {
 		ret += (characters[input[i] >> 4]);
 		ret += characters[input[i] & 0x0F];
-		ret += ' ';
+		if ( sep != 0 ) ret += sep;
 	}
 }
 
@@ -86,7 +86,6 @@ Log::Log(uint32_t size)
 Log::~Log() {}
 
 void Log::setLogLevel(char c) {
-	::printf("%s:%d was here\n",__FILE__,__LINE__);
 	for (uint32_t i = 0; i < sizeof(_logLevel); i++)
 		if (_logLevel[i] == c) {
 			_level = (Log::LogLevel)i;
@@ -120,6 +119,7 @@ void Log::log(char level, const char* file, uint32_t lineNbr,
 	_sema.wait();
 	if (_line == 0) {
 		::printf("%s:%d %s:%d\n", __FILE__, __LINE__, file, lineNbr);
+//		_sema.release();
 		return;
 	}
 
@@ -138,7 +138,7 @@ void Log::log(char level, const char* file, uint32_t lineNbr,
 	::snprintf(_application, sizeof(_application), "%X",
 	           (uint32_t)pxCurrentTCB);
 #endif
-	string_format(*_line, "%+10.10s %c | %8s | %s | %20s:%4d | %s", _application,
+	string_format(*_line, "%+10.10s %c | %8s | %s | %15s:%4d | %s", _application,
 	              level, time(), Sys::hostname(), file, lineNbr, logLine);
 	logger.flush();
 	_sema.release();

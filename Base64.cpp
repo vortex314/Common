@@ -54,7 +54,7 @@ Base64::~Base64() {
  \param in The data to encode
  \param out The encoded data as characters
  */
-Erc Base64::encode(Str& out, Bytes& in) {
+Erc Base64::encode(std::string& out, Bytes& in) {
 	char buff1[3];
 	char buff2[4];
 	uint8_t i = 0, j;
@@ -63,14 +63,14 @@ Erc Base64::encode(Str& out, Bytes& in) {
 	while (in.hasData()) {
 		buff1[i++] = in.read();
 		if (i == 3) {
-			out.write(encodeCharacterTable[(buff1[0] & 0xfc) >> 2]);
-			out.write(
+			out+=(encodeCharacterTable[(buff1[0] & 0xfc) >> 2]);
+			out+=(
 					encodeCharacterTable[((buff1[0] & 0x03) << 4)
 							+ ((buff1[1] & 0xf0) >> 4)]);
-			out.write(
+			out+=(
 					encodeCharacterTable[((buff1[1] & 0x0f) << 2)
 							+ ((buff1[2] & 0xc0) >> 6)]);
-			out.write(encodeCharacterTable[buff1[2] & 0x3f]);
+			out+=(encodeCharacterTable[buff1[2] & 0x3f]);
 			i = 0;
 		}
 	}
@@ -84,10 +84,10 @@ Erc Base64::encode(Str& out, Bytes& in) {
 		buff2[3] = buff1[2] & 0x3f;
 
 		for (j = 0; j < (i + 1); j++)
-			out.write(encodeCharacterTable[(int)buff2[j]]);
+			out+=(encodeCharacterTable[(int)buff2[j]]);
 
 		while (i++ < 3)
-			out.write( '=');
+			out+=( '=');
 	}
 	return E_OK;
 
@@ -98,15 +98,14 @@ Erc Base64::encode(Str& out, Bytes& in) {
  \param in The character data to decode
  \param out The decoded data
  */
-Erc Base64::decode(Bytes& out,Str &in) {
+Erc Base64::decode(Bytes& out,std::string &in) {
 	char buff1[4];
 	char buff2[4];
 	uint8_t i = 0, j;
 	out.clear();
-	in.offset(0);
 
-	while (in.hasData()) {
-		buff2[i] = in.read();
+	for(char& chr:in) {
+		buff2[i] = chr;
 		if (buff2[i] == '=')
 			break;
 		if (++i == 4) {

@@ -115,6 +115,7 @@ class Tag {
 		Tag(Xdr::Type t, uint16_t l, Uid ui);
 		void operator=(uint32_t i);
 		std::string toString();
+		bool equivalentType(Tag& );
 };
 
 #endif

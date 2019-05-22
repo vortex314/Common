@@ -15,7 +15,7 @@
 #define VALUE_SIZE 60
 
 Config::Config()
-		: _jsonBuffer(1024), _loaded(false) {
+	: _jsonBuffer(1024), _loaded(false) {
 	clear();
 }
 
@@ -48,17 +48,16 @@ void Config::save(std::string& str) {
 	serializeJson(_root, str);
 }
 
-void Config::load(std::string& str){
+void Config::load(const char* str) {
 	auto error = deserializeJson(_jsonBuffer,str);
 	if ( error == DeserializationError::Ok) {
 		_root = _jsonBuffer.as<JsonObject>();
 		if ( !_root.isNull() ) {
-			save();
 		} else {
-			WARN(" not a JSON object : '%s'",str.c_str());
+			WARN(" not a JSON object : '%s'",str);
 		}
 	} else {
-		WARN(" no JSON in '%s'",str.c_str());
+		WARN(" no JSON in '%s'",str);
 	}
 }
 void Config::printPretty(std::string& str) {
@@ -158,8 +157,7 @@ extern "C" {
 #include <sysparam.h>
 }
 
-void Config::load()
-{
+void Config::load() {
 	if(_loaded) {
 		return;
 	}
@@ -202,10 +200,9 @@ void Config::load()
 	INFO(" config loaded : %s", _strBuffer.c_str());
 }
 
-void Config::save()
-{
-std::string _strBuffer;
-serializeJson(_root,_strBuffer);
+void Config::save() {
+	std::string _strBuffer;
+	serializeJson(_root,_strBuffer);
 	sysparam_status_t status = sysparam_set_string("config", _strBuffer.c_str());
 	if(status == SYSPARAM_OK) {
 		INFO(" config saved : %s ", _strBuffer.c_str());
@@ -222,12 +219,17 @@ serializeJson(_root,_strBuffer);
 #include <streambuf>
 
 void Config::load() {
+	loadFile("config.json");
+}
+
+void Config::loadFile(const char* name) {
+
 	if (_loaded) {
 		return;
 	}
-	std::ifstream t("config.json");
+	std::ifstream t(name);
 	std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<
-			char>());
+	                char>());
 	_loaded = true;
 	auto error = deserializeJson(_jsonBuffer, str.c_str());
 
@@ -241,8 +243,13 @@ void Config::load() {
 	serializeJson(_root, temp);
 	INFO(" config loaded : %s", temp.c_str());
 }
+
 void Config::save() {
-	std::ofstream out("config.json");
+	saveFile("config.json");
+}
+
+void Config::saveFile(const char* name) {
+	std::ofstream out(name);
 	std::string output;
 	serializeJson(_root, output);
 	out << output;

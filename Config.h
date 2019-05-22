@@ -13,48 +13,50 @@
 #include <Log.h>
 
 class Config {
-	DynamicJsonDocument _jsonBuffer;
-	JsonObject _root;
-	std::string _nameSpace;
-	bool _loaded;
+		DynamicJsonDocument _jsonBuffer;
+		JsonObject _root;
+		std::string _nameSpace;
+		bool _loaded;
 
-public:
-	Config();
-	virtual ~Config();
+	public:
+		Config();
+		virtual ~Config();
 
-	void clear();
-	void load();
-	void save();
-	void load(std::string&);
-	void save(std::string&);
-	void printPretty(std::string& str);
-	JsonObject root() { return _root;};
+		void clear();
+		void load();
+		void save();
+		void load(const char*);
+		void save(std::string&);
+		void loadFile(const char*);
+		void saveFile(const char*);
+		void printPretty(std::string& str);
+		JsonObject root() { return _root;};
 
-	bool hasKey(const char* key);
-	void setNameSpace(const char* ns);
-	const char* getNameSpace();
-	void remove(const char* key);
+		bool hasKey(const char* key);
+		void setNameSpace(const char* ns);
+		const char* getNameSpace();
+		void remove(const char* key);
 
-	template<typename T> void set(const char* key, T value) {
-		_root[_nameSpace][key] = value;
-	}
-	template<typename T, typename T1> void get(const char* key, T& value,
-			T1 defaultValue) {
-		if (_root[_nameSpace].containsKey(key))
-			value = _root[_nameSpace][key];
-		else {
-			_root[_nameSpace][key] = defaultValue;
-			value = defaultValue;
+		template<typename T> void set(const char* key, T value) {
+			_root[_nameSpace][key] = value;
 		}
-	}
-	void get(const char* key, std::string& value, const char* defaultValue) {
-		if (_root[_nameSpace].containsKey(key))
-			value = _root[_nameSpace][key].as<std::string>();
-		else {
-			_root[_nameSpace][key] = defaultValue;
-			value = defaultValue;
+		template<typename T, typename T1> void get(const char* key, T& value,
+		        T1 defaultValue) {
+			if (_root[_nameSpace].containsKey(key))
+				value = _root[_nameSpace][key];
+			else {
+				_root[_nameSpace][key] = defaultValue;
+				value = defaultValue;
+			}
 		}
-	}
+		void get(const char* key, std::string& value, const char* defaultValue) {
+			if (_root[_nameSpace].containsKey(key))
+				value = _root[_nameSpace][key].as<std::string>();
+			else {
+				_root[_nameSpace][key] = defaultValue;
+				value = defaultValue;
+			}
+		}
 };
 
 extern Config config;

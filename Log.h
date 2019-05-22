@@ -18,7 +18,7 @@
 #define myASSERT(xxx) if (!(xxx) ) {WARN(" assertion " # xxx " failed.");};
 
 extern std::string& string_format(std::string& str, const char* fmt, ...);
-void bytesToHex(std::string& ret, uint8_t* input, uint32_t length);
+void bytesToHex(std::string& ret, uint8_t* input, uint32_t length,char sep=0);
 
 typedef void (*LogFunction)(char* start, uint32_t length);
 #pragma GCC diagnostic push
