@@ -74,7 +74,8 @@ std::string Tag::toString() {
 }
 
 Xdr::Xdr(uint32_t size) {
-	if ( size > 200 ) WARN(" huge XDR %d ",size);
+
+	if ( size > 100 ) WARN(" huge XDR %d ",size);
 	_start = new uint32_t[size];
 	_readIdx = 0;
 	_capacity = size;

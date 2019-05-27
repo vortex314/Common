@@ -11,7 +11,6 @@
 
 typedef uint16_t uid_type;
 #define UID_LENGTH 16
-#define UID_MAX 200
 
 #if UID_LENGTH == 16
 #define FNV_PRIME 16777619
