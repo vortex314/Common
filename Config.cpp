@@ -49,16 +49,19 @@ void Config::save(std::string& str) {
 }
 
 void Config::load(const char* str) {
-	auto error = deserializeJson(_jsonBuffer,str);
-	if ( error == DeserializationError::Ok) {
+	auto rc = deserializeJson(_jsonBuffer,str);
+	if ( rc == DeserializationError::Ok) {
 		_root = _jsonBuffer.as<JsonObject>();
 		if ( !_root.isNull() ) {
+			return;
 		} else {
 			WARN(" not a JSON object : '%s'",str);
 		}
 	} else {
 		WARN(" no JSON in '%s'",str);
 	}
+	deserializeJson(_jsonBuffer,"{}");
+	_root = _jsonBuffer.as<JsonObject>();
 }
 void Config::printPretty(std::string& str) {
 	serializeJsonPretty(_root, str);
@@ -251,7 +254,7 @@ void Config::save() {
 void Config::saveFile(const char* name) {
 	std::ofstream out(name);
 	std::string output;
-	serializeJson(_root, output);
+	serializeJsonPretty(_root, output);
 	out << output;
 	out.close();
 }
