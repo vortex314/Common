@@ -164,100 +164,100 @@ void Xdr::poke(uint32_t offset, uint32_t value) {
 		*(_start + offset) = value;
 }
 
-int Xdr::readInc(uint32_t delta) {
+bool Xdr::readInc(uint32_t delta) {
 	if (_readIdx + delta > _writeIdx)
-		return ENOENT;
+		return false;
 	_readIdx += delta;
-	return 0;
+	return true;
 }
 
-int Xdr::writeInc(uint32_t delta) {
+bool Xdr::writeInc(uint32_t delta) {
 	_writeIdx += delta;
-	return 0;
+	return true;
 }
 
-int Xdr::read(uint32_t& i) {
+bool Xdr::read(uint32_t& i) {
 	i = peek();
 	return readInc(1);
 }
 
-int Xdr::read(uint32_t* ui, uint32_t cnt) {
+bool Xdr::read(uint32_t* ui, uint32_t cnt) {
 	for (uint32_t i = 0; i < cnt; i++) {
 		if (read(*(ui + i)))
-			return ENOENT;
+			return false;
 	}
 	return readInc(1);
 }
 
-int Xdr::write(uint32_t i) {
+bool Xdr::write(uint32_t i) {
 	if (_writeIdx == _capacity)
 		resize(2 * _capacity);
 	*(_start + _writeIdx) = i;
 	_writeIdx++;
-	return 0;
+	return true;
 }
 
-inline int Xdr::write(Tag tag) { return write(tag.ui32); }
-
+inline bool Xdr::write(Tag tag) { return write(tag.ui32); }
+/*
 #define RETURN_ERR(xxx)                                                        \
 	{                                                                          \
 		int erc = 0;                                                  \
 		if ((erc = xxx) != 0)                                                  \
 			return erc;                                                        \
-	}
+	}*/
 
-int Xdr::write(uint8_t* pb, uint32_t count) {
+bool Xdr::write(uint8_t* pb, uint32_t count) {
 	uint32_t ui32;
 	for (uint32_t i = 0; i < count; i += 4) {
 		uint32_t delta = (count - i) > 4 ? 4 : (count - i);
 		memcpy(&ui32, pb + i, delta);
-		RETURN_ERR(write(ui32));
+		if ( ! write(ui32) ) return false;
 	}
-	return 0;
+	return true;
 }
 
-int Xdr::write(uint32_t* pb, uint32_t count) {
+bool Xdr::write(uint32_t* pb, uint32_t count) {
 	for (uint32_t i = 0; i < count; i += 1) {
 		write(*(pb + i));
 	}
-	return 0;
+	return true;
 }
 
-int Xdr::add(Xdr& xdr) { return write(xdr._start, xdr._writeIdx); }
+bool Xdr::add(Xdr& xdr) { return write(xdr._start, xdr._writeIdx); }
 
 
-int Xdr::add(Uid key, bool b) {
+bool Xdr::add(Uid key, bool b) {
 	write(Tag(BOOL, 1, key));
 	return write((uint32_t)b);
 }
 
-int Xdr::add(Uid key, uint16_t v) {
+bool Xdr::add(Uid key, uint16_t v) {
 	write(Tag(UINT, 4, key));
 	write(v);
-	return 0;
+	return true;
 }
 
-int Xdr::add(Uid key, int32_t v) {
+bool Xdr::add(Uid key, int32_t v) {
 	write(Tag(INT, 4, key));
 	return write((uint32_t)v);
 }
 
-int Xdr::add(Uid key, uint32_t v) {
+bool Xdr::add(Uid key, uint32_t v) {
 	write(Tag(UINT, 4, key));
 	return write(v);
 }
 
-int Xdr::add(Uid key, uint64_t v) {
+bool Xdr::add(Uid key, uint64_t v) {
 	write(Tag(UINT, 8, key));
 	return write((uint32_t*)&v, 2);
 }
 
-int Xdr::add(Uid key, int64_t v) {
+bool Xdr::add(Uid key, int64_t v) {
 	write(Tag(INT, 8, key));
 	return write((uint32_t*)&v, 2);
 }
 
-int Xdr::add(Uid key, double d) {
+bool Xdr::add(Uid key, double d) {
 	//   printf("%s:%d \n",__FILE__,__LINE__);
 	Tag tag(FLOAT, 8, key.id());
 	write(Tag(FLOAT, 8, key.id()).ui32);
@@ -269,28 +269,27 @@ int Xdr::add(Uid key, double d) {
 	dd = d;
 	write(ww[0]);
 	write(ww[1]);
-	return 0;
+	return true;
 }
 
 
-int Xdr::add(Uid key, const char* s) {
+bool Xdr::add(Uid key, const char* s) {
 	return add(key, (uint8_t*)s, strlen(s));
 }
 
-int Xdr::add(Uid key, std::string& v) {
+bool Xdr::add(Uid key, std::string& v) {
 	return add(key, (uint8_t*)v.data(), v.size());
 }
 
-int Xdr::add(Uid key, uint8_t* bytes, uint32_t length) {
-	write(Tag(BYTES, length, key));
-	write((uint8_t*)bytes, length);
-	return 0;
+bool Xdr::add(Uid key, uint8_t* bytes, uint32_t length) {
+	if ( write(Tag(BYTES, length, key))  && write((uint8_t*)bytes, length)) return true;
+	return false;
 }
 
 bool Xdr::find(Tag& tag) {
 	Tag t(0);
 
-	while (read(t.ui32) == 0) {
+	while (read(t.ui32) ) {
 		if (t.uid == tag.uid && tag.equivalentType(t)) {
 			tag.ui32 = t.ui32;
 			return true;
@@ -303,44 +302,44 @@ bool Xdr::find(Tag& tag) {
 }
 
 
-int Xdr::getNext(Uid uid, bool& b) {
+bool Xdr::getNext(Uid uid, bool& b) {
 	Tag tag = Tag(BOOL, 0, uid);
 
 	if (find(tag)) {
 		uint32_t ui32;
-		int erc = read(ui32);
+		bool erc = read(ui32);
 		b = ui32;
 		return erc;
 	}
-	return ENOENT;
+	return false;
 }
 
 
-int Xdr::getNext(Uid uid, uint16_t& i) {
+bool Xdr::getNext(Uid uid, uint16_t& i) {
 	Tag tag = Tag(UINT, 0, uid);
 
 	if (find(tag)) {
 		uint32_t ui;
 		if (read(ui))
-			return ENOENT;
+			return false;
 		i = ui;
-		return 0;
+		return true;
 	}
-	return ENOENT;
+	return false;
 }
 
 
-int Xdr::getNext(Uid uid, uint32_t& i) {
+bool Xdr::getNext(Uid uid, uint32_t& i) {
 	Tag tag = Tag(UINT, 0, uid);
 
 	if (find(tag)) {
 		return read(i);
 	}
-	return ENOENT;
+	return false;
 }
 
 
-int Xdr::getNext(Uid uid, uint64_t& i) {
+bool Xdr::getNext(Uid uid, uint64_t& i) {
 	Tag tag = Tag(UINT, 0, uid);
 	if (find(tag)) {
 		union {
@@ -358,13 +357,13 @@ int Xdr::getNext(Uid uid, uint64_t& i) {
 			return erc;
 		} else {
 			WARN(" invalid tag length ");
-			return ENOENT;
+			return false;
 		}
 	}
-	return ENOENT;
+	return false;
 }
 
-int Xdr::getNext(Uid uid, int& i) {
+bool Xdr::getNext(Uid uid, int& i) {
 	Tag tag = Tag(INT, 0, uid);
 
 	if (find(tag)) {
@@ -373,11 +372,11 @@ int Xdr::getNext(Uid uid, int& i) {
 		i = (int32_t)ui;
 		return erc;
 	}
-	return ENOENT;
+	return false;
 }
 
 
-int Xdr::getNext(Uid uid, int64_t& i) {
+bool Xdr::getNext(Uid uid, int64_t& i) {
 	Tag tag = Tag(INT, 0, uid);
 	if (find(tag)) {
 		union {
@@ -395,13 +394,13 @@ int Xdr::getNext(Uid uid, int64_t& i) {
 			return erc;
 		} else {
 			WARN(" invalid tag length ");
-			return ENOENT;
+			return false;
 		}
 	}
-	return ENOENT;
+	return false;
 }
 
-int Xdr::getNext(Uid uid, double& d) {
+bool Xdr::getNext(Uid uid, double& d) {
 	Tag tag = Tag(FLOAT, 0, uid);
 	if (find(tag)) {
 		union {
@@ -417,9 +416,9 @@ int Xdr::getNext(Uid uid, double& d) {
 			read(ww[1]);
 			d = dd;
 		}
-		return 0;
+		return true;
 	} else {
-		return ENOENT;
+		return false;
 	}
 }
 
@@ -429,7 +428,7 @@ bool Xdr::skip() {
 }
 
 
-int Xdr::getNext(Uid key, std::string& s) {
+bool Xdr::getNext(Uid key, std::string& s) {
 	Tag tag(BYTES, 0, key);
 
 	if (find(tag)) {
@@ -443,13 +442,13 @@ int Xdr::getNext(Uid key, std::string& s) {
 		for (int i = 0; i < tag.length; i += 4) {
 			int delta = (tag.length - i) > 4 ? 4 : (tag.length - i);
 
-			if (read(w) == 0) {
+			if (read(w) ) {
 				s.append(ch, delta);
 			}
 		}
-		return 0;
+		return true;
 	} else {
-		return ENOENT;
+		return false;
 	}
 }
 
@@ -529,42 +528,42 @@ void XdrTester(uint32_t MAX) {
 		xdr.add(UID("sStdString"), HW);
 		xdr.add(UID("test1"), test1);
 
-		assert(xdr.get(UID("temp"), d) == 0);
+		assert(xdr.get(UID("temp"), d));
 		assert(d == 1.23);
 		int ii;
-		assert(xdr.get(UID("anInt32"), ii) == 0);
+		assert(xdr.get(UID("anInt32"), ii) );
 		assert(ii == -15);
 		std::string ss;
 		ss.reserve(100);
-		assert(xdr.get(UID("aString"), ss) == 0);
+		assert(xdr.get(UID("aString"), ss) );
 		assert(ss.compare("The quick brown fox jumps over the lazy dog !") ==
 		       0);
-		assert(xdr.get(UID("sStdString"), ss) == 0);
+		assert(xdr.get(UID("sStdString"), ss) );
 		assert(ss.compare(HW) == 0);
-		assert(xdr.get(UID("test1"), ss) == 0);
-		assert(ss.compare(test1) == 0);
+		assert(xdr.get(UID("test1"), ss) );
+		assert(ss.compare(test1) );
 		bool bb;
-		assert(xdr.get(UID("booleke"), bb) == 0);
+		assert(xdr.get(UID("booleke"), bb) );
 		assert(bb == false);
 	}
 	LOG(" xdr = %s ", xdr.toString().c_str());
 
 	Xdr xdr2 = xdr;
-	assert(xdr2.get(UID("temp"), d) == 0);
+	assert(xdr2.get(UID("temp"), d) );
 	assert(d == 1.23);
 	int ii;
-	assert(xdr2.get(UID("anInt32"), ii) == 0);
+	assert(xdr2.get(UID("anInt32"), ii) );
 	assert(ii == -15);
 	std::string ss;
 	ss.reserve(100);
-	assert(xdr2.get(UID("aString"), ss) == 0);
+	assert(xdr2.get(UID("aString"), ss) );
 	assert(ss.compare("The quick brown fox jumps over the lazy dog !") == 0);
-	assert(xdr2.get(UID("sStdString"), ss) == 0);
+	assert(xdr2.get(UID("sStdString"), ss) );
 	assert(ss.compare(HW) == 0);
-	assert(xdr2.get(UID("test1"), ss) == 0);
+	assert(xdr2.get(UID("test1"), ss) );
 	assert(ss.compare(test1) == 0);
 	bool bb;
-	assert(xdr2.get(UID("booleke"), bb) == 0);
+	assert(xdr2.get(UID("booleke"), bb) );
 	assert(bb == false);
 
 	uint32_t delta = Sys::millis() - start;
