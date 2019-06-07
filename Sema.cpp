@@ -15,44 +15,44 @@
 // use printf as log also uses semaphores
 
 class LinuxSemaphore : public Sema {
-	sem_t sema;
-	uint32_t counter;
+		sem_t sema;
+		uint32_t counter;
 
-public:
-	LinuxSemaphore() {
-		if (sem_init(&sema, 1, 1) < 0) { 
-			WARN("connect: Unable to create semaphore  errno : %d : %s ",errno, strerror(errno));
+	public:
+		LinuxSemaphore() {
+			if (sem_init(&sema, 1, 1) < 0) {
+				WARN("connect: Unable to create semaphore  errno : %d : %s ",errno, strerror(errno));
+			}
+			counter=0;
 		}
-		counter=0;
-	}
-	~LinuxSemaphore() {sem_destroy(&sema);}
-	void wait() {
-		if (::sem_wait(&sema) != 0) { /* P operation */
-			printf("connect: Unable to wait semaphore  errno : %d : %s ",errno, strerror(errno));
-		}
-		counter++;
-		if ( counter != 1 ) {
-			int value;
-			sem_getvalue(&sema, &value);
-			printf("The value of the semaphors is %d\n", value);
-			printf(" wait sema counter %d \n",counter);
+		~LinuxSemaphore() {sem_destroy(&sema);}
+		void wait() {
+			if (::sem_wait(&sema) != 0) { /* P operation */
+				printf("connect: Unable to wait semaphore  errno : %d : %s ",errno, strerror(errno));
+			}
+			counter++;
+			if ( counter != 1 ) {
+				int value;
+				sem_getvalue(&sema, &value);
+				printf("The value of the semaphors is %d\n", value);
+				printf(" wait sema counter %d \n",counter);
 
+			}
 		}
-	}
 
-	void release() {
-		counter--;
-		if ( counter != 0 ) {
-			int value;
-			sem_getvalue(&sema, &value);
-			printf("The value of the semaphors is %d\n", value);
-			printf(" wait sema counter %d \n",counter);
+		void release() {
+			counter--;
+			if ( counter != 0 ) {
+				int value;
+				sem_getvalue(&sema, &value);
+				printf("The value of the semaphors is %d\n", value);
+				printf(" wait sema counter %d \n",counter);
 
+			}
+			if (::sem_post(&sema) != 0) { /* V operation */
+				printf("connect: Unable to post semaphore  errno : %d : %s ", errno, strerror(errno));
+			}
 		}
-		if (::sem_post(&sema) != 0) { /* V operation */
-			printf("connect: Unable to post semaphore  errno : %d : %s ", errno, strerror(errno));
-		}
-	}
 };
 
 Sema& Sema::create() {return *new LinuxSemaphore();}
@@ -66,44 +66,44 @@ Sema& Sema::create() {return *new LinuxSemaphore();}
 #include <fcntl.h>
 
 class MacSemaphore: public Sema {
-	uint32_t counter;
-	sem_t *semaphore;
+		uint32_t counter;
+		sem_t *semaphore;
 
-public:
-	MacSemaphore() {
-		if ((semaphore = sem_open("/semaphore", O_CREAT, 0644, 1))
-				== SEM_FAILED) {
-			perror("sem_open");
-			exit(EXIT_FAILURE);
+	public:
+		MacSemaphore() {
+			if ((semaphore = sem_open("/semaphore", O_CREAT, 0644, 1))
+			        == SEM_FAILED) {
+				perror("sem_open");
+				exit(EXIT_FAILURE);
+			}
+			counter = 0;
 		}
-		counter = 0;
-	}
-	~MacSemaphore() {
-		if (sem_close(semaphore) == -1) {
-			perror("sem_close");
-			exit(EXIT_FAILURE);
+		~MacSemaphore() {
+			if (sem_close(semaphore) == -1) {
+				perror("sem_close");
+				exit(EXIT_FAILURE);
+			}
+			if (sem_unlink("/semaphore") == -1) {
+				perror("sem_unlink");
+				exit(EXIT_FAILURE);
+			}
 		}
-		if (sem_unlink("/semaphore") == -1) {
-			perror("sem_unlink");
-			exit(EXIT_FAILURE);
-		}
-	}
-	void wait() {
-		if (::sem_wait(semaphore) != 0) { /* P operation */
-			printf("connect: Unable to wait semaphore  errno : %d : %s ", errno,
-					strerror(errno));
-		}
-		counter++;
+		void wait() {
+			if (::sem_wait(semaphore) != 0) { /* P operation */
+				printf("connect: Unable to wait semaphore  errno : %d : %s ", errno,
+				       strerror(errno));
+			}
+			counter++;
 
-	}
-
-	void release() {
-		counter--;
-		if (::sem_post(semaphore) != 0) { /* V operation */
-			printf("connect: Unable to post semaphore  errno : %d : %s ", errno,
-					strerror(errno));
 		}
-	}
+
+		void release() {
+			counter--;
+			if (::sem_post(semaphore) != 0) { /* V operation */
+				printf("connect: Unable to post semaphore  errno : %d : %s ", errno,
+				       strerror(errno));
+			}
+		}
 };
 
 Sema& Sema::create() {
@@ -116,12 +116,12 @@ Sema& Sema::create() {
 
 class ArduinoSemaphore : public Sema {
 
-public:
-	ArduinoSemaphore() {}
-	~ArduinoSemaphore() {}
-	void wait() {}
+	public:
+		ArduinoSemaphore() {}
+		~ArduinoSemaphore() {}
+		void wait() {}
 
-	void release() {}
+		void release() {}
 };
 
 Semaphore& Semaphore::create() {
@@ -133,15 +133,15 @@ Semaphore& Semaphore::create() {
 //____________________________________________________________ STM32
 #ifdef STM32F1
 class STM32Semaphore : public Sema {
-	//    sem_t* sem;
-	//    unsigned int value = 0;
-	sem_t put_mutex;
+		//    sem_t* sem;
+		//    unsigned int value = 0;
+		sem_t put_mutex;
 
-public:
-	STM32Semaphore() {}
-	void wait() {cm_disable_interrupts();}
+	public:
+		STM32Semaphore() {}
+		void wait() {cm_disable_interrupts();}
 
-	void release() {cm_enable_interrupts();}
+		void release() {cm_enable_interrupts();}
 };
 
 Sema& Sema::create() {return *(new STM32Semaphore());}
@@ -158,35 +158,36 @@ Sema& Sema::create() {return *(new STM32Semaphore());}
 
 #endif
 class Esp32Semaphore : public Sema {
-	SemaphoreHandle_t xSemaphore = NULL;
-	uint32_t counter=0;
-public:
-	Esp32Semaphore() {
-		xSemaphore = xSemaphoreCreateBinary();
-		xSemaphoreGive(xSemaphore);
-	}
-	~Esp32Semaphore() {}
+		SemaphoreHandle_t xSemaphore = NULL;
+		uint32_t counter=0;
+	public:
+		Esp32Semaphore() {
+			xSemaphore = xSemaphoreCreateBinary();
+			xSemaphoreGive(xSemaphore);
+		}
+		~Esp32Semaphore() {}
 
-	void wait() {
-		if (xSemaphoreTake(xSemaphore, (TickType_t)100000) == pdFALSE) {
-			printf(" xSemaphoreTake()  timed out ");
-		}
-		counter++;
-		if ( counter != 1 ) {
-			printf(" =======> wait sema counter %d \n",counter);
-		}
-	}
-
-	void release() {
-		if (xSemaphoreGive(xSemaphore) == pdFALSE) {
-			printf("xSemaphoreGive() failed");
-		}
-		counter--;
-		if ( counter != 0 ) {
-			printf(" ======> give sema counter %d \n",counter);
+		void wait() {
+			if (xSemaphoreTake(xSemaphore, (TickType_t)100000) == pdFALSE) {
+				printf(" xSemaphoreTake()  timed out ");
+			}
+			counter++;
+			if ( counter != 1 ) {
+				printf(" =======> wait sema counter %d \n",counter);
+			}
 		}
 
-	}
+		void release() {
+			counter--;
+			if ( counter != 0 ) {
+				printf(" ======> give sema counter %d \n",counter);
+			}
+			if (xSemaphoreGive(xSemaphore) == pdFALSE) {
+				printf("xSemaphoreGive() failed");
+			}
+
+
+		}
 //   static Semaphore& create() { return *(new Esp32Semaphore()); }
 };
 
