@@ -65,6 +65,7 @@ class Xdr { /*: public Stream<uint32_t> */
 		bool add(Uid key, uint8_t* bytes, uint32_t length);
 		bool add(Uid key, std::string& v);
 		bool add(Uid key, const char* s);
+		bool add(Uid key, Xdr& xdr);
 		bool add(Xdr& xdr);
 		template <typename T> Xdr& operator()(Uid key, T v) {
 			add(key, v);
@@ -80,6 +81,7 @@ class Xdr { /*: public Stream<uint32_t> */
 		bool getNext(Uid key, int64_t& i);
 		bool getNext(Uid key, std::string& s);
 		bool getNext(Uid key, uint8_t* bytes, uint32_t& size);
+		bool getNext(Uid key, Xdr& xdr);
 		template <typename T> bool get(Uid key, T& v) {
 			rewind();
 			return getNext(key, v);
@@ -89,11 +91,12 @@ class Xdr { /*: public Stream<uint32_t> */
 		bool hasData() const;
 
 		std::string toString();
-		bool find(Tag& t);
+		bool findNext(Tag& t);
 		Xdr& operator=(const Xdr&);
 
 		uint32_t size() const;
 		uint32_t capacity() const;
+		uint32_t offset() { return _readIdx;}
 		void resize(uint32_t newSize);
 		void poke(uint32_t offset, uint32_t value);
 };

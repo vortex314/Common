@@ -43,16 +43,15 @@ class Uid {
 		inline uid_type id() { return _id;};
 		void operator=(uid_type a);
 		bool operator==(Uid b) ;
-		static uid_type hash(const char* label);
-		static uid_type add(const char* label);
-		static const char* label(uid_type id);
+
 		const char* label() ;
 
 		static uid_type hash(void*);
 		static uid_type add(void* object);
-		static void* object(uid_type id);
-		void* object();
-
+		
+		static uid_type hash(const char* label);	// just calc hash
+		static uid_type add(const char* label);	// extend dictionary
+		static const char* label(uid_type id);
 		static std::unordered_map<uint16_t, void*>* uids();
 
 };
