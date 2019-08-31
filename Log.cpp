@@ -114,6 +114,10 @@ extern "C" {
 };
 #endif
 
+void Log::application(const char* app) {
+	strncpy(_application,app,sizeof(_application));
+}
+
 void Log::log(char level, const char* file, uint32_t lineNbr,
               const char* function, const char* fmt, ...) {
 	_sema.wait();
@@ -128,15 +132,15 @@ void Log::log(char level, const char* file, uint32_t lineNbr,
 	static char logLine[256];
 	vsnprintf(logLine, sizeof(logLine) - 1, fmt, args);
 	va_end(args);
-	_application[0] = 0;
 #ifdef __linux__
 //	::snprintf(_application,sizeof(_application),"%X",(uint32_t)pthread_self());
 	pthread_getname_np(pthread_self(),_application,sizeof(_application));
 #endif
 #if defined(ESP32_IDF) || defined(ESP_OPEN_RTOS)
 	extern void* pxCurrentTCB;
-	::snprintf(_application, sizeof(_application), "%X",
-	           (uint32_t)pxCurrentTCB);
+	if ( _application[0]==0)
+		::snprintf(_application, sizeof(_application), "%X",
+		           (uint32_t)pxCurrentTCB);
 #endif
 	string_format(*_line, "%+10.10s %c | %8s | %s | %15s:%4d | %s", _application,
 	              level, time(), Sys::hostname(), file, lineNbr, logLine);

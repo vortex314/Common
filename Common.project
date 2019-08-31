@@ -100,6 +100,8 @@
     <File Name="BipBuffer.h"/>
     <File Name="Base64.h"/>
   </VirtualDirectory>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Release"/>
   <Settings Type="Static Library">
     <GlobalSettings>
       <Compiler Options="-std=c++11" C_Options="" Assembler="">
@@ -113,7 +115,7 @@
     <Configuration Name="Debug" CompilerType="GCC" DebuggerType="LLDB Debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g;-std=c++11;-fPIC;" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
-        <IncludePath Value="../ArduinoJson/"/>
+        <IncludePath Value="../ArduinoJson/src"/>
       </Compiler>
       <Linker Options="" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
@@ -190,6 +192,4 @@
       </Completion>
     </Configuration>
   </Settings>
-  <Dependencies Name="Debug"/>
-  <Dependencies Name="Release"/>
 </CodeLite_Project>

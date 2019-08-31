@@ -27,9 +27,9 @@ using cstr = const char * const;
 
 static constexpr cstr past_last_slash(cstr str, cstr last_slash) {
 	return *str == '\0' ? last_slash :
-			*str == '/' ?
-					past_last_slash(str + 1, str + 1) :
-					past_last_slash(str + 1, last_slash);
+	       *str == '/' ?
+	       past_last_slash(str + 1, str + 1) :
+	       past_last_slash(str + 1, last_slash);
 }
 
 static constexpr cstr past_last_slash(cstr str) {
@@ -39,50 +39,50 @@ static constexpr cstr past_last_slash(cstr str) {
 #pragma GCC diagnostic pop
 
 class Log {
-public:
-	typedef enum {
-		LOG_TRACE = 0,
-		LOG_DEBUG,
-		LOG_INFO,
-		LOG_WARN,
-		LOG_ERROR,
-		LOG_FATAL,
-		LOG_NONE
-	} LogLevel;
-	static char _logLevel[7];
-	std::string* _line;
+	public:
+		typedef enum {
+			LOG_TRACE = 0,
+			LOG_DEBUG,
+			LOG_INFO,
+			LOG_WARN,
+			LOG_ERROR,
+			LOG_FATAL,
+			LOG_NONE
+		} LogLevel;
+		static char _logLevel[7];
+		std::string* _line;
 
-private:
-	bool _enabled;
-	LogFunction _logFunction;
-	char _hostname[20];
-	char _application[20];
-	LogLevel _level;
-	Sema& _sema;
+	private:
+		bool _enabled;
+		LogFunction _logFunction;
+		char _hostname[20];
+		char _application[20];
+		LogLevel _level;
+		Sema& _sema;
 
-public:
-	Log(uint32_t size);
-	~Log();
-	bool enabled(LogLevel level);
-	void setLogLevel(char l);
-	void disable();
-	void enable();
-	void defaultOutput();
-	void setOutput(LogFunction function);
-	void printf(const char* fmt, ...);
-	void log(char level, const char* file, uint32_t line, const char* function,
-			const char* fmt, ...);
+	public:
+		Log(uint32_t size);
+		~Log();
+		bool enabled(LogLevel level);
+		void setLogLevel(char l);
+		void disable();
+		void enable();
+		void defaultOutput();
+		void setOutput(LogFunction function);
+		void printf(const char* fmt, ...);
+		void log(char level, const char* file, uint32_t line, const char* function,
+		         const char* fmt, ...);
 
-	void vprintf(const char* fmt, va_list args);
-	const char* time();
-	void host(const char* hostname);
-	void location(const char* module, uint32_t line);
-	void application(const char* applicationName);
-	void flush();
-	void level(LogLevel l);
-	void logLevel();
-	static void serialLog(char* start, uint32_t length);
-	LogLevel level();
+		void vprintf(const char* fmt, va_list args);
+		const char* time();
+		void host(const char* hostname);
+		void location(const char* module, uint32_t line);
+		void application(const char* applicationName);
+		void flush();
+		void level(LogLevel l);
+		void logLevel();
+		static void serialLog(char* start, uint32_t length);
+		LogLevel level();
 };
 
 extern Log logger;
@@ -128,24 +128,3 @@ extern Log logger;
 	 : __FILE__)
 
 #endif /* LOG_H_ */
-
-//#define __FLE__ strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__
-//#define __FLE__ __FILE__
-//#define __FLE__ past_last_slash(__FILE__)
-/*
- * using cstr = const char* const;
-
- static constexpr cstr past_last_slash(cstr str, cstr last_slash) {
- return *str == '\0' ? last_slash
- : *str == '/' ? past_last_slash(str + 1, str + 1)
- : past_last_slash(str + 1, last_slash);
- }
-
- static constexpr cstr past_last_slash(cstr str) {
- return past_last_slash(str, str);
- }
- #define __FLEE__                                                               \
-    ({                                                                         \
-        constexpr cstr sf__{past_last_slash(__FILE__)};                        \
-        sf__;                                                                  \
-    })*/
