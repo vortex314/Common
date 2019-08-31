@@ -33,14 +33,14 @@ class Config {
 		JsonObject root() { return _root;};
 
 		bool hasKey(const char* key);
-		void setNameSpace(const char* ns);
+		Config&  setNameSpace(const char* ns);
 		const char* getNameSpace();
 		void remove(const char* key);
 
 		template<typename T> void set(const char* key, T value) {
 			_root[_nameSpace][key] = value;
 		}
-		template<typename T, typename T1> void get(const char* key, T& value,
+		template<typename T, typename T1> Config& get(const char* key, T& value,
 		        T1 defaultValue) {
 			if (_root[_nameSpace].containsKey(key))
 				value = _root[_nameSpace][key];
@@ -48,14 +48,16 @@ class Config {
 				_root[_nameSpace][key] = defaultValue;
 				value = defaultValue;
 			}
+			return *this;
 		}
-		void get(const char* key, std::string& value, const char* defaultValue) {
+		Config& get(const char* key, std::string& value, const char* defaultValue) {
 			if (_root[_nameSpace].containsKey(key))
 				value = _root[_nameSpace][key].as<std::string>();
 			else {
 				_root[_nameSpace][key] = defaultValue;
 				value = defaultValue;
 			}
+			return *this;
 		}
 };
 

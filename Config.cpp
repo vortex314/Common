@@ -28,8 +28,9 @@ void Config::clear() {
 	_nameSpace = "unknown";
 }
 
-void Config::setNameSpace(const char* ns) {
+Config& Config::setNameSpace(const char* ns) {
 	_nameSpace = ns;
+	return *this;
 }
 
 const char* Config::getNameSpace() {
