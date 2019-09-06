@@ -437,7 +437,7 @@ bool Xdr::getNext(Uid key, Xdr& xdr) {
         xdr.clear();
 
         for (int i = 0; i < tag.length; i += 4) {
-            int delta = (tag.length - i) > 4 ? 4 : (tag.length - i);
+//            int delta = (tag.length - i) > 4 ? 4 : (tag.length - i);
 
             if (read(w)) {
                 xdr.write(w);

@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Msgpack.cpp
  * Author: lieven2
- * 
+ *
  * Created on 21 september 2013, 10:39
  */
 
@@ -24,40 +24,40 @@
 #endif
 
 #define PACK_8BIT_VALUE(  xData )          \
-    write(((uint8_t)xData));
+	write(((uint8_t)xData));
 
 #define PACK_16BIT_VALUE(  xData )                 \
-    write(((uint16_t)xData >> 8));    \
-    write(((uint16_t)xData));
+	write(((uint16_t)xData >> 8));    \
+	write(((uint16_t)xData));
 
 #define PACK_32BIT_VALUE(  xData )                  \
-    write(((uint32_t)xData >> 24));    \
-    write(((uint32_t)xData >> 16));    \
-    write(((uint32_t)xData >> 8));     \
-    write(((uint32_t)xData));
+	write(((uint32_t)xData >> 24));    \
+	write(((uint32_t)xData >> 16));    \
+	write(((uint32_t)xData >> 8));     \
+	write(((uint32_t)xData));
 
 #ifdef SUPPORT_64BIT_VALUE
 #define PACK_64BIT_VALUE( xData )                  \
-    write((((uint64_t)xData) >> 56));    \
-    write((((uint64_t)xData) >> 48));    \
-    write((((uint64_t)xData) >> 40));    \
-    write((((uint64_t)xData) >> 32));    \
-    write((((uint64_t)xData) >> 24));    \
-    write((((uint64_t)xData) >> 16));    \
-    write((((uint64_t)xData) >> 8));     \
-    write((uint64_t)xData);
+	write((((uint64_t)xData) >> 56));    \
+	write((((uint64_t)xData) >> 48));    \
+	write((((uint64_t)xData) >> 40));    \
+	write((((uint64_t)xData) >> 32));    \
+	write((((uint64_t)xData) >> 24));    \
+	write((((uint64_t)xData) >> 16));    \
+	write((((uint64_t)xData) >> 8));     \
+	write((uint64_t)xData);
 #endif
 
 Msgpack::Msgpack(int size) :
-		Bytes(size) {
+	Bytes(size) {
 }
 
 Msgpack::Msgpack(uint8_t* pb, int size) :
-		Bytes(pb, size) {
+	Bytes(pb, size) {
 }
 
 Msgpack::Msgpack(Bytes& b) :
-		Bytes(b._start, b._capacity) {
+	Bytes(b._start, b._capacity) {
 	_offset = b._offset;
 	_limit = b._limit;
 }
@@ -214,31 +214,31 @@ void Msgpack::pack(double data) {
 
 /// Get 16bit value from buffer.
 #define UNPACK_GET_16BIT_VALUE(d)         \
-    ((uint16_t)(*d) << 8) |               \
-    (uint16_t)(*(d+1))
+	((uint16_t)(*d) << 8) |               \
+	(uint16_t)(*(d+1))
 
 /// Get 32bit value from buffer.
 #define UNPACK_GET_32BIT_VALUE(d)         \
-    ((uint32_t)(*d) << 24)     |          \
-    ((uint32_t)*(d+1) << 16) |            \
-    ((uint32_t)*(d+2) <<  8) |            \
-    (uint32_t)*(d+3)
+	((uint32_t)(*d) << 24)     |          \
+	((uint32_t)*(d+1) << 16) |            \
+	((uint32_t)*(d+2) <<  8) |            \
+	(uint32_t)*(d+3)
 
 #ifdef SUPPORT_64BIT_VALUE
 /// Get 64bit value from buffer.
 #define UNPACK_GET_64BIT_VALUE(d)         \
-    ((uint64_t)(*d) << 56)   |            \
-    ((uint64_t)*(d+1) << 48) |            \
-    ((uint64_t)*(d+2) << 40) |            \
-    ((uint64_t)*(d+3) << 32) |            \
-    ((uint64_t)*(d+4) << 24) |            \
-    ((uint64_t)*(d+5) << 16) |            \
-    ((uint64_t)*(d+6) <<  8) |            \
-    (uint64_t)*(d+7)
+	((uint64_t)(*d) << 56)   |            \
+	((uint64_t)*(d+1) << 48) |            \
+	((uint64_t)*(d+2) << 40) |            \
+	((uint64_t)*(d+3) << 32) |            \
+	((uint64_t)*(d+4) << 24) |            \
+	((uint64_t)*(d+5) << 16) |            \
+	((uint64_t)*(d+6) <<  8) |            \
+	(uint64_t)*(d+7)
 #endif
 
 unpack_base_info_t unpack_base(uint8_t* buf) {
-	unpack_base_info_t info = { 0 };
+	unpack_base_info_t info = { 0,0,0 };
 	unsigned char header = (uint8_t) (UNPACK_GET_8BIT_VALUE(buf));
 	buf++;
 
@@ -348,7 +348,7 @@ int unpack(unpack_info_t *info, uint8_t* buf) {
 	}
 #endif
 	else if (info_base.type == TYPE_POSITIVE_FIXNUM
-			|| info_base.type == TYPE_VALIABLE_UINT8) {
+	         || info_base.type == TYPE_VALIABLE_UINT8) {
 		info->type = UNPACK_TYPE_UINT;
 		info->value.uint_value = (unsigned int) info_base.value.uint8_value;
 	} else if (info_base.type == TYPE_VALIABLE_UINT16) {
@@ -358,7 +358,7 @@ int unpack(unpack_info_t *info, uint8_t* buf) {
 		info->type = UNPACK_TYPE_UINT;
 		info->value.uint_value = (unsigned int) info_base.value.uint32_value;
 	} else if (info_base.type == TYPE_NEGATIVE_FIXNUM
-			|| info_base.type == TYPE_VALIABLE_INT8) {
+	           || info_base.type == TYPE_VALIABLE_INT8) {
 		info->type = UNPACK_TYPE_INT;
 		info->value.int_value = (int) info_base.value.int8_value;
 	} else if (info_base.type == TYPE_VALIABLE_INT16) {
@@ -368,8 +368,8 @@ int unpack(unpack_info_t *info, uint8_t* buf) {
 		info->type = UNPACK_TYPE_INT;
 		info->value.int_value = (int) info_base.value.int32_value;
 	} else if (info_base.type == TYPE_FIXRAW
-			|| info_base.type == TYPE_VALIABLE_RAW16
-			|| info_base.type == TYPE_VALIABLE_RAW32) {
+	           || info_base.type == TYPE_VALIABLE_RAW16
+	           || info_base.type == TYPE_VALIABLE_RAW32) {
 		info->type = UNPACK_TYPE_RAW;
 		info->value.raw_value.size = info_base.value.size;
 		info->value.raw_value.data = (buf + info_base.size);

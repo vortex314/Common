@@ -62,7 +62,7 @@ const char* Uid::label(uid_type id) {
 
 #define PTR_BYTES sizeof(void*)
 #define UID_BYTES sizeof(uid_type)
-
+/*
 uid_type Uid::hash(void* pv) {
 	uid_type h;
 	union {
@@ -75,7 +75,7 @@ uid_type Uid::hash(void* pv) {
 		h ^= uids[i];
 	}
 	return h;
-}
+}*/
 
 uid_type Uid::hash(const char* s) { return H(s); }
 
