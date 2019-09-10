@@ -12,9 +12,9 @@ INC_DIRS += $(Common_ROOT)..  $(Common_ROOT)
 # args for passing into compile rule generation
 Common_SRC_DIR =  $(Common_ROOT)
 Common_CFLAGS= -DESP_OPEN_RTOS
-Common_CXXFLAGS= -DESP_OPEN_RTOS -fno-rtti -std=gnu++11 -fno-exceptions -I../../ArduinoJson
+Common_CXXFLAGS= -DESP_OPEN_RTOS -fno-rtti -std=gnu++11 -fno-exceptions -I../../ArduinoJson/src
 
-$(eval $(call component_compile_rules,Common))
+# $(eval $(call component_compile_rules,Common))
 
 #ESP32 COMPONENT.MK
 COMPONENT_SRCDIRS := .
