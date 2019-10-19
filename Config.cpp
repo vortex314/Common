@@ -231,9 +231,25 @@ void Config::loadFile(const char* name) {
 	if (_loaded) {
 		return;
 	}
-	std::ifstream t(name);
-	std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<
-	                char>());
+	std::string str="{}";
+
+	FILE *file = fopen(name,"r");
+	if ( file != NULL) {
+		str="";
+		std::string str;
+		char buffer[256];
+		while(true) {
+			int result=fread(buffer,1,256,file);
+			if ( result <=0 ) break;
+			str.append(buffer,result);
+		}
+		fclose(file);
+	} else {
+		WARN(" cannot open %s : %d = %s",name,errno,strerror(errno));
+	}
+	/*	std::ifstream t(name);
+		std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<
+		                char>());*/
 	_loaded = true;
 	auto error = deserializeJson(_jsonBuffer, str.c_str());
 
