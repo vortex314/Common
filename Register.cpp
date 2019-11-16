@@ -33,7 +33,7 @@ void Register::show()
     uint32_t reg = 0;
     if ( _regAddress==0) reg = _reg;
     else reg=*_regAddress;
-    uint32_t bitsValue=0;
+    unsigned int bitsValue=0;
     uint32_t bitCount=1;
     const char* fmt = _format;
     while (fmt != 0) {

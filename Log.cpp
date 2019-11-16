@@ -5,8 +5,11 @@
  *      Author: lieven
  */
 #include <Log.h>
+extern "C" {
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
+}
 
 char Log::_logLevel[7] = {'T', 'D', 'I', 'W', 'E', 'F', 'N'};
 
@@ -14,11 +17,17 @@ char Log::_logLevel[7] = {'T', 'D', 'I', 'W', 'E', 'F', 'N'};
 #include <Arduino.h>
 #include <WString.h>
 #endif
-#ifdef OPENCM3
+
+#ifdef STM32_OPENCM3
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/usart.h>
 #endif
+
+#ifdef LM4F_OPENCM3
+#include <libopencm3/lm4f/uart.h>
+#endif
+
 #ifdef ESP32_IDF
 #endif
 #ifdef ESP_OPEN_RTOS
@@ -31,7 +40,7 @@ std::string& string_format(std::string& str, const char* fmt, ...) {
 		ASSERT(size < 1024);
 		str.resize(size);
 		va_start(ap, fmt);
-		int n = vsnprintf((char*)str.data(), size, fmt, ap);
+		int n = vsprintf((char*)str.data(),  fmt, ap);
 		va_end(ap);
 		if (n > -1 && n < size) { // Everything worked
 			str.resize(n);
@@ -59,10 +68,11 @@ void Log::serialLog(char* start, uint32_t length) {
 	Serial.write((const uint8_t*)start, length);
 	Serial.write("\r\n");
 #endif
-#ifdef OPENCM3
+#if defined(STM32_OPENCM3) || defined(LM4F_OPENCM3)
 	*(start + length) = '\0';
+	char* s=start;
 	while (*s) {
-		usart_send_blocking(USART1, *(s++));
+		uart_send_blocking(0, *(s++));
 	}
 #endif
 #if defined(__linux__) || defined(ESP_OPEN_RTOS) || defined(ESP32_IDF) || defined (__APPLE__ )
@@ -122,7 +132,7 @@ void Log::log(char level, const char* file, uint32_t lineNbr,
               const char* function, const char* fmt, ...) {
 	_sema.wait();
 	if (_line == 0) {
-		::printf("%s:%d %s:%d\n", __FILE__, __LINE__, file, lineNbr);
+		::printf("%s:%d %s:%u\n", __FILE__, __LINE__, file, (unsigned int)lineNbr);
 //		_sema.release();
 		return;
 	}

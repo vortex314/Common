@@ -236,7 +236,6 @@ void Config::loadFile(const char* name) {
 	FILE *file = fopen(name,"r");
 	if ( file != NULL) {
 		str="";
-		std::string str;
 		char buffer[256];
 		while(true) {
 			int result=fread(buffer,1,256,file);
@@ -256,7 +255,8 @@ void Config::loadFile(const char* name) {
 	if (!error) {
 		_root = _jsonBuffer.as<JsonObject>();
 	} else {
-		ERROR(" couldn't parse config '%s' , dropped old config ! ", str.c_str());
+		ERROR(" couldn't parse config ! ");
+		printf("%s\n",str.c_str());
 		_root = _jsonBuffer.to<JsonObject>();
 	}
 	std::string temp;

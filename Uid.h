@@ -7,7 +7,7 @@
 	(__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1   \
 	 : __FILE__)
 #define LOG(fmt, ...)                                                         \
-	{ printf("%10s:%4u | ",__FLE__, __LINE__);printf(fmt, ##__VA_ARGS__);printf("\n") ;}
+	{ printf("%10s:%4u | ",__FLE__, (unsigned int)__LINE__);printf(fmt, ##__VA_ARGS__);printf("\n") ;}
 
 typedef uint16_t uid_type;
 #define UID_LENGTH 16

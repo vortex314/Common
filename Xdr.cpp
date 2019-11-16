@@ -363,7 +363,7 @@ bool Xdr::getNext(Uid uid, uint64_t& i) {
     return false;
 }
 
-bool Xdr::getNext(Uid uid, int& i) {
+bool Xdr::getNext(Uid uid, int32_t& i) {
     Tag tag = Tag(INT, 0, uid);
 
     if (findNext(tag)) {
@@ -524,8 +524,8 @@ void XdrTester(uint32_t MAX) {
     Tag t(Xdr::FLOAT, 2, "Hello");
     LOG(" Start Xdrtester .... ");
     LOG("Tag : %s", t.toString().c_str());
-    LOG("sizeof(Tag)=%u", (uint32_t)sizeof(Tag));
-    LOG("sizeof(Type)=%u", (uint32_t)sizeof(Xdr::Type));
+    LOG("sizeof(Tag)=%u", (unsigned int)sizeof(Tag));
+    LOG("sizeof(Type)=%u", (unsigned int)sizeof(Xdr::Type));
 
     const char* test1 = "{\"$src\":\"master/brain\",\"$dst\":\"ESP82-10027/"
                         "System\",\"$cls\":\"Properties\"}";
@@ -545,7 +545,7 @@ void XdrTester(uint32_t MAX) {
     for (uint32_t loop = 0; loop < MAX; loop++) {
         xdr.clear();
         xdr.add(UID("temp"), 1.23);
-        xdr.add(UID("anInt32"), -15);
+        xdr.add(UID("anInt32"),(int32_t) -15);
         xdr.add(UID("aString"),
                 "The quick brown fox jumps over the lazy dog !");
         xdr.add(UID("booleke"), false);
@@ -554,7 +554,7 @@ void XdrTester(uint32_t MAX) {
 
         assert(xdr.get(UID("temp"), d));
         assert(d == 1.23);
-        int ii;
+        int32_t ii;
         assert(xdr.get(UID("anInt32"), ii));
         assert(ii == -15);
         std::string ss;
@@ -575,7 +575,7 @@ void XdrTester(uint32_t MAX) {
     Xdr xdr2 = xdr;
     assert(xdr2.get(UID("temp"), d));
     assert(d == 1.23);
-    int ii;
+    int32_t ii;
     assert(xdr2.get(UID("anInt32"), ii));
     assert(ii == -15);
     std::string ss;
@@ -591,7 +591,7 @@ void XdrTester(uint32_t MAX) {
     assert(bb == false);
 
     uint32_t delta = Sys::millis() - start;
-    LOG(" %d took %u msec, %f msg/sec , double : %f", MAX, delta,
+    LOG(" %d took %u msec, %f msg/sec , double : %f", (unsigned int)MAX,(unsigned int)delta,
         (MAX * 1000.0) / delta, d);
     std::string s = xdr.toString();
 }

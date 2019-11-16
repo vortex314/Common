@@ -55,7 +55,7 @@ class Xdr { /*: public Stream<uint32_t> */
 		bool write(uint32_t* pi, uint32_t i);
 		bool write(uint8_t* pi, uint32_t i);
 		bool write(Tag tag);
-		bool add(Uid key, int v);
+		bool add(Uid key, int32_t v);
 		bool add(Uid key, bool b);
 		bool add(Uid key, double d);
 		bool add(Uid key, uint16_t v);
