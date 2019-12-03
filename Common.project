@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="Common" Version="10.0.0" InternalType="Library">
-
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00010001N0005Debug000000000000]]>
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="Common">
-	    <File Name="Register.h"/>
-	  <File Name="Register.cpp"/>
+    <File Name="BipBuffer.cpp-old"/>
+    <File Name="Register.h"/>
+    <File Name="Register.cpp"/>
     <File Name="Sema.cpp"/>
     <File Name="Sema.h"/>
     <File Name="Msg.cpp.old"/>
@@ -34,7 +34,6 @@
     <File Name="CborQueue.cpp"/>
     <File Name="Bytes.cpp"/>
     <File Name="BufferedByteStream.cpp"/>
-    <File Name="BipBuffer.cpp"/>
     <File Name="Base64.cpp"/>
     <File Name="Xdr.cpp"/>
     <File Name="Config.cpp"/>
