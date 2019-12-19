@@ -119,7 +119,7 @@ char* tfp_sprintf(char* s,const char *fmt, ...);
 
 void tfp_format(void* putp,void (*putf) (void*,char),char *fmt, va_list va);
 
-#define printf tfp_printf 
+//#define printf tfp_printf 
 #define sprintf tfp_sprintf 
 #ifdef __cplusplus
 }

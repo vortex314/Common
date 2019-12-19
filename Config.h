@@ -45,7 +45,6 @@ class Config {
 			if (_root[_nameSpace].containsKey(key))
 				value = _root[_nameSpace][key];
 			else {
-				_root[_nameSpace][key] = defaultValue;
 				value = defaultValue;
 			}
 			return *this;
@@ -54,7 +53,6 @@ class Config {
 			if (_root[_nameSpace].containsKey(key))
 				value = _root[_nameSpace][key].as<std::string>();
 			else {
-				_root[_nameSpace][key] = defaultValue;
 				value = defaultValue;
 			}
 			return *this;
