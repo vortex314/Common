@@ -52,11 +52,11 @@ void Register::show() {
 			if (bitCount > 1) {
 				str.append("=");
 				char numstr[21]; // enough to hold all numbers up to 64-bits
-				sprintf(numstr, "0x%X", bitsValue);
+				tfp_sprintf(numstr, "0x%X", bitsValue);
 				str +=  numstr;
 			} else if ( bitCount==1 && bitsValue != 0 ) {
 				char numstr[21]; // enough to hold all numbers up to 64-bits
-				sprintf(numstr, "%d", bitsValue);
+				tfp_sprintf(numstr, "%d", bitsValue);
 //               str +=  numstr;
 			}
 			bitsValue = 0;

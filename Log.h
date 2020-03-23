@@ -58,7 +58,9 @@ class Log {
 		char _hostname[20];
 		char _application[20];
 		LogLevel _level;
+		#if !defined(ARDUINO)
 		Sema& _sema;
+		#endif
 
 	public:
 		Log(uint32_t size);
@@ -86,7 +88,7 @@ class Log {
 };
 
 extern Log logger;
-#include <cstdio>
+//#include <cstdio>
 
 #define LOGF(fmt, ...)                                                         \
 	logger.log(__FLE__, __SHORT_FILE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)

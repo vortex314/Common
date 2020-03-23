@@ -169,21 +169,21 @@ class Esp32Semaphore : public Sema {
 
 		void wait() {
 			if (xSemaphoreTake(xSemaphore, (TickType_t)100000) == pdFALSE) {
-				printf(" xSemaphoreTake()  timed out ");
+				WARN(" xSemaphoreTake()  timed out ");
 			}
 			counter++;
 			if ( counter != 1 ) {
-				printf(" =======> wait sema counter %d \n",counter);
+				WARN(" =======> wait sema counter %d \n",counter);
 			}
 		}
 
 		void release() {
 			counter--;
 			if ( counter != 0 ) {
-				printf(" ======> give sema counter %d \n",counter);
+				WARN(" ======> give sema counter %d \n",counter);
 			}
 			if (xSemaphoreGive(xSemaphore) == pdFALSE) {
-				printf("xSemaphoreGive() failed");
+				WARN("xSemaphoreGive() failed");
 			}
 
 
