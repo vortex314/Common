@@ -23,6 +23,7 @@ class Register {
 		virtual ~Register();
 		void value(uint32_t);
 		void show();
+        void format(std::string&);
 };
 
 
