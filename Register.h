@@ -10,20 +10,21 @@
 #include <stdint.h>
 #include <string>
 #include <Log.h>
-#include <printf.h>
-class Register {
-		const char* _name;
-		uint32_t _reg;
-		const char* _format;
-		uint32_t* _regAddress;
-	public:
-		Register(const char* name,const char* format,uint32_t* reg);
-		Register(const char* name,const char* format);
+//#include <printf.h>
+class Register
+{
+    const char* _name;
+    uint32_t _reg;
+    const char* _format;
+    uint32_t* _regAddress;
+public:
+    Register(const char* name,const char* format,uint32_t* reg);
+    Register(const char* name,const char* format);
 
-		virtual ~Register();
-		void value(uint32_t);
-		void show();
-        void format(std::string&);
+    virtual ~Register();
+    void value(uint32_t);
+    void show();
+    void format(std::string&);
 };
 
 

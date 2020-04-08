@@ -6,6 +6,7 @@
  */
 
 #include "Register.h"
+#include "printf.h"
 
 Register::Register(const char* name, const char* format,uint32_t* regAddress)
     :  _name(name),_format(format),_regAddress(regAddress)
