@@ -15,34 +15,38 @@
 #include <string.h>
 #include <string>
 
-#define myASSERT(xxx) if (!(xxx) ) {WARN(" assertion " # xxx " failed.");};
+#define myASSERT(xxx)                                                          \
+    if (!(xxx)) {                                                              \
+        WARN(" assertion " #xxx " failed.");                                   \
+    };
 
 extern std::string& string_format(std::string& str, const char* fmt, ...);
-void bytesToHex(std::string& ret, uint8_t* input, uint32_t length,char sep=0);
+void bytesToHex(std::string& ret, uint8_t* input, uint32_t length,
+                char sep = 0);
 
 typedef void (*LogFunction)(char* start, uint32_t length);
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wignored-qualifiers"
-using cstr = const char * const;
+using cstr = const char* const;
 
-static constexpr cstr past_last_slash(cstr str, cstr last_slash)
-{
-    return *str == '\0' ? last_slash :
-           *str == '/' ?
-           past_last_slash(str + 1, str + 1) :
-           past_last_slash(str + 1, last_slash);
+static constexpr cstr past_last_slash(cstr str, cstr last_slash) {
+    return *str == '\0' ? last_slash
+                        : *str == '/' ? past_last_slash(str + 1, str + 1)
+                                      : past_last_slash(str + 1, last_slash);
 }
 
-static constexpr cstr past_last_slash(cstr str)
-{
+static constexpr cstr past_last_slash(cstr str) {
     return past_last_slash(str, str);
 }
-#define __SHORT_FILE__ ({constexpr cstr sf__ {past_last_slash(__FILE__)}; sf__;})
+#define __SHORT_FILE__                                                         \
+    ({                                                                         \
+        constexpr cstr sf__{past_last_slash(__FILE__)};                        \
+        sf__;                                                                  \
+    })
 //#pragma GCC diagnostic pop
 
-class Log
-{
-public:
+class Log {
+  public:
     typedef enum {
         LOG_TRACE = 0,
         LOG_DEBUG,
@@ -55,7 +59,7 @@ public:
     static char _logLevel[7];
     std::string* _line;
 
-private:
+  private:
     bool _enabled;
     LogFunction _logFunction;
     char _hostname[20];
@@ -65,7 +69,7 @@ private:
     Sema& _sema;
 #endif
 
-public:
+  public:
     Log(uint32_t size);
     ~Log();
     bool enabled(LogLevel level);
@@ -73,7 +77,8 @@ public:
     void disable();
     void enable();
     void defaultOutput();
-    void setOutput(LogFunction function);
+    void writer(LogFunction function);
+    LogFunction writer();
     void printf(const char* fmt, ...);
     void log(char level, const char* file, uint32_t line, const char* function,
              const char* fmt, ...);
@@ -97,8 +102,8 @@ extern Log logger;
     logger.log(__FLE__, __SHORT_FILE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
 
 /*
- #define LOGF(fmt, ...)                                                         \
-    logger.log(__FLE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+ #define LOGF(fmt, ...) \ logger.log(__FLE__, __LINE__, __PRETTY_FUNCTION__,
+ fmt, ##__VA_ARGS__)
  */
 #undef ASSERT
 #define ASSERT(xxx)                                                            \
@@ -111,25 +116,31 @@ extern Log logger;
 
 #define INFO(fmt, ...)                                                         \
     if (logger.enabled(Log::LOG_INFO))                                         \
-        logger.log('I', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+    logger.log('I', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt,        \
+               ##__VA_ARGS__)
 #define ERROR(fmt, ...)                                                        \
     if (logger.enabled(Log::LOG_ERROR))                                        \
-        logger.log('E', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+    logger.log('E', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt,        \
+               ##__VA_ARGS__)
 #define WARN(fmt, ...)                                                         \
     if (logger.enabled(Log::LOG_WARN))                                         \
-        logger.log('W', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+    logger.log('W', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt,        \
+               ##__VA_ARGS__)
 #define FATAL(fmt, ...)                                                        \
     if (logger.enabled(Log::LOG_FATAL))                                        \
-        logger.log('F', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+    logger.log('F', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt,        \
+               ##__VA_ARGS__)
 #define DEBUG(fmt, ...)                                                        \
     if (logger.enabled(Log::LOG_DEBUG))                                        \
-        logger.log('D', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+    logger.log('D', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt,        \
+               ##__VA_ARGS__)
 #define TRACE(fmt, ...)                                                        \
     if (logger.enabled(Log::LOG_TRACE))                                        \
-        logger.log('T', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt, ##__VA_ARGS__)
+    logger.log('T', __SHORT_FILE__, __LINE__, __PRETTY_FUNCTION__, fmt,        \
+               ##__VA_ARGS__)
 
 #define __FLE__                                                                \
     (__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1   \
-     : __FILE__)
+                                      : __FILE__)
 
 #endif /* LOG_H_ */
