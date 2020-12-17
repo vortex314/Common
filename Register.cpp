@@ -44,32 +44,25 @@ void Register::format(std::string& str)
         }
         if (*fmt == '+') { // add this bit to total value
             bitCount++;
+            bitsValue<<=1;
         } else if ( *fmt=='-')  { // ignore these bits
             bitCount=0;
+            bitsValue=0;
         } else { // show accumulated value
             bitCount++;
-            if (bitCount > 1 || ( bitsValue>0 && bitCount==1)  ) {
-                if (next == 0)
-                    str.append(fmt);
-                else
-                    str.append(fmt, next - fmt);
-            }
-            if (bitCount > 1) {
-                str.append("=");
-                char numstr[21]; // enough to hold all numbers up to 64-bits
-                tfp_sprintf(numstr, "0x%X", bitsValue);
-                str +=  numstr;
-            } else if ( bitCount==1 && bitsValue != 0 ) {
-                char numstr[21]; // enough to hold all numbers up to 64-bits
-                tfp_sprintf(numstr, "%d", bitsValue);
-//               str +=  numstr;
-            }
+            if (next == 0)
+                str.append(fmt);
+            else
+                str.append(fmt, next - fmt);
+            str.append("=");
+            char numstr[21]; // enough to hold all numbers up to 64-bits
+            tfp_sprintf(numstr, "%d", bitsValue);
+            str +=  numstr;
             bitsValue = 0;
             bitCount = 0;
-            str.append(",");
+            str.append(" ");
         }
 
-        bitsValue <<= 1;
         reg <<= 1;
         fmt = next;
         if (fmt) fmt++;

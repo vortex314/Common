@@ -31,9 +31,10 @@ class Bytes {
     //    void map(uint8_t *start, uint32_t size);
     Bytes& sub(Bytes* parent, uint32_t length);
     Bytes& copy(Bytes* from);
-    Bytes& operator=(Bytes& src);
+    Bytes& operator=( Bytes& src);
+        Bytes& operator=( const Bytes& src);
     Bytes& operator=(const char* s);
-    Bytes& append(Bytes& src);
+    Bytes& append( Bytes& src);
     Bytes& append(const char s[]);
     Bytes& append(uint8_t* data, uint32_t length);
 

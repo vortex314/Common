@@ -76,7 +76,7 @@ void Log::serialLog(char* start, uint32_t length) {
         uart_send_blocking(0, *(s++));
     }
 #endif
-#if defined(__linux__) || defined(ESP_OPEN_RTOS) || defined(ESP32_IDF) ||      \
+#if defined(__linux__) || defined(ESP_OPEN_RTOS) || defined(ESP8266_RTOS_SDK) || defined(ESP32_IDF) ||      \
     defined(__APPLE__)
     *(start + length) = '\0';
     fprintf(stdout, "%s\n", start);
@@ -151,7 +151,7 @@ void Log::log(char level, const char* file, uint32_t lineNbr,
     //	::snprintf(_application,sizeof(_application),"%X",(uint32_t)pthread_self());
     pthread_getname_np(pthread_self(), _application, sizeof(_application));
 #endif
-#if defined(ESP32_IDF) || defined(ESP_OPEN_RTOS)
+#if defined(ESP32_IDF) || defined(ESP_OPEN_RTOS) || defined(ESP8266_RTOS_SDK)
     extern void* pxCurrentTCB;
     //	if ( _application[0]==0)
     ::snprintf(_application, sizeof(_application), "%X",
@@ -210,7 +210,7 @@ const char* Log::time() {
 }
 #endif
 
-#if defined(ESP_OPEN_RTOS) // doesn't support 64 bit printf
+#if defined(ESP_OPEN_RTOS) || defined(ESP8266_RTOS_SDK) // doesn't support 64 bit printf
 const char* Log::time() {
     static char szTime[20];
     snprintf(szTime, sizeof(szTime), "%d", (uint32_t)Sys::millis());

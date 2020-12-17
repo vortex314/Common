@@ -91,15 +91,22 @@ void Sys::delay(uint32_t delta)
 
 #endif
 
-#if defined(ESP_OPEN_RTOS)
+#if defined(ESP_OPEN_RTOS) || defined(ESP8266_RTOS_SDK)
+#ifdef ESP_OPEN_RTOS
 #include <espressif/esp_system.h>
+#include <espressif/esp_wifi.h>
 #include <FreeRTOS.h>
+#include <task.h>
+
+#endif
+
+#ifdef ESP8266_RTOS_SDK
+#include <esp_system.h>
+#endif
 #include <Log.h>
 #include <Sys.h>
-#include <espressif/esp_wifi.h>
 #include <stdint.h>
 #include <sys/time.h>
-#include <task.h>
 
 const char* Sys::getProcessor()
 {
@@ -107,17 +114,16 @@ const char* Sys::getProcessor()
 }
 const char* Sys::getBuild()
 {
-    return __DATE__ " " __TIME__;
-}
+    return __DATE__ " " __TIME__;  
+} 
 
 void Sys::init()
 {
     // uint8_t cpuMhz = sdk_system_get_cpu_frequency();
 }
-
 uint32_t Sys::getFreeHeap()
 {
-    return 0;
+    return esp_get_free_heap_size();
 };
 
 uint64_t Sys::millis()
@@ -126,19 +132,21 @@ uint64_t Sys::millis()
     timeval time;
     gettimeofday(&time, NULL);
     return (time.tv_sec * 1000) + (time.tv_usec / 1000);*/
-    return Sys::micros() / 1000;
+    return Sys::micros() / 1000000;
 }
 
 uint32_t Sys::sec()
 {
     return millis() / 1000;
 }
-
+extern "C" void vPortEnterCritical(void);
+extern "C" void vPortExitCritical();
 uint64_t Sys::micros()
 {
 
     static uint32_t lsClock = 0;
     static uint32_t msClock = 0;
+
 
     vPortEnterCritical();
     uint32_t ccount;
@@ -147,7 +155,7 @@ uint64_t Sys::micros()
         msClock++;
     }
     lsClock = ccount;
-    portEXIT_CRITICAL();
+    vPortExitCritical();
 
     uint64_t micros = msClock;
     micros <<= 32;
@@ -199,17 +207,29 @@ extern "C" uint64_t SysMillis()
 
 const char* Sys::hostname()
 {
+
     if(_hostname[0] == 0) {
+        #ifdef ESP_OPEN_RTOS
         snprintf(_hostname, sizeof(_hostname), "ESP82-%d", sdk_system_get_chip_id() & 0xFFFF);
+        #endif
+        #ifdef ESP82666_RTOS_SDK
+        uint8_t mac[6];
+        esp_efuse_mac_get_default(mac);
+        uint32_t l = mac[2]*mac[3]*mac[4]*mac[5];
+        snprintf(_hostname, sizeof(_hostname),"ESP82-%u",l); 
+        #endif
     }
     return _hostname;
 }
 const char* Sys::board()
 {
-    static char buffer[80];
+        static char buffer[80];
+
+    #ifdef ESP_OPEN_RTOS
     snprintf(buffer, sizeof(buffer), " cpu-id : %X , freq : %d Mhz rom-sdk : %s", sdk_system_get_chip_id(),
              sdk_system_get_cpu_freq(), sdk_system_get_sdk_version());
     sdk_system_print_meminfo();
+    #endif
     return buffer;
 }
 

@@ -83,7 +83,7 @@
 //     PT_END();
 // }
 //
-#include "Msg.h"
+template <class T> 
 class ProtoThread {
 public:
 	// Construct a new protothread that will start from the beginning
@@ -120,7 +120,7 @@ public:
 	// Run next part of protothread or return immediately if it's still
 	// waiting. Return true if protothread is still running, false if it
 	// has finished. Implement this method in your Protothread subclass.
-	virtual bool dispatch(Msg& msg) = 0;
+	virtual bool dispatch(const T& event) = 0;
 
 protected:
 	// Used to store a protothread's position (what Dunkels calls a
@@ -132,7 +132,7 @@ protected:
 
 	// Stores the protothread's position (by storing the line number of
 	// the last PT_WAIT, which is then switched on at the next Run).
-	LineNumber _ptLine;
+	LineNumber _ptLine=0;
 };
 
 // Declare start of protothread (use at start of Run() implementation).

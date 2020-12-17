@@ -147,7 +147,7 @@ class STM32Semaphore : public Sema {
 Sema& Sema::create() {return *(new STM32Semaphore());}
 #endif
 
-#if defined(ESP32_IDF) || defined(ESP_OPEN_RTOS)
+#if defined(ESP32_IDF) || defined(ESP_OPEN_RTOS) || defined(ESP8266_RTOS_SDK)
 #ifdef ESP_OPEN_RTOS
 #include <FreeRTOS.h>
 #include <semphr.h>
@@ -155,8 +155,13 @@ Sema& Sema::create() {return *(new STM32Semaphore());}
 #ifdef ESP32_IDF
 #include <freertos/FreeRTOS.h>
 #include <freertos/semphr.h>
-
 #endif
+
+#ifdef ESP8266_RTOS_SDK
+#include <FreeRTOS.h>
+#include <semphr.h>
+#endif
+
 class Esp32Semaphore : public Sema {
 		SemaphoreHandle_t xSemaphore = NULL;
 		uint32_t counter=0;

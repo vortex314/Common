@@ -113,9 +113,14 @@ Bytes& Bytes::append(const char s[]) {
     return *this;
 }
 
-Bytes& Bytes::operator=(Bytes& s) {
+Bytes& Bytes::operator=( Bytes& s) {
     clear();
     return append(s);
+}
+
+Bytes& Bytes::operator=( const Bytes& s) {
+    clear();
+    return append((Bytes&)s);
 }
 
 Bytes& Bytes::operator=(const char* s) {
