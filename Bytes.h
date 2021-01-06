@@ -25,7 +25,7 @@ class Bytes {
     Bytes(uint32_t size);
     Bytes(uint8_t* start, uint32_t size);
     Bytes& map(uint8_t* start, uint32_t size);
-    Bytes(Bytes& in);
+    Bytes(const Bytes& in);
     ~Bytes();
     Bytes& clone(Bytes& src);
     //    void map(uint8_t *start, uint32_t size);

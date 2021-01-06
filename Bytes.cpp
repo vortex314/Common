@@ -70,7 +70,7 @@ Bytes::~Bytes() {
         if (_start)
             free(_start);
 }
-Bytes::Bytes(Bytes& src) {
+Bytes::Bytes(const Bytes& src) {
     _start = (uint8_t*)malloc(src._capacity);
     _offset = 0;
     _limit = src._limit;
