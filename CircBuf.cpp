@@ -85,7 +85,7 @@ int   CircBuf::readFromIsr() {
 }
 
  uint32_t  CircBuf::space() {
-	return limit - size();
+	return limit - 2 - size();
 }
 
 bool  CircBuf::hasSpace() {
@@ -95,9 +95,9 @@ bool  CircBuf::hasSpace() {
 bool  CircBuf::hasSpace(uint32_t size) {
 	uint32_t next = (writePos + 1) % limit;
 	if (next <= readPos)
-		return (readPos > (next + size));
+		return (readPos >= (next + size));
 	else
-		return ((readPos + limit) > (next + size));
+		return ((readPos + limit) >= (next + size));
 }
 
 bool  CircBuf::hasData() { // not in  as it will be called in interrupt
