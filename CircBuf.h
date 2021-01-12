@@ -19,9 +19,9 @@
 class CircBuf {
 private:
 	uint8_t* start;
-	uint16_t readPos;
-	uint16_t writePos;
-	uint16_t limit;
+	uint64_t readPos;
+	uint64_t writePos;
+	uint32_t limit;
 public:
 	CircBuf(int size);
 	~CircBuf();
