@@ -22,8 +22,8 @@ private:
 	uint64_t readPos;
 	uint64_t writePos;
 	uint32_t limit;
-public:
-	CircBuf(int size);
+public: 
+	CircBuf(uint32_t size);
 	~CircBuf();
 	int write(uint8_t b);
 	int writeFromIsr(uint8_t b);
