@@ -19,7 +19,7 @@ class Config {
 		bool _loaded;
 
 	public:
-		Config();
+		Config(uint32_t size=10240);
 		virtual ~Config();
 
 		void clear();

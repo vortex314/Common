@@ -1,6 +1,7 @@
 #include "CircBuf.h"
 // attentions : this is a single producer, single consumer circular buffer,
-// totally NOT thread-safe start[writePos] => location of next write
+// totally NOT thread-safe 
+// start[writePos] => location of next write
 // start[readPos] => location of next read
 // positions are increased after operation
 // readPos==writePos => empty

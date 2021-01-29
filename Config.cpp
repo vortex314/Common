@@ -14,8 +14,8 @@
 #define KEY_SIZE 40
 #define VALUE_SIZE 60
 
-Config::Config()
-	: _jsonBuffer(1024), _loaded(false) {
+Config::Config(uint32_t size)
+	: _jsonBuffer(size), _loaded(false) {
 	clear();
 }
 
