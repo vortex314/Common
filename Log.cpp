@@ -33,6 +33,10 @@ char Log::_logLevel[7] = {'T', 'D', 'I', 'W', 'E', 'F', 'N'};
 #ifdef ESP_OPEN_RTOS
 #endif
 
+#ifdef __linux__
+#include <sys/prctl.h>
+#endif
+
 std::string& string_format(std::string& str, const char* fmt, ...) {
     int size = strlen(fmt) * 2 + 50; // Use a rubric appropriate for your code
     va_list ap;
@@ -148,8 +152,15 @@ void Log::log(char level, const char* file, uint32_t lineNbr,
     vsnprintf(logLine, sizeof(logLine) - 1, fmt, args);
     va_end(args);
 #ifdef __linux__
+#ifdef __GLIBC__
     //	::snprintf(_application,sizeof(_application),"%X",(uint32_t)pthread_self());
     pthread_getname_np(pthread_self(), _application, sizeof(_application));
+#else
+    static_assert(sizeof(_application) >= 16, "PR_GET_NAME argument must be at least 16 bytes long");
+    if (prctl(PR_GET_NAME, _application)) {
+	    ::snprintf(_application, sizeof(_application), "%X", static_cast<uint32_t>(pthread_self()));
+    }
+#endif
 #endif
 #if defined(ESP32_IDF) || defined(ESP_OPEN_RTOS) || defined(ESP8266_RTOS_SDK)
     extern void* pxCurrentTCB;
