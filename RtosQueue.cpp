@@ -1,4 +1,5 @@
 #include "RtosQueue.h"
+#include <sys/select.h>
 
 RtosQueue::~RtosQueue() {
 
